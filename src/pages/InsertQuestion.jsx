@@ -41,7 +41,7 @@ export default function InsertQuestion() {
       answer: answer,
     })
     db.collection("questions")
-      .add({
+      .doc().set({
         question: question,
         choices: choices,
         type: "multipleChoice",
