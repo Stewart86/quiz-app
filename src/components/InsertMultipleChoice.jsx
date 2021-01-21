@@ -1,5 +1,5 @@
 import { Button, Grid, Paper, TextField } from "@material-ui/core"
-import React, { useState } from "react"
+import React, { Fragment, useState } from "react"
 
 import AddIcon from "@material-ui/icons/Add"
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -29,13 +29,13 @@ const handleRemoveClick = index => {
       <Grid container>
         {choices.map((x, i) => {
           return (
-            <>
-              <Grid row xs={10}>
+            <Fragment key={i}>
+              <Grid item xs={10}>
                 <Paper className={classes.paper}>
                   <TextField fullWidth className={classes.textField} defaultValue={`Choice ${i + 1}`} />
                 </Paper>
               </Grid>
-              <Grid row xs={1}>
+              <Grid item xs={1}>
                 <Button
                   variant='contained'
                   color={"primary"}
@@ -44,7 +44,7 @@ const handleRemoveClick = index => {
                   <RemoveIcon/>
                 </Button>
               </Grid>
-              <Grid row xs={1}>
+              <Grid item xs={1}>
                 <Button
                   variant='contained'
                   color={"primary"}
@@ -53,7 +53,7 @@ const handleRemoveClick = index => {
                   <AddIcon />
                 </Button>
               </Grid>
-            </>
+            </Fragment>
           )
         })}
       </Grid>

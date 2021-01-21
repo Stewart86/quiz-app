@@ -3,6 +3,7 @@ import React, { useState } from "react"
 
 import { Editor } from "@tinymce/tinymce-react"
 import InsertMultipleChoice from "../components/InsertMultipleChoice"
+import { db } from "../firestore"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -39,15 +40,15 @@ export default function InsertQuestion() {
       type: "multipleChoice",
       answer: answer,
     })
-    // db.collection("questions")
-    //   .add({
-    //     question: question,
-    //     choices: choices,
-    //     type: "multipleChoice",
-    //     answer: answer,
-    //   })
-    //   .then(() => console.log("done"))
-    //   .catch((error) => console.error(error))
+    db.collection("questions")
+      .add({
+        question: question,
+        choices: choices,
+        type: "multipleChoice",
+        answer: answer,
+      })
+      .then(() => console.log("done"))
+      .catch((error) => console.error(error))
   }
   return (
     <>
