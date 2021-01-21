@@ -13,13 +13,13 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-if (window.location.hostname === 'localhost') {
-  console.log("testing locally -- hitting local functions and firestore emulators");
-  firebase.firestore().settings({
-    host: 'localhost:8080',
-    ssl: false
-  });
-}
+// if (window.location.hostname === 'localhost') {
+//   console.log("testing locally -- hitting local functions and firestore emulators");
+//   firebase.firestore().settings({
+//     host: 'localhost:8080',
+//     ssl: false
+//   });
+// }
 
 export const provider = new firebase.auth.GoogleAuthProvider();
 export const auth = firebase.auth();

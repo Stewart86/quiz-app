@@ -27,9 +27,16 @@ export default function InsertQuestion() {
 
   const handleAddClick = (event) => {
     setChoices([...choices, event.value])
+    console.log(choices)
   }
   const handleEditorChange = (content, editor) => {
     setQuestion(content)
+  }
+
+  const handleSetChoice = (i, value) => {
+    let list = [...choices]
+    list[i] = value
+    setChoices(list)
   }
 
   const handleInsertQuestion = () => {
@@ -72,6 +79,7 @@ export default function InsertQuestion() {
         />
         <InsertMultipleChoice
           choices={choices}
+          handleSetChoice={handleSetChoice}
           handleRemoveClick={handleRemoveClick}
           handleAddClick={handleAddClick}
         />
