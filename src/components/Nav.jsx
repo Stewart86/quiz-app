@@ -23,6 +23,7 @@ export default function Nav() {
       <AppBar position='fixed'>
         <Toolbar>
           <Typography className={classes.title} variant='h6'>Quiz App</Typography>
+          <Button className={classes.btn} href='/insertquestion' color="inherit">Insert Question</Button>
           <Button className={classes.btn} href='/questionselection' color="inherit">Question Selection</Button>
           <Button className={classes.btn} href='/login' color="inherit">Login</Button>
         </Toolbar>
