@@ -16,7 +16,7 @@ export default function InsertQuestion() {
 
   const [choices, setChoices] = useState([""])
   const [question, setQuestion] = useState("")
-  const [answer, setAnswer] = useState(0)
+  // const [answer, setAnswer] = useState(0)
 
   const handleRemoveClick = (index) => {
     const list = [...choices]
