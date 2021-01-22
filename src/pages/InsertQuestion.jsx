@@ -3,7 +3,7 @@ import React, { useState } from "react"
 
 import { Editor } from "@tinymce/tinymce-react"
 import InsertMultipleChoice from "../components/InsertMultipleChoice"
-import { db } from "../firestore"
+import { postNewQuestion } from "../firestore/questions"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function InsertQuestion() {
+export default function InsertQuestion({ categories }) {
   const classes = useStyles()
 
   const [choices, setChoices] = useState([""])
@@ -45,22 +45,13 @@ export default function InsertQuestion() {
   }
 
   const handleInsertQuestion = () => {
-    console.log({
+    postNewQuestion({
       question: question,
       choices: choices,
       type: "multipleChoice",
       answer: answer,
+      categories: categories,
     })
-    db.collection("questions")
-      .doc()
-      .set({
-        question: question,
-        choices: choices,
-        type: "multipleChoice",
-        answer: answer,
-      })
-      .then(() => console.log("done"))
-      .catch((error) => console.error(error))
   }
 
   return (

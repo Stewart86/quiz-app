@@ -11,6 +11,7 @@ import Questions from "./pages/Questions"
 import QuestionsSelection from "./pages/QuestionsSelection"
 import React from "react"
 import Result from "./pages/Result"
+import InsertQuestionOptions from "./pages/InsertQuestionOptions"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -29,31 +30,34 @@ export default function App() {
       <Container className={classes.root}>
         <Router>
           <Switch>
-            <Route path='/insertquestion'>
+            <Route path="/insertquestionoptions">
+              <InsertQuestionOptions />
+            </Route>
+            <Route path="/insertquestion">
               <InsertQuestion />
             </Route>
-            <Route path='/questionsselection'>
+            <Route path="/questionsselection">
               <QuestionsSelection />
             </Route>
-            <Route path='/questions'>
+            <Route path="/questions">
               <Questions />
             </Route>
-            <Route path='/result'>
+            <Route path="/result">
               <Result />
             </Route>
-            <Route path='/accountsettings'>
+            <Route path="/accountsettings">
               <AccountSettings />
             </Route>
-            <Route path='/admin'>
+            <Route path="/admin">
               <Admin />
             </Route>
-            <Route exact path='/Login'>
+            <Route exact path="/Login">
               <Login />
             </Route>
-            <Route exact path='/'>
+            <Route exact path="/">
               <Login />
             </Route>
-            <Route path='*'>
+            <Route path="*">
               <Error />
             </Route>
           </Switch>

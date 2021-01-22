@@ -27,7 +27,7 @@ export default function Nav() {
           </Typography>
           <Button
             className={classes.btn}
-            href="/insertquestion"
+            href="/insertquestionoptions"
             color="inherit">
             Add
           </Button>

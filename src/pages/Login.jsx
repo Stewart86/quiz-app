@@ -16,10 +16,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexWrap: "wrap",
   },
-  textField: {},
-  marginLeft: theme.spacing(1),
-  marginRight: theme.spacing(1),
-  width: "25ch",
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: "25ch",
+  },
 }))
 
 export default function Login() {
@@ -27,7 +28,7 @@ export default function Login() {
 
   return (
     <div className={classes.root}>
-      <Grid container direction='column' justify='center' alignItems='center'>
+      <Grid container direction="column" justify="center" alignItems="center">
         <Grid container item xs={4}></Grid>
         <Grid container item xs={4}>
           <Card>
@@ -40,8 +41,8 @@ export default function Login() {
                   className={classes.textField}
                   fullWidth
                   label={"User ID"}
-                  variant='outlined'
-                  margin='normal'
+                  variant="outlined"
+                  margin="normal"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -49,8 +50,8 @@ export default function Login() {
                   className={classes.textField}
                   fullWidth
                   label={"Password"}
-                  variant='outlined'
-                  margin='normal'
+                  variant="outlined"
+                  margin="normal"
                 />
               </Grid>
             </CardContent>
