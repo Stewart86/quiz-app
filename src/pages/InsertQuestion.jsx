@@ -44,14 +44,16 @@ export default function InsertQuestion({ categories }) {
     setAnswer(i)
   }
 
-  const handleInsertQuestion = () => {
-    postNewQuestion({
-      question: question,
-      choices: choices,
-      type: "multipleChoice",
-      answer: answer,
-      categories: categories,
-    })
+  const handleInsertQuestion = async () => {
+    await postNewQuestion(
+      {
+        question: question,
+        choices: choices,
+        type: "multipleChoice",
+        answer: answer,
+      },
+      categories
+    )
   }
 
   return (
