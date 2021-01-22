@@ -1,9 +1,9 @@
 import { Button, Paper, Typography } from "@material-ui/core"
 import React, { useState } from "react"
+import { postNewQuestion, updateNewCategories } from "../firestore/questions"
 
 import { Editor } from "@tinymce/tinymce-react"
 import InsertMultipleChoice from "../components/InsertMultipleChoice"
-import { postNewQuestion } from "../firestore/questions"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +54,7 @@ export default function InsertQuestion({ categories }) {
       },
       categories
     )
+    await updateNewCategories(categories)
   }
 
   return (
@@ -61,7 +62,7 @@ export default function InsertQuestion({ categories }) {
       <Paper className={classes.paper}>
         <Typography variant={"h2"}>Insert Question</Typography>
         <Editor
-          initialValue="<p>This is the initial content of the editor</p>"
+          initialValue='<p>This is the initial content of the editor</p>'
           init={{
             height: 500,
             menubar: false,
@@ -84,7 +85,7 @@ export default function InsertQuestion({ categories }) {
           handleAnswerClick={handleAnswerClick}
         />
         <Button
-          variant="contained"
+          variant='contained'
           color={"primary"}
           onClick={handleInsertQuestion}>
           Insert

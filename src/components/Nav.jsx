@@ -33,7 +33,7 @@ export default function Nav() {
           </Button>
           <Button
             className={classes.btn}
-            href="/questionselection"
+            href="/questionsselection"
             color="inherit">
             Question
           </Button>
