@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   btn: {
-    margin: theme.spacing(2)
-  }
+    margin: theme.spacing(2),
+  },
 }))
 
 export default function Nav() {
@@ -20,12 +20,26 @@ export default function Nav() {
 
   return (
     <div className={classes.root}>
-      <AppBar position='fixed'>
+      <AppBar position="fixed">
         <Toolbar>
-          <Typography className={classes.title} variant='h6'>Quiz App</Typography>
-          <Button className={classes.btn} href='/insertquestion' color="inherit">Insert Question</Button>
-          <Button className={classes.btn} href='/questionselection' color="inherit">Question Selection</Button>
-          <Button className={classes.btn} href='/login' color="inherit">Login</Button>
+          <Typography className={classes.title} variant="h6">
+            Quiz App
+          </Typography>
+          <Button
+            className={classes.btn}
+            href="/insertquestion"
+            color="inherit">
+            Add
+          </Button>
+          <Button
+            className={classes.btn}
+            href="/questionselection"
+            color="inherit">
+            Question
+          </Button>
+          <Button className={classes.btn} href="/login" color="inherit">
+            Login
+          </Button>
         </Toolbar>
       </AppBar>
     </div>

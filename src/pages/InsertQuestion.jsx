@@ -17,7 +17,11 @@ export default function InsertQuestion() {
 
   const [choices, setChoices] = useState([""])
   const [question, setQuestion] = useState("")
-  // const [answer, setAnswer] = useState(0)
+  const [answer, setAnswer] = useState(0)
+
+  const handleEditorChange = (content, editor) => {
+    setQuestion(content)
+  }
 
   const handleRemoveClick = (index) => {
     const list = [...choices]
@@ -29,18 +33,18 @@ export default function InsertQuestion() {
     setChoices([...choices, event.value])
     console.log(choices)
   }
-  const handleEditorChange = (content, editor) => {
-    setQuestion(content)
-  }
-
-  const handleSetChoice = (i, value) => {
+  const handleSetChoice = (value, i) => {
+    console.log(value)
     let list = [...choices]
     list[i] = value
     setChoices(list)
   }
 
+  const handleAnswerClick = (i) => {
+    setAnswer(i)
+  }
+
   const handleInsertQuestion = () => {
-    const answer = 1
     console.log({
       question: question,
       choices: choices,
@@ -48,7 +52,8 @@ export default function InsertQuestion() {
       answer: answer,
     })
     db.collection("questions")
-      .doc().set({
+      .doc()
+      .set({
         question: question,
         choices: choices,
         type: "multipleChoice",
@@ -57,12 +62,13 @@ export default function InsertQuestion() {
       .then(() => console.log("done"))
       .catch((error) => console.error(error))
   }
+
   return (
     <>
       <Paper className={classes.paper}>
         <Typography variant={"h2"}>Insert Question</Typography>
         <Editor
-          initialValue='<p>This is the initial content of the editor</p>'
+          initialValue="<p>This is the initial content of the editor</p>"
           init={{
             height: 500,
             menubar: false,
@@ -82,9 +88,10 @@ export default function InsertQuestion() {
           handleSetChoice={handleSetChoice}
           handleRemoveClick={handleRemoveClick}
           handleAddClick={handleAddClick}
+          handleAnswerClick={handleAnswerClick}
         />
         <Button
-          variant='contained'
+          variant="contained"
           color={"primary"}
           onClick={handleInsertQuestion}>
           Insert
