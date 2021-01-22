@@ -47,12 +47,12 @@ export default function InsertQuestion({ categories }) {
   const handleInsertQuestion = async () => {
     await postNewQuestion(
       {
+        ...categories,
         question: question,
         choices: choices,
         type: "multipleChoice",
         answer: answer,
       },
-      categories
     )
     await updateNewCategories(categories)
   }

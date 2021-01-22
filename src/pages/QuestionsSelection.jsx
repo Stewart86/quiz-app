@@ -1,13 +1,16 @@
 import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Typography,
+    Button,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    Typography,
 } from "@material-ui/core"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
+import { getCategories } from "../firestore/questions"
+import { getFirstArrayInObj } from "../helper/utilities"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -53,21 +56,19 @@ const Dropdown = ({ handleOnChange, state, data, type }) => {
 export default function QuestionsSelection() {
   const classes = useStyles()
 
-  const data = {
-    test: ["aaa", "bbb", "ccc"],
-    test2: ["aaa", "bbb", "ccc"],
-  }
-  const getFirstArrayInObj = (data) => {
-    let result = {}
-    Object.keys(data).forEach((k, i) => {
-      result[k] = data[k][0]
-    })
-    return result
-  }
-  const [state, setState] = useState(getFirstArrayInObj(data))
+  const [state, setState] = useState({})
+  const [data, setData] = useState({})
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getCategories()
+      setState(getFirstArrayInObj(data))
+      setData(data)
+    }
+    fetchData()
+  }, [])
 
   const handleOnChange = (e, type) => {
-    console.log(e.target.value)
     setState({
       ...state,
       [type]: e.target.value,
@@ -80,6 +81,7 @@ export default function QuestionsSelection() {
       {Object.keys(data).map((k, i) => {
         return (
           <Dropdown
+            key={i}
             handleOnChange={handleOnChange}
             state={state}
             data={data}
@@ -87,6 +89,8 @@ export default function QuestionsSelection() {
           />
         )
       })}
+    <Button>Print</Button>{/* TODO: number of question, timer, generate pdf, questions */}
+    <Button>Start</Button>
     </Paper>
   )
 }
