@@ -5,9 +5,6 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Grid,
-  Paper,
-  Typography,
 } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 import { getCategories, getQuestions } from "../firestore/questions"
@@ -16,19 +13,8 @@ import { Dropdown } from "../components/Dropdown"
 import { Loading } from "../components/Loading"
 import { Printable } from "../pages/Printable"
 import { getFirstArrayInObj } from "../helper/utilities"
-import { makeStyles } from "@material-ui/core/styles"
-
-const useStyles = makeStyles((theme) => ({
-  title: {
-    flexGrow: 1,
-  },
-  btn: {
-    margin: theme.spacing(2),
-  },
-}))
 
 export default function QuestionsSelection() {
-  const classes = useStyles()
 
   const [state, setState] = useState({})
   const [data, setData] = useState({})

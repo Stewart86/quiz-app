@@ -9,17 +9,8 @@ import {
 } from "@material-ui/core"
 
 import React from "react"
-import { makeStyles } from "@material-ui/core/styles"
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        margin: theme.spacing(2)
-    }
-}))
-
 
 export default function Question({ count, question }) {
-    const classes = useStyles()
   return (
       <Grid item xs={12} >
       <Card>

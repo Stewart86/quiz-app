@@ -1,22 +1,33 @@
-import { Button, Grid, TextField } from "@material-ui/core"
-import React, { Fragment } from "react"
+import {
+  Button,
+  Divider,
+  IconButton,
+  InputBase,
+  Paper,
+} from "@material-ui/core"
 
 import AddIcon from "@material-ui/icons/Add"
+import React from "react"
 import RemoveIcon from "@material-ui/icons/Remove"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(3),
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    marginBottom: theme.spacing(1),
   },
-  textField: {
-    padding: theme.spacing(0.5),
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
   },
-  paper: {
-    margin: theme.spacing(3),
+  iconButton: {
+    padding: 10,
   },
-  addRemoveBtn: {
-    margin: theme.spacing(3),
+  divider: {
+    height: 28,
+    margin: 4,
   },
 }))
 
@@ -26,52 +37,42 @@ export default function InsertMultipleChoice({
   handleRemoveClick,
   handleAnswerClick,
   handleSetChoice,
+  answer,
 }) {
   const classes = useStyles()
 
   return (
     <>
-      <Grid container className={classes.root}>
-        {choices.map((x, i) => {
-          return (
-            <Fragment key={i}>
-              <Grid item xs={9}>
-                <TextField
-                  fullWidth
-                  className={classes.textField}
-                  defaultValue={`Choice ${i + 1}`}
-                  onChange={(event) => handleSetChoice(event.target.value, i)}
-                />
-              </Grid>
-              <Grid item>
-                <Button
-                  disabled={choices.length === 1}
-                  variant="contained"
-                  color={"primary"}
-                  onClick={(e) => handleRemoveClick(i)}>
-                  <RemoveIcon />
-                </Button>
-              </Grid>
-              <Grid item xs={1}>
-                <Button
-                  variant="contained"
-                  color={"primary"}
-                  onClick={handleAddClick}>
-                  <AddIcon />
-                </Button>
-              </Grid>
-              <Grid item xs={1}>
-                <Button
-                  variant="contained"
-                  color={"secondary"}
-                  onClick={handleAnswerClick(i)}>
-                  Answer
-                </Button>
-              </Grid>
-            </Fragment>
-          )
-        })}
-      </Grid>
+      {choices.map((x, i) => {
+        return (
+          <Paper key={i} component={"form"} className={classes.root}>
+            <InputBase
+              className={classes.input}
+              fullWidth
+              placeholder={`Choice ${i + 1}`}
+              onChange={(event) => handleSetChoice(event.target.value, i)}
+            />
+            <Divider className={classes.divider} orientation={"vertical"} />
+            <IconButton
+              disabled={choices.length === 1}
+              variant='contained'
+              color={"primary"}
+              onClick={(e) => handleRemoveClick(i)}>
+              <RemoveIcon />
+            </IconButton>
+            <IconButton
+              variant='contained'
+              color={"primary"}
+              onClick={handleAddClick}>
+              <AddIcon />
+            </IconButton>
+            <Divider className={classes.divider} orientation={"vertical"} />
+            <Button variant={"outlined"} onClick={handleAnswerClick(i)}>
+              {answer === i ? "answer" : "wrong"}
+            </Button>
+          </Paper>
+        )
+      })}
     </>
   )
 }
