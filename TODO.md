@@ -13,3 +13,4 @@
 
 - not checking for duplicated question. How to check?
 - leaving fields in default will not save to db
+- rich text editor potential XSS risk

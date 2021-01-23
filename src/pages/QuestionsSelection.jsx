@@ -1,14 +1,8 @@
-import {
-    Button,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Paper,
-    Select,
-    Typography,
-} from "@material-ui/core"
+import { Button, Paper, Typography } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 
+import { Dropdown } from "../components/Dropdown"
+import { Printable } from "../pages/Printable"
 import { getCategories } from "../firestore/questions"
 import { getFirstArrayInObj } from "../helper/utilities"
 import { makeStyles } from "@material-ui/core/styles"
@@ -23,41 +17,14 @@ const useStyles = makeStyles((theme) => ({
   btn: {
     margin: theme.spacing(2),
   },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
 }))
-
-const Dropdown = ({ handleOnChange, state, data, type }) => {
-  const classes = useStyles()
-  return (
-    <FormControl className={classes.formControl}>
-      <InputLabel id={type}>{type}</InputLabel>
-      <Select
-        labelId={type}
-        id={`${type}-select`}
-        value={state[type]}
-        onChange={(e) => handleOnChange(e, type)}>
-        {data[type].length > 0
-          ? data[type].map((k, i) => {
-              return (
-                <MenuItem key={i} value={k}>
-                  {k}
-                </MenuItem>
-              )
-            })
-          : ""}
-      </Select>
-    </FormControl>
-  )
-}
 
 export default function QuestionsSelection() {
   const classes = useStyles()
 
   const [state, setState] = useState({})
   const [data, setData] = useState({})
+  const [showPrintable, setShowPrintable] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,22 +42,48 @@ export default function QuestionsSelection() {
     })
   }
 
+  const isPrintable = () => {
+    // all categories must not be empty
+    let isAllPrintable = []
+    let count = 0
+    Object.keys(state).forEach((k,i) => {
+      if (state[k].length > 0)
+      isAllPrintable.push(true)
+      count = i+1
+    })
+    if (isAllPrintable.length !== count) {
+      setShowPrintable(false)
+      console.error("missing  information unable to print")
+      alert("missing  information unable to print")
+    }
+    else {
+      setShowPrintable(true)
+    }
+  }
+
   return (
-    <Paper className={classes.root}>
-      <Typography variant={"h3"}>Question Selection</Typography>
-      {Object.keys(data).map((k, i) => {
-        return (
-          <Dropdown
-            key={i}
-            handleOnChange={handleOnChange}
-            state={state}
-            data={data}
-            type={k}
-          />
-        )
-      })}
-    <Button>Print</Button>{/* TODO: number of question, timer, generate pdf, questions */}
-    <Button>Start</Button>
-    </Paper>
+    <>
+      {showPrintable ? (
+        <Printable />
+      ) : (
+        <Paper className={classes.root}>
+          <Typography variant={"h3"}>Question Selection</Typography>
+          {Object.keys(data).map((k, i) => {
+            return (
+              <Dropdown
+                key={i}
+                handleOnChange={handleOnChange}
+                state={state}
+                data={data}
+                type={k}
+              />
+            )
+          })}
+          <Button onClick={isPrintable}>Printable</Button>
+          {/* TODO: number of question, timer, generate pdf, questions */}
+          <Button>Start</Button>
+        </Paper>
+      )}
+    </>
   )
 }
