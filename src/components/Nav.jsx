@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    marginBottom: "68px"
   },
   title: {
     flexGrow: 1,
@@ -33,7 +34,7 @@ export default function Nav() {
           </Button>
           <Button
             className={classes.btn}
-            href="/questionsselection"
+            href="/question"
             color="inherit">
             Question
           </Button>

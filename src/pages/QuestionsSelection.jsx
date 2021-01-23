@@ -1,16 +1,24 @@
-import { Button, Paper, Typography } from "@material-ui/core"
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Grid,
+  Paper,
+  Typography,
+} from "@material-ui/core"
 import React, { useEffect, useState } from "react"
+import { getCategories, getQuestions } from "../firestore/questions"
 
 import { Dropdown } from "../components/Dropdown"
+import { Loading } from "../components/Loading"
 import { Printable } from "../pages/Printable"
-import { getCategories } from "../firestore/questions"
 import { getFirstArrayInObj } from "../helper/utilities"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   title: {
     flexGrow: 1,
   },
@@ -24,13 +32,16 @@ export default function QuestionsSelection() {
 
   const [state, setState] = useState({})
   const [data, setData] = useState({})
+  const [loading, setLoading] = useState(true)
+  const [questions, setQuestions] = useState({})
   const [showPrintable, setShowPrintable] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getCategories()
-      setState(getFirstArrayInObj(data))
-      setData(data)
+      const categories = await getCategories()
+      setState(getFirstArrayInObj(categories))
+      setData(categories)
+      setLoading(false)
     }
     fetchData()
   }, [])
@@ -42,47 +53,49 @@ export default function QuestionsSelection() {
     })
   }
 
-  const isPrintable = () => {
-    // all categories must not be empty
-    let isAllPrintable = []
-    let count = 0
-    Object.keys(state).forEach((k,i) => {
-      if (state[k].length > 0)
-      isAllPrintable.push(true)
-      count = i+1
-    })
-    if (isAllPrintable.length !== count) {
-      setShowPrintable(false)
-      console.error("missing  information unable to print")
-      alert("missing  information unable to print")
-    }
-    else {
-      setShowPrintable(true)
-    }
+  const handlePrintable = async () => {
+    setLoading(true)
+    setQuestions(await getQuestions(state))
+    setShowPrintable(true)
+    setLoading(false)
+  }
+
+  const handleGetQuestions = async () => {
+    setLoading(true)
+    setQuestions(await getQuestions(state))
+    setLoading(false)
   }
 
   return (
     <>
-      {showPrintable ? (
-        <Printable />
+      {loading ? (
+        <Loading />
+      ) : showPrintable ? (
+        <Printable questions={questions} />
       ) : (
-        <Paper className={classes.root}>
-          <Typography variant={"h3"}>Question Selection</Typography>
-          {Object.keys(data).map((k, i) => {
-            return (
-              <Dropdown
-                key={i}
-                handleOnChange={handleOnChange}
-                state={state}
-                data={data}
-                type={k}
-              />
-            )
-          })}
-          <Button onClick={isPrintable}>Printable</Button>
-          {/* TODO: number of question, timer, generate pdf, questions */}
-          <Button>Start</Button>
-        </Paper>
+        <Card>
+          <CardContent>
+            <CardHeader title={"Question Selection"} />
+            {Object.keys(data).map((k, i) => {
+              return (
+                <Dropdown
+                  key={i}
+                  handleOnChange={handleOnChange}
+                  state={state}
+                  data={data}
+                  type={k}
+                />
+              )
+            })}
+          </CardContent>
+          <CardActionArea>
+            <CardActions>
+              <Button onClick={handlePrintable}>Printable</Button>
+              {/* TODO: number of question, timer, generate pdf, questions */}
+              <Button onClick={handleGetQuestions}>Start</Button>
+            </CardActions>
+          </CardActionArea>
+        </Card>
       )}
     </>
   )
