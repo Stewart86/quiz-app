@@ -1,7 +1,8 @@
-import { Loading, Printable, QuestionsSelection, } from "../components"
+import { Loading, Printable, QuestionsSelection } from "../components"
 import React, { useEffect, useState } from "react"
 import { getCategories, getQuestions } from "../firestore/questions"
 
+import { questionComponents as components } from "../helper/enum"
 import { getFirstArrayInObj } from "../helper/utilities"
 
 export const Questions = () => {
@@ -10,13 +11,14 @@ export const Questions = () => {
   const [loading, setLoading] = useState(true)
   const [questions, setQuestions] = useState({})
   const [showPrintable, setShowPrintable] = useState(false)
+  const [show, setShowComponent] = useState(components.loading)
 
   useEffect(() => {
     const fetchData = async () => {
       const categories = await getCategories()
       setState(getFirstArrayInObj(categories))
       setData(categories)
-      setLoading(false)
+      setShowComponent(components.questionsSelection)
     }
     fetchData()
   }, [])
@@ -29,33 +31,42 @@ export const Questions = () => {
   }
 
   const handlePrintable = async () => {
-    setLoading(true)
+    setShowComponent(components.loading)
     setQuestions(await getQuestions(state))
-    setShowPrintable(true)
-    setLoading(false)
+    setShowComponent(components.printable)
   }
 
   const handleGetQuestions = async () => {
-    setLoading(true)
+    setShowComponent(components.loading)
     setQuestions(await getQuestions(state))
-    setLoading(false)
+    setShowComponent(components.startQuiz)
   }
 
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : showPrintable ? (
-        <Printable questions={questions} />
-      ) : (
-        <QuestionsSelection
-          data={data}
-          handleOnChange={handleOnChange}
-          state={state}
-          handlePrintable={handlePrintable}
-          handleGetQuestions={handleGetQuestions}
-        />
-      )}
+      {(() => {
+        switch (show) {
+          case components.loading:
+            return <Loading />
+
+          case components.printable:
+            return <Printable questions={questions} />
+
+          case components.questionsSelection:
+            return (
+              <QuestionsSelection
+                data={data}
+                handleOnChange={handleOnChange}
+                state={state}
+                handlePrintable={handlePrintable}
+                handleGetQuestions={handleGetQuestions}
+              />
+            )
+
+          default:
+            return <Loading />
+        }
+      })()}
     </>
   )
 }

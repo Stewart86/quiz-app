@@ -14,7 +14,6 @@ import { Editor } from "@tinymce/tinymce-react"
 import { InsertMultipleChoice } from "./InsertMultipleChoice"
 
 export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
-
   const [choices, setChoices] = useState([""])
   const [question, setQuestion] = useState("")
   const [answer, setAnswer] = useState(0)
@@ -51,15 +50,17 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
 
   const handleInsertQuestion = async () => {
     // if empty dont insert
-    await postNewQuestion({
-      ...categories,
-      question: question,
-      choices: choices,
-      type: "multipleChoice",
-      answer: answer,
-    })
-    await updateNewCategories(categories)
-    handleNextInsert()
+    if (!answer === 0) {
+      await postNewQuestion({
+        ...categories,
+        question: question,
+        choices: choices,
+        type: "multipleChoice",
+        answer: answer,
+      })
+      await updateNewCategories(categories)
+      handleNextInsert()
+    }
   }
 
   return (
@@ -100,7 +101,7 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
           onChange={handleAnswerError}
           type={"number"}
           label={"Answer"}
-          helperText={answerError ? "Enter the correct answer only":""}
+          helperText={answerError ? "Enter the correct answer only" : ""}
         />
         <CardActions>
           <Button onClick={handleInsertQuestion}>Insert</Button>

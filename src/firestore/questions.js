@@ -1,3 +1,4 @@
+import _ from "lodash"
 import { db } from "../firestore"
 
 export const postNewQuestion = async (question) => {
@@ -6,19 +7,27 @@ export const postNewQuestion = async (question) => {
 }
 
 export const updateNewCategories = async (categories) => {
-  const cursor = db.collection("questions").doc("categories")
-  const doc = await cursor.get()
-  const obj = {}
-
-  Object.keys(categories).forEach((k, i) => {
-    const data = doc.data()
-    if (!data || !data[k]) {
-      obj[k] = [categories[k]]
-    } else {
-      obj[k] = [...new Set([...data[k], categories[k]])]
+  console.log("before", categories)
+  let preparedCat = {}
+  Object.keys(categories).forEach((k) => {
+    if (!Array.isArray(categories[k])) {
+      preparedCat[k] = [categories[k]]
     }
   })
-
+  console.log("after isarray", preparedCat)
+  const cursor = db.collection("questions").doc("categories")
+  const doc = await cursor.get()
+  const obj = _.mergeWith(categories, doc.data(), (obj, src) => {
+    if (_.isArray(obj)) {
+      return _.uniq(obj.concat(src))
+    } else if (!_.isArray(obj)) {
+      obj = [obj]
+      return _.uniq(obj.concat(src))
+    } else {
+      return ""
+    }
+  })
+  console.log("after", obj)
   await cursor.set(obj)
 }
 

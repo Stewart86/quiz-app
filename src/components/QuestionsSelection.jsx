@@ -32,11 +32,16 @@ export const QuestionsSelection = ({
           )
         })}
       </CardContent>
-        <CardActions>
-          <Button onClick={handlePrintable}>Printable</Button>
-          {/* TODO: number of question, timer, generate pdf, questions */}
-          <Button onClick={handleGetQuestions}>Start</Button>
-        </CardActions>
+      <CardActions>
+        <Button onClick={handlePrintable}>Printable</Button>
+        {/* TODO: number of question, timer, generate pdf, questions */}
+        <Button
+          color={"primary"}
+          variant={"contained"}
+          onClick={handleGetQuestions}>
+          Start Quiz
+        </Button>
+      </CardActions>
     </Card>
   )
 }

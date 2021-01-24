@@ -16,6 +16,7 @@ import {
 import React, { useState } from "react"
 
 import { InsertQuestionForm } from "../components"
+import _ from "lodash"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -30,10 +31,20 @@ const useStyles = makeStyles((theme) => ({
 export const InsertQuestion = () => {
   const classes = useStyles()
   const [showQuestionForm, setShowQuestionForm] = useState(false)
-  const [categories, setCategories] = useState({ type: "multipleChoice" })
+  const [categories, setCategories] = useState({ type: ["multipleChoice"] })
 
   const handleInsertClick = () => {
-    setShowQuestionForm(true)
+    let validate = 0
+    Object.keys(categories).forEach((k,i)=>{
+        validate += 1
+    })
+    console.log(validate)
+    if (validate !== 5) {
+      alert("all input must be completed")
+    }
+    else {
+      setShowQuestionForm(true)
+    }
   }
 
   const handleChange = (event) => {
@@ -114,12 +125,17 @@ export const InsertQuestion = () => {
                     <FormLabel component={"legend"}>
                       Answer Input Type
                     </FormLabel>
-                    <RadioGroup value={categories.type} onChange={handleChange}>
-                      <FormControlLabel
-                        value='multipleChoice'
-                        control={<Radio />}
-                        label={"Multiple Choice"}
-                      />
+                    <RadioGroup value="multipleChoice" onChange={handleChange}>
+                      {categories.type.map((n, i) => {
+                        return (
+                          <FormControlLabel
+                          key={i}
+                          value={n}
+                          control={<Radio />}
+                          label={_.startCase(n)}
+                          />
+                          )
+                      })}
                     </RadioGroup>
                   </FormControl>
                 </Grid>
