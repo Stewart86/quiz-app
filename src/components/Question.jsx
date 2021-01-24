@@ -10,7 +10,7 @@ import {
 
 import React from "react"
 
-export default function Question({ count, question }) {
+export const Question = ({ count, question }) => {
   return (
       <Grid item xs={12} >
       <Card>

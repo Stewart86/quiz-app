@@ -1,5 +1,5 @@
 import { Grid } from "@material-ui/core"
-import Question from "../components/Question"
+import { Question } from "./Question"
 import React from "react"
 
 export const Printable = ({ questions }) => {

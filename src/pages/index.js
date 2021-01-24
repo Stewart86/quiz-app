@@ -1,0 +1,7 @@
+export { Questions } from "./Questions"
+export { InsertQuestion } from "../components/InsertQuestion"
+export { Login } from "./Login"
+export { Result } from "./Result"
+export { Error } from "./Error"
+export { Admin } from "./Admin"
+export { AccountSettings } from "./AccountSettings"

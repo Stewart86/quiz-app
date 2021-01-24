@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function Nav() {
+export const Nav = () => {
   const classes = useStyles()
 
   return (
@@ -28,7 +28,7 @@ export default function Nav() {
           </Typography>
           <Button
             className={classes.btn}
-            href="/insertquestionoptions"
+            href="/insertquestion"
             color="inherit">
             Add
           </Button>

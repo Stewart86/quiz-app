@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function InsertMultipleChoice({
+export const InsertMultipleChoice = ({
   choices,
   handleAddClick,
   handleRemoveClick,
   handleAnswerClick,
   handleSetChoice,
   answer,
-}) {
+}) => {
   const classes = useStyles()
 
   return (

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function AccountSettings() {
+export const AccountSettings = () => {
     return (
         <div>
             Account settings

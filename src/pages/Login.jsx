@@ -11,7 +11,7 @@ import {
 import React from "react"
 import { useHistory } from "react-router-dom";
 
-export default function Login() {
+export const Login = () => {
   const history = useHistory()
 
   const handleLogin = () => {

@@ -5,95 +5,134 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Divider,
+  FormControl,
+  FormControlLabel,
   FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  TextField,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { postNewQuestion, updateNewCategories } from "../firestore/questions"
 
-import { Editor } from "@tinymce/tinymce-react"
-import InsertMultipleChoice from "../components/InsertMultipleChoice"
-import { useHistory } from "react-router-dom"
+import { InsertQuestion as Insert } from "../components"
+import { makeStyles } from "@material-ui/core/styles"
 
-export default function InsertQuestion({ categories }) {
-  const history = useHistory()
+const useStyles = makeStyles((theme) => ({
+  textField: {
+    padding: theme.spacing(0.5),
+  },
+  paper: {
+    margin: theme.spacing(3),
+  },
+}))
 
-  const [choices, setChoices] = useState([""])
-  const [question, setQuestion] = useState("")
-  const [answer, setAnswer] = useState(-1)
+export const InsertQuestion = () => {
+  const classes = useStyles()
+  const [showQuestionForm, setShowQuestionForm] = useState(false)
+  const [categories, setCategories] = useState({ type: "multipleChoice" })
 
-  const handleEditorChange = (content, editor) => {
-    setQuestion(content)
+  const handleInsertClick = () => {
+    setShowQuestionForm(true)
   }
 
-  const handleRemoveClick = (index) => {
-    const list = [...choices]
-    list.splice(index, 1)
-    setChoices(list)
-  }
-
-  const handleAddClick = (event) => {
-    setChoices([...choices, event.value])
-    console.log(choices)
-  }
-  const handleSetChoice = (value, i) => {
-    console.log(value)
-    let list = [...choices]
-    list[i] = value
-    setChoices(list)
-  }
-
-  const handleAnswerClick = (i) => {
-    setAnswer(i)
-  }
-
-  const handleInsertQuestion = async () => {
-    await postNewQuestion({
-      ...categories,
-      question: question,
-      choices: choices,
-      type: "multipleChoice",
-      answer: answer,
-    })
-    await updateNewCategories(categories)
-    history.push("/insertquestionoptions")
+  const handleChange = (event) => {
+    let obj = categories
+    obj[event.target.id] = event.target.value
+    setCategories(obj)
   }
 
   return (
-    <Card>
-      <CardHeader title={"Insert Question"} />
-      <CardContent>
-        <Editor
-          initialValue='<p>This is the initial content of the editor</p>'
-          init={{
-            height: 500,
-            menubar: false,
-            plugins: [
-              "advlist autolink lists link image charmap print preview anchor",
-              "searchreplace visualblocks code fullscreen",
-              "insertdatetime media table paste code help wordcount",
-            ],
-            toolbar: `undo redo | formatselect | bold italic backcolor | \
-             alignleft aligncenter alignright alignjustify | \
-             bullist numlist outdent indent | removeformat | help`,
-          }}
-          onEditorChange={handleEditorChange}
-          
-        />
-          <FormLabel component={"legend"}>Question Category</FormLabel>
-          <InsertMultipleChoice
-            choices={choices}
-            handleSetChoice={handleSetChoice}
-            handleRemoveClick={handleRemoveClick}
-            handleAddClick={handleAddClick}
-            handleAnswerClick={handleAnswerClick}
-            answer={answer}
+    <Grid item xs={12}>
+      {!showQuestionForm ? (
+        <Card>
+          <CardHeader
+            title={"Input Category"}
+            subheader={"Enter the category that this question belongs to."}
           />
-        <CardActionArea>
-          <CardActions>
-            <Button onClick={handleInsertQuestion}>Insert</Button>
-          </CardActions>
-        </CardActionArea>
-      </CardContent>
-    </Card>
+          <CardContent>
+            <form>
+              <Grid container direction='column'>
+                <FormControl component={"fieldset"}>
+                  <FormLabel component={"legend"}>Question Category</FormLabel>
+                  <Grid item>
+                    <TextField
+                      id={"subject"}
+                      label='Subject'
+                      className={classes.textField}
+                      variant='filled'
+                      onChange={handleChange}
+                      fullWidth
+                      helperText={
+                        "e.g. 'English', 'Mathematics' or 'Science' etc."
+                      }
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      id={"level"}
+                      label='Educational Level'
+                      className={classes.textField}
+                      variant='filled'
+                      onChange={handleChange}
+                      fullWidth
+                      helperText={"e.g. 'Primary 1' or 'Secondary 1' etc."}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      id={"school"}
+                      label='School'
+                      className={classes.textField}
+                      variant='filled'
+                      onChange={handleChange}
+                      fullWidth
+                      helperText={"School that this question is produced"}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      id={"year"}
+                      label='Year'
+                      className={classes.textField}
+                      variant='filled'
+                      onChange={handleChange}
+                      fullWidth
+                      helperText={"Year that this question is produced"}
+                    />
+                  </Grid>
+                </FormControl>
+                <Divider
+                  variant={"middle"}
+                  style={{ marginBottom: "2rem", marginTop: "2rem" }}
+                />
+                <Grid item>
+                  <FormControl component={"fieldset"}>
+                    <FormLabel component={"legend"}>
+                      Answer Input Type
+                    </FormLabel>
+                    <RadioGroup value={categories.type} onChange={handleChange}>
+                      <FormControlLabel
+                        value='multipleChoice'
+                        control={<Radio />}
+                        label={"Multiple Choice"}
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </form>
+          </CardContent>
+          <CardActionArea>
+            <CardActions>
+              <Button onClick={handleInsertClick}>Next</Button>
+            </CardActions>
+          </CardActionArea>
+        </Card>
+      ) : (
+        <Insert categories={categories} />
+      )}
+    </Grid>
   )
 }

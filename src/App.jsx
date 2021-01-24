@@ -1,16 +1,17 @@
+import {
+  AccountSettings,
+  Admin,
+  Error,
+  InsertQuestion,
+  Login,
+  Questions,
+  Result,
+} from "./pages"
 import { Container, CssBaseline, Grid } from "@material-ui/core"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 
-import AccountSettings from "./pages/AccountSettings"
-import Admin from "./pages/Admin"
-import Error from "./pages/Error"
-import InsertQuestion from "./pages/InsertQuestion"
-import InsertQuestionOptions from "./pages/InsertQuestionOptions"
-import Login from "./pages/Login"
-import Nav from "./components/Nav"
-import QuestionsSelection from "./pages/QuestionsSelection"
+import { Nav } from "./components"
 import React from "react"
-import Result from "./pages/Result"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -42,14 +43,11 @@ export default function App() {
           justify='center'>
           <Router>
             <Switch>
-              <Route path='/insertquestionoptions'>
-                <InsertQuestionOptions />
-              </Route>
               <Route path='/insertquestion'>
                 <InsertQuestion />
               </Route>
               <Route path='/question'>
-                <QuestionsSelection />
+                <Questions />
               </Route>
               <Route path='/result'>
                 <Result />
