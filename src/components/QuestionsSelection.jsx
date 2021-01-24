@@ -12,7 +12,7 @@ import React from "react"
 export const QuestionsSelection = ({
   data,
   handleOnChange,
-  state,
+  selection,
   handlePrintable,
   handleGetQuestions,
 }) => {
@@ -25,7 +25,7 @@ export const QuestionsSelection = ({
             <Dropdown
               key={i}
               handleOnChange={handleOnChange}
-              state={state}
+              selection={selection}
               data={data}
               type={k}
             />

@@ -1,4 +1,4 @@
-import { Loading, Printable, QuestionsSelection } from "../components"
+import { Loading, Printable, QuestionsSelection, Quiz } from "../components"
 import React, { useEffect, useState } from "react"
 import { getCategories, getQuestions } from "../firestore/questions"
 
@@ -6,17 +6,15 @@ import { questionComponents as components } from "../helper/enum"
 import { getFirstArrayInObj } from "../helper/utilities"
 
 export const Questions = () => {
-  const [state, setState] = useState({})
+  const [selection, setSelection] = useState({})
   const [data, setData] = useState({})
-  const [loading, setLoading] = useState(true)
   const [questions, setQuestions] = useState({})
-  const [showPrintable, setShowPrintable] = useState(false)
   const [show, setShowComponent] = useState(components.loading)
 
   useEffect(() => {
     const fetchData = async () => {
       const categories = await getCategories()
-      setState(getFirstArrayInObj(categories))
+      setSelection(getFirstArrayInObj(categories))
       setData(categories)
       setShowComponent(components.questionsSelection)
     }
@@ -24,21 +22,21 @@ export const Questions = () => {
   }, [])
 
   const handleOnChange = (e, type) => {
-    setState({
-      ...state,
+    setSelection({
+      ...selection,
       [type]: e.target.value,
     })
   }
 
   const handlePrintable = async () => {
     setShowComponent(components.loading)
-    setQuestions(await getQuestions(state))
+    setQuestions(await getQuestions(selection))
     setShowComponent(components.printable)
   }
 
   const handleGetQuestions = async () => {
     setShowComponent(components.loading)
-    setQuestions(await getQuestions(state))
+    setQuestions(await getQuestions(selection))
     setShowComponent(components.startQuiz)
   }
 
@@ -57,11 +55,14 @@ export const Questions = () => {
               <QuestionsSelection
                 data={data}
                 handleOnChange={handleOnChange}
-                state={state}
+                selection={selection}
                 handlePrintable={handlePrintable}
                 handleGetQuestions={handleGetQuestions}
               />
             )
+
+          case components.startQuiz:
+            return <Quiz questions={questions} />
 
           default:
             return <Loading />

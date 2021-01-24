@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const Dropdown = ({ handleOnChange, state, data, type }) => {
+export const Dropdown = ({ handleOnChange, selection, data, type }) => {
   const classes = useStyles();
   return (
     <FormControl className={classes.formControl}>
@@ -23,7 +23,7 @@ export const Dropdown = ({ handleOnChange, state, data, type }) => {
       <Select
         labelId={type}
         id={`${type}-select`}
-        value={state[type]}
+        value={selection[type]}
         onChange={(e) => handleOnChange(e, type)}>
         {data[type].length > 0
           ? data[type].map((k, i) => {
