@@ -1,25 +1,34 @@
 import {
   Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardHeader,
   FormLabel,
+  TextField,
 } from "@material-ui/core"
 import React, { useState } from "react"
 import { postNewQuestion, updateNewCategories } from "../firestore/questions"
 
 import { Editor } from "@tinymce/tinymce-react"
 import { InsertMultipleChoice } from "./InsertMultipleChoice"
-import { useHistory } from "react-router-dom"
 
-export const InsertQuestion = ({ categories }) => {
-  const history = useHistory()
+export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
 
   const [choices, setChoices] = useState([""])
   const [question, setQuestion] = useState("")
-  const [answer, setAnswer] = useState(-1)
+  const [answer, setAnswer] = useState(0)
+  const [answerError, setAnswerError] = useState(true)
+
+  const handleAnswerError = (answer) => {
+    const val = answer.target.value
+    if (val > choices.length || val < 1) {
+      setAnswerError(true)
+    } else {
+      setAnswerError(false)
+      setAnswer(val)
+    }
+  }
 
   const handleEditorChange = (content, editor) => {
     setQuestion(content)
@@ -32,21 +41,16 @@ export const InsertQuestion = ({ categories }) => {
   }
 
   const handleAddClick = (event) => {
-    setChoices([...choices, event.value])
-    console.log(choices)
+    setChoices([...choices, event.target.value])
   }
   const handleSetChoice = (value, i) => {
-    console.log(value)
     let list = [...choices]
     list[i] = value
     setChoices(list)
   }
 
-  const handleAnswerClick = (i) => {
-    setAnswer(i)
-  }
-
   const handleInsertQuestion = async () => {
+    // if empty dont insert
     await postNewQuestion({
       ...categories,
       question: question,
@@ -55,7 +59,7 @@ export const InsertQuestion = ({ categories }) => {
       answer: answer,
     })
     await updateNewCategories(categories)
-    history.push("/insertquestionoptions")
+    handleNextInsert()
   }
 
   return (
@@ -63,7 +67,7 @@ export const InsertQuestion = ({ categories }) => {
       <CardHeader title={"Insert Question"} />
       <CardContent>
         <Editor
-          initialValue='<p>This is the initial content of the editor</p>'
+          initialValue=''
           init={{
             height: 500,
             menubar: false,
@@ -77,22 +81,30 @@ export const InsertQuestion = ({ categories }) => {
              bullist numlist outdent indent | removeformat | help`,
           }}
           onEditorChange={handleEditorChange}
-          
         />
-          <FormLabel component={"legend"}>Question Category</FormLabel>
-          <InsertMultipleChoice
-            choices={choices}
-            handleSetChoice={handleSetChoice}
-            handleRemoveClick={handleRemoveClick}
-            handleAddClick={handleAddClick}
-            handleAnswerClick={handleAnswerClick}
-            answer={answer}
-          />
-        <CardActionArea>
-          <CardActions>
-            <Button onClick={handleInsertQuestion}>Insert</Button>
-          </CardActions>
-        </CardActionArea>
+        <FormLabel component={"legend"}>Question Category</FormLabel>
+        {choices.map((x, i) => {
+          return (
+            <InsertMultipleChoice
+              key={i}
+              index={i}
+              choices={choices}
+              handleSetChoice={handleSetChoice}
+              handleRemoveClick={handleRemoveClick}
+              handleAddClick={handleAddClick}
+            />
+          )
+        })}
+        <TextField
+          error={answerError}
+          onChange={handleAnswerError}
+          type={"number"}
+          label={"Answer"}
+          helperText={answerError ? "Enter the correct answer only":""}
+        />
+        <CardActions>
+          <Button onClick={handleInsertQuestion}>Insert</Button>
+        </CardActions>
       </CardContent>
     </Card>
   )

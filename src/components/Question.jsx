@@ -1,6 +1,5 @@
 import {
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardHeader,
@@ -12,7 +11,7 @@ import React from "react"
 
 export const Question = ({ count, question }) => {
   return (
-      <Grid item xs={12} >
+    <Grid item xs={12}>
       <Card>
         <CardHeader title={`Question ${count}`} />
         <CardContent>
@@ -20,7 +19,6 @@ export const Question = ({ count, question }) => {
             <span dangerouslySetInnerHTML={{ __html: question.question }} />
           </Typography>
         </CardContent>
-        <CardActionArea>
         <CardActions>
           <Grid container item direction={"column"} spacing={3}>
             {question.choices.map((choice, i) => {
@@ -34,7 +32,7 @@ export const Question = ({ count, question }) => {
             })}
           </Grid>
         </CardActions>
-        </CardActionArea>
-      </Card></Grid>
+      </Card>
+    </Grid>
   )
 }

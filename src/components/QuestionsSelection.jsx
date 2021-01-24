@@ -1,7 +1,6 @@
 import {
   Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardHeader,
@@ -33,13 +32,11 @@ export const QuestionsSelection = ({
           )
         })}
       </CardContent>
-      <CardActionArea>
         <CardActions>
           <Button onClick={handlePrintable}>Printable</Button>
           {/* TODO: number of question, timer, generate pdf, questions */}
           <Button onClick={handleGetQuestions}>Start</Button>
         </CardActions>
-      </CardActionArea>
     </Card>
   )
 }

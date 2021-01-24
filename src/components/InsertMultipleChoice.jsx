@@ -32,32 +32,29 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const InsertMultipleChoice = ({
+  index,
   choices,
   handleAddClick,
   handleRemoveClick,
-  handleAnswerClick,
   handleSetChoice,
-  answer,
 }) => {
   const classes = useStyles()
 
   return (
     <>
-      {choices.map((x, i) => {
-        return (
-          <Paper key={i} component={"form"} className={classes.root}>
+          <Paper component={"form"} className={classes.root}>
             <InputBase
               className={classes.input}
               fullWidth
-              placeholder={`Choice ${i + 1}`}
-              onChange={(event) => handleSetChoice(event.target.value, i)}
+              placeholder={`Choice ${index + 1}`}
+              onChange={(event) => handleSetChoice(event.target.value, index)}
             />
             <Divider className={classes.divider} orientation={"vertical"} />
             <IconButton
               disabled={choices.length === 1}
               variant='contained'
               color={"primary"}
-              onClick={(e) => handleRemoveClick(i)}>
+              onClick={(e) => handleRemoveClick(index)}>
               <RemoveIcon />
             </IconButton>
             <IconButton
@@ -67,12 +64,7 @@ export const InsertMultipleChoice = ({
               <AddIcon />
             </IconButton>
             <Divider className={classes.divider} orientation={"vertical"} />
-            <Button variant={"outlined"} onClick={handleAnswerClick(i)}>
-              {answer === i ? "answer" : "wrong"}
-            </Button>
           </Paper>
-        )
-      })}
     </>
   )
 }

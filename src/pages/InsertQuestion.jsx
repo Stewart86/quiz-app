@@ -1,7 +1,6 @@
 import {
   Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardHeader,
@@ -16,7 +15,7 @@ import {
 } from "@material-ui/core"
 import React, { useState } from "react"
 
-import { InsertQuestion as Insert } from "../components"
+import { InsertQuestionForm } from "../components"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -43,6 +42,9 @@ export const InsertQuestion = () => {
     setCategories(obj)
   }
 
+  const handleNextInsert = () => {
+    setShowQuestionForm(false)
+  }
   return (
     <Grid item xs={12}>
       {!showQuestionForm ? (
@@ -124,14 +126,12 @@ export const InsertQuestion = () => {
               </Grid>
             </form>
           </CardContent>
-          <CardActionArea>
             <CardActions>
               <Button onClick={handleInsertClick}>Next</Button>
             </CardActions>
-          </CardActionArea>
         </Card>
       ) : (
-        <Insert categories={categories} />
+        <InsertQuestionForm categories={categories} handleNextInsert={handleNextInsert} />
       )}
     </Grid>
   )
