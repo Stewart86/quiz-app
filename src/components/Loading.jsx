@@ -1,4 +1,4 @@
-import { Backdrop, CircularProgress, Typography } from "@material-ui/core"
+import { Backdrop, CircularProgress } from "@material-ui/core"
 
 import React from "react"
 
