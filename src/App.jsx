@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexWrap: "wrap",
-    minHeight: "94vh",
+    minHeight: "92vh",
   },
   title: {
     flexGrow: 1,
@@ -38,33 +38,33 @@ export default function App() {
         <Grid
           className={classes.root}
           container
-          direction='column'
-          alignItems='center'
-          justify='center'>
+          direction="column"
+          alignItems="center"
+          justify="center">
           <Router>
             <Switch>
-              <Route path='/insertquestion'>
+              <Route path="/insertquestion">
                 <InsertQuestion />
               </Route>
-              <Route path='/question'>
+              <Route path="/question">
                 <Questions />
               </Route>
-              <Route path='/result'>
+              <Route path="/result">
                 <Result />
               </Route>
-              <Route path='/accountsettings'>
+              <Route path="/accountsettings">
                 <AccountSettings />
               </Route>
-              <Route path='/admin'>
+              <Route path="/admin">
                 <Admin />
               </Route>
-              <Route exact path='/Login'>
+              <Route exact path="/Login">
                 <Login />
               </Route>
-              <Route exact path='/'>
+              <Route exact path="/">
                 <Login />
               </Route>
-              <Route path='*'>
+              <Route path="*">
                 <Error />
               </Route>
             </Switch>

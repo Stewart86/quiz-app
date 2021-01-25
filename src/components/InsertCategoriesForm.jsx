@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     float: "right",
   },
 }))
+
 export const InsertCategoriesForm = ({
   categories,
   handleChange,
