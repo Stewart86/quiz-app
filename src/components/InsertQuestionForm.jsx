@@ -87,8 +87,8 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
 
   const handleInsertQuestion = async () => {
     // if empty dont insert
-    setLoading(true)
     if (answer < choices.length || answer > 1) {
+      setLoading(true)
       await postNewQuestion({
         ...categories,
         question: question,

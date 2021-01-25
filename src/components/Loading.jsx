@@ -1,14 +1,11 @@
-import { CircularProgress, Typography } from '@material-ui/core'
+import { Backdrop, CircularProgress, Typography } from "@material-ui/core"
 
-import React from 'react'
+import React from "react"
 
 export const Loading = () => {
-    return (
-        <>
-        <CircularProgress style={{margin: "5rem"}}/>
-        <Typography>
-            Loading.. Please wait
-        </Typography>
-        </>
-    )
+  return (
+    <Backdrop open>
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  )
 }
