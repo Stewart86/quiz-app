@@ -1,20 +1,31 @@
 import {
+  Grid,
   List,
   ListItem,
-  ListItemText,
   ListItemIcon,
+  ListItemText,
   SwipeableDrawer,
 } from "@material-ui/core"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 
+import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import React from "react"
+import { green } from "@material-ui/core/colors"
 
 export const QuestionsDrawer = ({ questions, open, onHandleDrawer, goto }) => {
   const handleDrawer = (boolean) => {
     onHandleDrawer(boolean)
   }
-  const test = (q) => {
-    Object.keys(q).map((k) => console.log(q[k]))
+  const QuestionItem = ({ completed, index }) => {
+    return (
+      <Grid item container justify={"space-between"} style={{width:"200px"}}>
+        <ListItem key={index} onClick={() => goto(index)} button>
+          <ListItemText primary={`Question ${index + 1}`} />
+          <ListItemIcon>
+            {completed && <CheckCircleIcon style={{ color: green[500] }} />}
+          </ListItemIcon>
+        </ListItem>
+      </Grid>
+    )
   }
   return (
     <SwipeableDrawer
@@ -23,18 +34,12 @@ export const QuestionsDrawer = ({ questions, open, onHandleDrawer, goto }) => {
       onClose={() => handleDrawer(false)}
       onOpen={() => handleDrawer(true)}>
       <List>
-        {test(questions)}
         {Object.keys(questions).map((key, i) => (
-          <ListItem key={i} onClick={() => goto(i)} button>
-            <ListItemText primary={`Question ` + (i + 1)} />
-            {questions[key] ? (
-              <ListItemIcon>
-                <CheckCircleIcon />
-              </ListItemIcon>
-            ) : (
-              ""
-            )}
-          </ListItem>
+          <QuestionItem
+            key={i.toString()}
+            completed={questions[key]}
+            index={i}
+          />
         ))}
       </List>
     </SwipeableDrawer>

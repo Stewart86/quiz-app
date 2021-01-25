@@ -1,8 +1,9 @@
 import { Button, Grid } from "@material-ui/core"
 import React, { useState } from "react"
 import _, { random } from "lodash"
-import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
+import NavigateNextIcon from "@material-ui/icons/NavigateNext"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
 
@@ -41,14 +42,13 @@ export const Quiz = ({ questions, handleEndClick }) => {
     tempObj[count] = true
     setDrawerQuestions(tempObj)
 
+    setDrawerQuestions(tempObj)
     // some how this random state is needed for state retention in child
     setTest(random(100.0))
 
-    console.log("after", drawerQuestions)
   }
 
   const onHandleDrawer = (toggle) => {
-    setDrawerQuestions(makeDrawerList(questions))
     setDrawerOpen(toggle)
 
     // some how this random state is needed for state retention in child
