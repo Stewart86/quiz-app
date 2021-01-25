@@ -4,20 +4,57 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  CircularProgress,
   FormLabel,
   TextField,
 } from "@material-ui/core"
 import React, { useState } from "react"
 import { postNewQuestion, updateNewCategories } from "../firestore/questions"
+import { green } from "@material-ui/core/colors"
 
 import { Editor } from "@tinymce/tinymce-react"
 import { InsertMultipleChoice } from "./InsertMultipleChoice"
+import { makeStyles } from "@material-ui/core/styles"
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    alignItems: "center",
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    "&:hover": {
+      backgroundColor: green[700],
+    },
+  },
+  fabProgress: {
+    color: green[500],
+    position: "absolute",
+    top: -6,
+    left: -6,
+    zIndex: 1,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}))
 
 export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
+  const classes = useStyles()
   const [choices, setChoices] = useState([""])
   const [question, setQuestion] = useState("")
   const [answer, setAnswer] = useState(0)
   const [answerError, setAnswerError] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const handleAnswerError = (answer) => {
     const val = answer.target.value
@@ -50,7 +87,8 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
 
   const handleInsertQuestion = async () => {
     // if empty dont insert
-    if (!answer === 0) {
+    setLoading(true)
+    if (answer < choices.length || answer > 1) {
       await postNewQuestion({
         ...categories,
         question: question,
@@ -59,6 +97,7 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
         answer: answer,
       })
       await updateNewCategories(categories)
+      setLoading(false)
       handleNextInsert()
     }
   }
@@ -68,7 +107,7 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
       <CardHeader title={"Insert Question"} />
       <CardContent>
         <Editor
-          initialValue=''
+          initialValue=""
           init={{
             height: 500,
             menubar: false,
@@ -104,7 +143,14 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
           helperText={answerError ? "Enter the correct answer only" : ""}
         />
         <CardActions>
-          <Button onClick={handleInsertQuestion}>Insert</Button>
+          <div className={classes.wrapper}>
+            <Button disabled={loading} onClick={handleInsertQuestion}>
+              Insert
+            </Button>
+            {loading && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
         </CardActions>
       </CardContent>
     </Card>
