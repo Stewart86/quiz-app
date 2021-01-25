@@ -52,7 +52,7 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
   const classes = useStyles()
   const [choices, setChoices] = useState([""])
   const [question, setQuestion] = useState("")
-  const [answer, setAnswer] = useState(0)
+  const [answer, setAnswer] = useState(-1)
   const [answerError, setAnswerError] = useState(true)
   const [loading, setLoading] = useState(false)
 
@@ -87,6 +87,9 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
 
   const handleInsertQuestion = async () => {
     // if empty dont insert
+    if (answer === -1) {
+      return
+    }
     if (answer < choices.length || answer > 1) {
       setLoading(true)
       await postNewQuestion({
@@ -107,6 +110,7 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
       <CardHeader title={"Insert Question"} />
       <CardContent>
         <Editor
+          apiKey="nsjjba31x54f5slt84a74owxenrmbe9xlj1esq35wwm7h3w7"
           initialValue=""
           init={{
             height: 500,
