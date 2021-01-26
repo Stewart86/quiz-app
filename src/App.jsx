@@ -8,9 +8,9 @@ import {
   Result,
 } from "./pages"
 import { Container, CssBaseline, Grid } from "@material-ui/core"
+import { FillInTheBlank, Nav } from "./components"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 
-import { Nav } from "./components"
 import React from "react"
 import { makeStyles } from "@material-ui/core/styles"
 
@@ -43,6 +43,9 @@ export default function App() {
           justify="center">
           <Router>
             <Switch>
+              <Route path="/fillintheblank">
+                <FillInTheBlank />
+              </Route>
               <Route path="/insertquestion">
                 <InsertQuestion />
               </Route>

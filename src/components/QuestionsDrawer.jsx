@@ -12,9 +12,6 @@ import React from "react"
 import { green } from "@material-ui/core/colors"
 
 export const QuestionsDrawer = ({ questions, open, onHandleDrawer, goto }) => {
-  const handleDrawer = (boolean) => {
-    onHandleDrawer(boolean)
-  }
   const QuestionItem = ({ completed, index }) => {
     return (
       <Grid item container justify={"space-between"} style={{width:"200px"}}>
@@ -31,8 +28,8 @@ export const QuestionsDrawer = ({ questions, open, onHandleDrawer, goto }) => {
     <SwipeableDrawer
       anchor={"left"}
       open={open}
-      onClose={() => handleDrawer(false)}
-      onOpen={() => handleDrawer(true)}>
+      onClose={() => onHandleDrawer(false)}
+      onOpen={() => onHandleDrawer(true)}>
       <List>
         {Object.keys(questions).map((key, i) => (
           <QuestionItem
