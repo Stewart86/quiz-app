@@ -26,7 +26,7 @@ export const QuestionsDrawer = ({ questions, open, onHandleDrawer, goto }) => {
   }
   return (
     <SwipeableDrawer
-      anchor={"left"}
+      anchor={"right"}
       open={open}
       onClose={() => onHandleDrawer(false)}
       onOpen={() => onHandleDrawer(true)}>

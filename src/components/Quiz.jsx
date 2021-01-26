@@ -6,8 +6,21 @@ import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
+import { makeStyles } from "@material-ui/core"
+
+const useStyles = makeStyles((theme) => ({
+  questionContainer: {
+    margin: theme.spacing(10),
+  },
+  functionBtn: {
+    marginTop: theme.spacing(3),
+    paddingRight: theme.spacing(17)
+  }
+}))
 
 export const Quiz = ({ questions, handleEndClick }) => {
+  const classes = useStyles()
+
   const makeDrawerList = (questions) => {
     let result = {}
     Object.keys(questions).forEach((key, i) => {
@@ -45,7 +58,6 @@ export const Quiz = ({ questions, handleEndClick }) => {
     setDrawerQuestions(tempObj)
     // some how this random state is needed for state retention in child
     setTest(random(100.0))
-
   }
 
   const onHandleDrawer = (toggle) => {
@@ -60,35 +72,21 @@ export const Quiz = ({ questions, handleEndClick }) => {
   }
 
   return (
-    <Grid container spacing={2}>
+    <>
       <QuestionsDrawer
         questions={drawerQuestions}
         open={drawerOpen}
         onHandleDrawer={onHandleDrawer}
         goto={goto}
       />
-      <Grid item container justify={"space-between"}>
+      <Grid container xs={8}/>
+      <Grid className={classes.functionBtn} container justify={"space-evenly"} item xs={4}>
         <Button
           variant={"outlined"}
           color={"secondary"}
           onClick={() => onHandleDrawer(true)}>
           Navigate
         </Button>
-        <Button
-          variant={"outlined"}
-          color={"secondary"}
-          onClick={handleEndClick}>
-          End
-        </Button>
-      </Grid>
-      <Question
-        test={test}
-        count={count + 1}
-        question={questions[count]}
-        selectedAnswer={selectedAnswer[count]}
-        onHandleAnswerClick={onHandleAnswerClick}
-      />
-      <Grid item container justify={"space-between"}>
         <Button
           disabled={count === 0}
           variant={"contained"}
@@ -104,7 +102,28 @@ export const Quiz = ({ questions, handleEndClick }) => {
           Next
           <NavigateNextIcon />
         </Button>
+        <Button
+          variant={"outlined"}
+          color={"secondary"}
+          onClick={handleEndClick}>
+          End
+        </Button>
       </Grid>
-    </Grid>
+      <Grid
+        container
+        className={classes.questionContainer}
+        direction={"row"}
+        spacing={4}
+        item
+        xs={12}>
+        <Question
+          test={test}
+          count={count + 1}
+          question={questions[count]}
+          selectedAnswer={selectedAnswer[count]}
+          onHandleAnswerClick={onHandleAnswerClick}
+        />
+      </Grid>
+    </>
   )
 }
