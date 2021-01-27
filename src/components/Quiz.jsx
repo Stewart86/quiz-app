@@ -1,4 +1,10 @@
-import { Button, Grid } from "@material-ui/core"
+import {
+  AppBar,
+  Button,
+  Grid,
+  Slide,
+  Toolbar,
+} from "@material-ui/core"
 import React, { useState } from "react"
 import _, { random } from "lodash"
 
@@ -6,8 +12,32 @@ import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
+import { grey } from "@material-ui/core/colors"
+import { makeStyles } from "@material-ui/core"
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  featureBar: {
+    minHeight: 100,
+    alignItems: "flex-end",
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
+    backgroundColor: grey[50],
+    justifyContent: "flex-end",
+  },
+  questionContainer: {
+    margin: theme.spacing(10),
+  },
+  functionBtn: {
+    margin: theme.spacing(3),
+  },
+}))
 
 export const Quiz = ({ questions, handleEndClick }) => {
+  const classes = useStyles()
+
   const makeDrawerList = (questions) => {
     let result = {}
     Object.keys(questions).forEach((key, i) => {
@@ -45,7 +75,6 @@ export const Quiz = ({ questions, handleEndClick }) => {
     setDrawerQuestions(tempObj)
     // some how this random state is needed for state retention in child
     setTest(random(100.0))
-
   }
 
   const onHandleDrawer = (toggle) => {
@@ -60,51 +89,67 @@ export const Quiz = ({ questions, handleEndClick }) => {
   }
 
   return (
-    <Grid container spacing={2}>
+    <>
+      <div className={classes.root}>
+        <Slide in={true} direction={"down"}>
+          <AppBar position={"static"}>
+            <Toolbar className={classes.featureBar} variant={"dense"}>
+              <Button
+                className={classes.functionBtn}
+                variant={"outlined"}
+                color={"secondary"}
+                onClick={() => onHandleDrawer(true)}>
+                Navigate
+              </Button>
+              <Button
+                className={classes.functionBtn}
+                disabled={count === 0}
+                variant={"contained"}
+                color={"secondary"}
+                onClick={handlePreviousClick}>
+                <NavigateBeforeIcon /> Previous
+              </Button>
+              <Button
+                className={classes.functionBtn}
+                disabled={questions.length - 1 === count}
+                variant={"contained"}
+                color={"secondary"}
+                onClick={handleNextClick}>
+                Next
+                <NavigateNextIcon />
+              </Button>
+              <Button
+                className={classes.functionBtn}
+                variant={"outlined"}
+                color={"secondary"}
+                onClick={handleEndClick}>
+                End
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </Slide>
+      </div>
       <QuestionsDrawer
         questions={drawerQuestions}
         open={drawerOpen}
         onHandleDrawer={onHandleDrawer}
         goto={goto}
       />
-      <Grid item container justify={"space-between"}>
-        <Button
-          variant={"outlined"}
-          color={"secondary"}
-          onClick={() => onHandleDrawer(true)}>
-          Navigate
-        </Button>
-        <Button
-          variant={"outlined"}
-          color={"secondary"}
-          onClick={handleEndClick}>
-          End
-        </Button>
+      <Grid
+        container
+        className={classes.questionContainer}
+        direction={"row"}
+        spacing={4}
+        item
+        xs={12}>
+        <Question
+          test={test}
+          count={count + 1}
+          question={questions[count]}
+          selectedAnswer={selectedAnswer[count]}
+          onHandleAnswerClick={onHandleAnswerClick}
+        />
       </Grid>
-      <Question
-        test={test}
-        count={count + 1}
-        question={questions[count]}
-        selectedAnswer={selectedAnswer[count]}
-        onHandleAnswerClick={onHandleAnswerClick}
-      />
-      <Grid item container justify={"space-between"}>
-        <Button
-          disabled={count === 0}
-          variant={"contained"}
-          color={"secondary"}
-          onClick={handlePreviousClick}>
-          <NavigateBeforeIcon /> Previous
-        </Button>
-        <Button
-          disabled={questions.length - 1 === count}
-          variant={"contained"}
-          color={"secondary"}
-          onClick={handleNextClick}>
-          Next
-          <NavigateNextIcon />
-        </Button>
-      </Grid>
-    </Grid>
+    </>
   )
 }

@@ -3,9 +3,9 @@ import {
   Card,
   CardActions,
   CardContent,
+  CardHeader,
   Grid,
   TextField,
-  Typography,
 } from "@material-ui/core"
 
 import React from "react"
@@ -19,11 +19,9 @@ export const Login = () => {
     history.push("/question")
   }
   return (
-    <Card>
+    <Card elevation={5}>
+      <CardHeader title={"Quiz App"} subheader={"Your One Stop Learning Solution"}/>
       <CardContent>
-        <Grid item xs={12}>
-          <Typography variant={"h1"}>Quiz App</Typography>
-        </Grid>
         <Grid item xs={12}>
           <TextField
             fullWidth
@@ -43,8 +41,10 @@ export const Login = () => {
         </Grid>
       </CardContent>
       <CardActions>
-        <Button onClick={handleLogin}>Login</Button>
-        <Button variant={"outlined"}>Sign Up</Button>
+        <Grid container justify={"space-around"}>
+          <Button variant={"outlined"}>Sign Up</Button>
+          <Button onClick={handleLogin}>Login</Button>
+        </Grid>
       </CardActions>
       {/* } Note: after login check if admin redirect to admin page else question page
         login*/}

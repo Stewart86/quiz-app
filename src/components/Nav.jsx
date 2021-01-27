@@ -22,7 +22,7 @@ export const Nav = () => {
   return (
     <div className={classes.root}>
       <AppBar position="fixed">
-        <Toolbar>
+        <Toolbar variant={"dense"}>
           <Typography className={classes.title} variant="h6">
             Quiz App
           </Typography>
