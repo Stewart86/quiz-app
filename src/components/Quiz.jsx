@@ -1,4 +1,10 @@
-import { Button, Grid } from "@material-ui/core"
+import {
+  AppBar,
+  Button,
+  Grid,
+  Slide,
+  Toolbar,
+} from "@material-ui/core"
 import React, { useState } from "react"
 import _, { random } from "lodash"
 
@@ -6,16 +12,27 @@ import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
+import { grey } from "@material-ui/core/colors"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  featureBar: {
+    minHeight: 100,
+    alignItems: "flex-end",
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
+    backgroundColor: grey[50],
+    justifyContent: "flex-end",
+  },
   questionContainer: {
     margin: theme.spacing(10),
   },
   functionBtn: {
-    marginTop: theme.spacing(3),
-    paddingRight: theme.spacing(17)
-  }
+    margin: theme.spacing(3),
+  },
 }))
 
 export const Quiz = ({ questions, handleEndClick }) => {
@@ -73,42 +90,51 @@ export const Quiz = ({ questions, handleEndClick }) => {
 
   return (
     <>
+      <div className={classes.root}>
+        <Slide in={true} direction={"down"}>
+          <AppBar position={"static"}>
+            <Toolbar className={classes.featureBar} variant={"dense"}>
+              <Button
+                className={classes.functionBtn}
+                variant={"outlined"}
+                color={"secondary"}
+                onClick={() => onHandleDrawer(true)}>
+                Navigate
+              </Button>
+              <Button
+                className={classes.functionBtn}
+                disabled={count === 0}
+                variant={"contained"}
+                color={"secondary"}
+                onClick={handlePreviousClick}>
+                <NavigateBeforeIcon /> Previous
+              </Button>
+              <Button
+                className={classes.functionBtn}
+                disabled={questions.length - 1 === count}
+                variant={"contained"}
+                color={"secondary"}
+                onClick={handleNextClick}>
+                Next
+                <NavigateNextIcon />
+              </Button>
+              <Button
+                className={classes.functionBtn}
+                variant={"outlined"}
+                color={"secondary"}
+                onClick={handleEndClick}>
+                End
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </Slide>
+      </div>
       <QuestionsDrawer
         questions={drawerQuestions}
         open={drawerOpen}
         onHandleDrawer={onHandleDrawer}
         goto={goto}
       />
-      <Grid container xs={8}/>
-      <Grid className={classes.functionBtn} container justify={"space-evenly"} item xs={4}>
-        <Button
-          variant={"outlined"}
-          color={"secondary"}
-          onClick={() => onHandleDrawer(true)}>
-          Navigate
-        </Button>
-        <Button
-          disabled={count === 0}
-          variant={"contained"}
-          color={"secondary"}
-          onClick={handlePreviousClick}>
-          <NavigateBeforeIcon /> Previous
-        </Button>
-        <Button
-          disabled={questions.length - 1 === count}
-          variant={"contained"}
-          color={"secondary"}
-          onClick={handleNextClick}>
-          Next
-          <NavigateNextIcon />
-        </Button>
-        <Button
-          variant={"outlined"}
-          color={"secondary"}
-          onClick={handleEndClick}>
-          End
-        </Button>
-      </Grid>
       <Grid
         container
         className={classes.questionContainer}
