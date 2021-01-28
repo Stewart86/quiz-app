@@ -62,7 +62,9 @@ export const Questions = () => {
             )
 
           case components.startQuiz:
-            return <Quiz questions={questions} />
+            return (
+              <Quiz questions={questions} handlePrintable={handlePrintable} />
+            )
 
           default:
             return <Loading />
