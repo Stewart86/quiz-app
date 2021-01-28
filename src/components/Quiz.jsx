@@ -1,52 +1,24 @@
-import {
-  AppBar,
-  Button,
-  Grid,
-  IconButton,
-  Slide,
-  Toolbar,
-} from "@material-ui/core"
 import React, { useState } from "react"
 import _, { random } from "lodash"
 
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
-import NavigateNextIcon from "@material-ui/icons/NavigateNext"
-import PrintIcon from "@material-ui/icons/Print"
+import { Grid } from "@material-ui/core"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
-import { grey } from "@material-ui/core/colors"
+import { QuizFunctionBar } from "./QuizFunctionBar"
+import { Result } from "./Result"
+import { makeDrawerList } from "../helper/utilities"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  featureBar: {
-    minHeight: 100,
-    alignItems: "flex-end",
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(2),
-    backgroundColor: grey[50],
-    justifyContent: "flex-end",
-  },
   questionContainer: {
-    margin: theme.spacing(10),
-  },
-  functionBtn: {
-    margin: theme.spacing(3),
+    margin: theme.spacing(6),
   },
 }))
 
-export const Quiz = ({ questions, handleEndClick, handlePrintable }) => {
+export const Quiz = ({ questions, handlePrintable }) => {
   const classes = useStyles()
 
-  const makeDrawerList = (questions) => {
-    let result = {}
-    Object.keys(questions).forEach((key, i) => {
-      result[key] = false
-    })
-    return result
-  }
+  const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [count, setCount] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState({})
@@ -91,53 +63,24 @@ export const Quiz = ({ questions, handleEndClick, handlePrintable }) => {
     setCount(i)
   }
 
-  return (
+  const handleEndClick = () => {
+    console.log("handle end click")
+    setShowResult(true)
+  }
+
+  return showResult ? (
+    <Result />
+  ) : (
     <>
-      <div className={classes.root}>
-        <Slide in={true} direction={"down"}>
-          <AppBar position={"static"}>
-            <Toolbar className={classes.featureBar} variant={"dense"}>
-              <IconButton
-                className={classes.functionBtn}
-                color={"secondary"}
-                onClick={handlePrintable}>
-                <PrintIcon />
-              </IconButton>
-              <Button
-                className={classes.functionBtn}
-                variant={"outlined"}
-                color={"secondary"}
-                onClick={() => onHandleDrawer(true)}>
-                Navigate
-              </Button>
-              <Button
-                className={classes.functionBtn}
-                disabled={count === 0}
-                variant={"contained"}
-                color={"secondary"}
-                onClick={handlePreviousClick}>
-                <NavigateBeforeIcon /> Previous
-              </Button>
-              <Button
-                className={classes.functionBtn}
-                disabled={questions.length - 1 === count}
-                variant={"contained"}
-                color={"secondary"}
-                onClick={handleNextClick}>
-                Next
-                <NavigateNextIcon />
-              </Button>
-              <Button
-                className={classes.functionBtn}
-                variant={"outlined"}
-                color={"secondary"}
-                onClick={handleEndClick}>
-                End
-              </Button>
-            </Toolbar>
-          </AppBar>
-        </Slide>
-      </div>
+      <QuizFunctionBar
+        handlePrintable={handlePrintable}
+        onHandleDrawer={onHandleDrawer}
+        handlePreviousClick={handlePreviousClick}
+        handleNextClick={handleNextClick}
+        handleEndClick={handleEndClick}
+        handleDisablePreviousBtn={count === 0}
+        handleDisableNextBtn={questions.length - 1 === count}
+      />
       <QuestionsDrawer
         questions={drawerQuestions}
         open={drawerOpen}
