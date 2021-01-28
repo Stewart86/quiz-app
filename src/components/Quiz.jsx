@@ -2,6 +2,7 @@ import {
   AppBar,
   Button,
   Grid,
+  IconButton,
   Slide,
   Toolbar,
 } from "@material-ui/core"
@@ -10,6 +11,7 @@ import _, { random } from "lodash"
 
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+import PrintIcon from "@material-ui/icons/Print"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
 import { grey } from "@material-ui/core/colors"
@@ -35,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const Quiz = ({ questions, handleEndClick }) => {
+export const Quiz = ({ questions, handleEndClick, handlePrintable }) => {
   const classes = useStyles()
 
   const makeDrawerList = (questions) => {
@@ -45,13 +47,13 @@ export const Quiz = ({ questions, handleEndClick }) => {
     })
     return result
   }
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const [count, setCount] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState({})
   const [test, setTest] = useState("")
   const [drawerQuestions, setDrawerQuestions] = useState(
     makeDrawerList(questions)
   )
-  const [drawerOpen, setDrawerOpen] = useState(false)
 
   const handleNextClick = () => {
     if (count < questions.length - 1) {
@@ -64,6 +66,7 @@ export const Quiz = ({ questions, handleEndClick }) => {
       setCount(count - 1)
     }
   }
+
   const onHandleAnswerClick = (ans) => {
     const update = _.merge(selectedAnswer, { [count]: ans })
     setSelectedAnswer(update)
@@ -94,6 +97,12 @@ export const Quiz = ({ questions, handleEndClick }) => {
         <Slide in={true} direction={"down"}>
           <AppBar position={"static"}>
             <Toolbar className={classes.featureBar} variant={"dense"}>
+              <IconButton
+                className={classes.functionBtn}
+                color={"secondary"}
+                onClick={handlePrintable}>
+                <PrintIcon />
+              </IconButton>
               <Button
                 className={classes.functionBtn}
                 variant={"outlined"}
