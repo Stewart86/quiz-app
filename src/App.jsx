@@ -5,7 +5,6 @@ import {
   InsertQuestion,
   Login,
   Questions,
-  Result,
 } from "./pages"
 import { CenterContentRoute, FullScreenContentRoute, LoginPageRoute } from "./layouts"
 import {
@@ -33,7 +32,6 @@ export default function App() {
               component={InsertQuestion}
             />
             <FullScreenContentRoute path='/question' component={Questions} />
-            <CenterContentRoute path='/result' component={Result} />
             <CenterContentRoute
               path='/accountsettings'
               component={AccountSettings}

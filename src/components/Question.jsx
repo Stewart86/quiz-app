@@ -59,7 +59,7 @@ export const Question = ({
         sm={4}>
         {question.choices.map((choice, i) => {
           return (
-            <Grow in={true}>
+            <Grow key={i.toString()} in={true}>
               <Card className={classes.answerCard}>
                 <CardContent>
                   <CardActionArea
