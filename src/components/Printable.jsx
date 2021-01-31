@@ -4,19 +4,19 @@ import { PrintableQuestions } from "./PrintableQuestions"
 import React from "react"
 
 export const Printable = ({ questions }) => {
-  const tempRangeLoop = (questions, range) => {
+  const tempRangeLoop = () => {
     let result = []
-    for (let i = 0; i < range; i++) {
+    Object.keys(questions).forEach((key, i) => {
       result.push(
-        <PrintableQuestions key={i} count={i + 1} question={questions[i]} />
+        <PrintableQuestions key={key} count={key} question={questions[key]} />
       )
-    }
+    })
     return result
   }
   return (
     <Container>
       <Grid container direction={"column"} spacing={2}>
-        {tempRangeLoop(questions, questions.length)}
+        {tempRangeLoop()}
       </Grid>
     </Container>
   )

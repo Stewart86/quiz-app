@@ -20,31 +20,27 @@ export const Quiz = ({ questions, handlePrintable }) => {
 
   const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [count, setCount] = useState(0)
-  const [selectedAnswerState, setSelectedAnswer] = useState({})
+  const [count, setCount] = useState(1)
   const [drawerQuestions, setDrawerQuestions] = useState(
     makeDrawerList(questions)
   )
-  const [attemptedList, setAttemptedList] = useState({})
 
   const handleNextClick = () => {
-    if (count < questions.length - 1) {
+    if (count < Object.keys(questions).length - 1) {
       setCount(count + 1)
     }
   }
 
   const handlePreviousClick = () => {
-    if (count > 0) {
+    if (count > 1) {
       setCount(count - 1)
     }
   }
 
   const onHandleAnswerClick = (ans) => {
-    const updateAttemptedQuestion = _.merge(attemptedList, {[count]: {result: Number(questions[count].answer) === ans }})
-    setAttemptedList({[count]: {result: Number(questions[count].answer) === ans }})
-    const update = _.merge(selectedAnswerState, { [count]: ans })
-    setSelectedAnswer(update)
-
+    // TODO: {1:{}, 2:{}, 3, {}}
+    // set selected answer directly into questions
+    // set attempted direcetly into questions
     const tempObj = drawerQuestions
     tempObj[count] = true
     setDrawerQuestions(tempObj)
@@ -63,7 +59,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   return showResult ? (
-    <Result listOfAttempted={attemptedList} listOfNotAttempted={drawerQuestions} />
+    <Result listOfNotAttempted={drawerQuestions} />
   ) : (
     <>
       <QuizFunctionBar
@@ -72,8 +68,8 @@ export const Quiz = ({ questions, handlePrintable }) => {
         handlePreviousClick={handlePreviousClick}
         handleNextClick={handleNextClick}
         handleEndClick={handleEndClick}
-        handleDisablePreviousBtn={count === 0}
-        handleDisableNextBtn={questions.length - 1 === count}
+        handleDisablePreviousBtn={count === 1}
+        handleDisableNextBtn={Object.keys(questions).length - 1 === count}
       />
       <QuestionsDrawer
         questions={drawerQuestions}
@@ -89,9 +85,8 @@ export const Quiz = ({ questions, handlePrintable }) => {
         item
         xs={12}>
         <Question
-          count={count + 1}
+          count={count}
           question={questions[count]}
-          selectedAnswer={selectedAnswerState[count]}
           onHandleAnswerClick={onHandleAnswerClick}
         />
       </Grid>

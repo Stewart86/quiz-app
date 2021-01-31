@@ -28,3 +28,13 @@ export const makeDrawerList = (questions) => {
   })
   return result
 }
+
+export const questionKeyRename = (questions) => {
+  let result = {}
+  Object.keys(questions).forEach((key, i) => {
+    result[i + 1] = questions[key]
+  })
+  
+  console.log(result)
+  return result
+}

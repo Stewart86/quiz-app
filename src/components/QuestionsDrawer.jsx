@@ -13,7 +13,7 @@ import { green } from "@material-ui/core/colors"
 export const QuestionsDrawer = ({ questions, open, onHandleDrawer, goto }) => {
   const QuestionItem = ({ completed, index }) => {
     return (
-        <ListItem key={index.toString()} onClick={() => goto(index)} button divider>
+        <ListItem key={index.toString()} onClick={() => goto(index + 1)} button divider>
           <ListItemIcon>
             {completed && <CheckCircleIcon style={{ color: green[500] }} />}
           </ListItemIcon>
