@@ -1,11 +1,11 @@
 import React, { useState } from "react"
-import _, { random } from "lodash"
 
 import { Grid } from "@material-ui/core"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
 import { QuizFunctionBar } from "./QuizFunctionBar"
 import { Result } from "./Result"
+import _ from "lodash"
 import { makeDrawerList } from "../helper/utilities"
 import { makeStyles } from "@material-ui/core"
 
@@ -21,11 +21,11 @@ export const Quiz = ({ questions, handlePrintable }) => {
   const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [count, setCount] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState({})
-  const [test, setTest] = useState("")
+  const [selectedAnswerState, setSelectedAnswer] = useState({})
   const [drawerQuestions, setDrawerQuestions] = useState(
     makeDrawerList(questions)
   )
+  const [attemptedList, setAttemptedList] = useState({})
 
   const handleNextClick = () => {
     if (count < questions.length - 1) {
@@ -40,23 +40,18 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const onHandleAnswerClick = (ans) => {
-    const update = _.merge(selectedAnswer, { [count]: ans })
+    const updateAttemptedQuestion = _.merge(attemptedList, {[count]: {result: Number(questions[count].answer) === ans }})
+    setAttemptedList({[count]: {result: Number(questions[count].answer) === ans }})
+    const update = _.merge(selectedAnswerState, { [count]: ans })
     setSelectedAnswer(update)
 
     const tempObj = drawerQuestions
     tempObj[count] = true
     setDrawerQuestions(tempObj)
-
-    setDrawerQuestions(tempObj)
-    // some how this random state is needed for state retention in child
-    setTest(random(100.0))
   }
 
   const onHandleDrawer = (toggle) => {
     setDrawerOpen(toggle)
-
-    // some how this random state is needed for state retention in child
-    setTest(random(100.0))
   }
 
   const goto = (i) => {
@@ -64,12 +59,11 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const handleEndClick = () => {
-    console.log("handle end click")
     setShowResult(true)
   }
 
   return showResult ? (
-    <Result />
+    <Result listOfAttempted={attemptedList} listOfNotAttempted={drawerQuestions} />
   ) : (
     <>
       <QuizFunctionBar
@@ -95,10 +89,9 @@ export const Quiz = ({ questions, handlePrintable }) => {
         item
         xs={12}>
         <Question
-          test={test}
           count={count + 1}
           question={questions[count]}
-          selectedAnswer={selectedAnswer[count]}
+          selectedAnswer={selectedAnswerState[count]}
           onHandleAnswerClick={onHandleAnswerClick}
         />
       </Grid>

@@ -39,7 +39,7 @@ const ListOfButtons = ({ range, correct }) => {
     </Grid>
   )
 }
-export const Result = () => {
+export const Result = (listOfAttempted, listOfNotAttempted) => {
   const classes = useStyles()
   console.log("result page")
 
@@ -75,15 +75,6 @@ export const Result = () => {
               Questions Not Attempted
             </Typography>
             <Divider orientation={"horizontal"} />
-            <Typography>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptatum
-            </Typography>
-            <Typography>
-              quod quia rem sapiente unde? Expedita hic corrupti possimus
-              architecto quaerat veniam provident perferendis, magni
-              perspiciatis ad, ipsum ducimus excepturi autem.
-            </Typography>
             <ListOfButtons
               range={[
                 1,
