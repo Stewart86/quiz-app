@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core"
 import { green, red } from "@material-ui/core/colors"
 
+import { Link } from "react-router-dom"
 import React from "react"
 import { makeStyles } from "@material-ui/core"
 
@@ -22,29 +23,63 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ListOfButtons = ({ range, correct }) => {
+const ListOfButtons = ({ questions, handleFromResult }) => {
   const classes = useStyles()
   return (
     <Grid container direction={"row"} justify={"flex-start"}>
-      {range.map((value, i) => (
-        <Grid key={i.toString()} item>
-          <Button
-            className={classes.questionBtn}
-            variant={"outlined"}
-            style={{ width:150, color: correct ? green[500] : red[500] }}>
-            Question {i + 1}
-          </Button>
-        </Grid>
-      ))}
+      {questions &&
+        questions.map((value, i) => (
+          <Grid key={i.toString()} item>
+            <Button
+              className={classes.questionBtn}
+              variant={"outlined"}
+              onClick={() => handleFromResult(value.index)}
+              style={{
+                width: 150,
+                color: value.result ? green[500] : red[500],
+              }}>
+              Question {value.index}
+            </Button>
+          </Grid>
+        ))}
     </Grid>
   )
 }
-export const Result = (listOfAttempted, listOfNotAttempted) => {
+export const Result = ({ questions, fromResultGoTo }) => {
   const classes = useStyles()
-  console.log("result page")
 
-  const correctAnswer = 2
-  const questions = [{}, {}, {}]
+  const correctAnswer = () => {
+    let correctAnsCount = 0
+    Object.keys(questions).forEach((key, i) => {
+      if (questions[key]["result"] === true) {
+        correctAnsCount += 1
+      }
+    })
+    const length = Object.keys(questions).length
+    return (
+      <Typography
+        style={{ color: correctAnsCount > length / 2 ? green[700] : red[700] }}
+        paragraph
+        variant={"h4"}>{`${correctAnsCount} / ${length} `}</Typography>
+    )
+  }
+
+  const getAttempted = () => {
+    let attempted = []
+    let notAttempted = []
+
+    Object.keys(questions).forEach((key) => {
+      let out = questions[key]
+      out["index"] = key
+      if (questions[key]["result"] !== undefined) {
+        attempted.push(out)
+      } else {
+        notAttempted.push(out)
+      }
+    })
+    return { attempted, notAttempted }
+  }
+  const attempts = getAttempted()
 
   return (
     <Grid
@@ -56,18 +91,14 @@ export const Result = (listOfAttempted, listOfNotAttempted) => {
         <Card>
           <CardHeader title={"Result"} />
           <CardContent>
-            <Typography paragraph>
-              {" "}
-              You have asnwered {correctAnswer} out of {questions.length}{" "}
-              correct.
-            </Typography>
+            {correctAnswer()}
             <Typography variant={"h6"} gutterBottom>
               Questions Attempted
             </Typography>
             <Divider orientation={"horizontal"} />
             <ListOfButtons
-              range={[1, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]}
-              correct={true}
+              handleFromResult={fromResultGoTo}
+              questions={attempts.attempted}
             />
           </CardContent>
           <CardContent>
@@ -76,36 +107,14 @@ export const Result = (listOfAttempted, listOfNotAttempted) => {
             </Typography>
             <Divider orientation={"horizontal"} />
             <ListOfButtons
-              range={[
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13,
-                14,
-                15,
-                16,
-                17,
-                18,
-                19,
-                20,
-              ]}
-              correct={false}
+              handleFromResult={fromResultGoTo}
+              questions={attempts.notAttempted}
             />
           </CardContent>
           <CardActions>
-            {/* TODO: number of question, timer, generate pdf, questions */}
-            <Button color={"primary"} variant={"contained"}>
+            <Link to={"/question"} component={Button} color={"secondary"} variant={"contained"}>
               Back
-            </Button>
+            </Link>
           </CardActions>
         </Card>
       </Grid>

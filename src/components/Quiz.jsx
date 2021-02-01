@@ -57,8 +57,13 @@ export const Quiz = ({ questions, handlePrintable }) => {
     setShowResult(true)
   }
 
+  const fromResultGoTo = (index) => {
+    setCount(index)
+    setShowResult(false)
+  }
+
   return showResult ? (
-    <Result questions={questionsState} />
+    <Result questions={questionsState} fromResultGoTo={fromResultGoTo} />
   ) : (
     <>
       <QuizFunctionBar

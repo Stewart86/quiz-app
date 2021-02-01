@@ -13,7 +13,6 @@ import React from "react"
 
 export const QuestionsDrawer = ({ questions, open, onHandleDrawer, goto }) => {
   const QuestionItem = ({ question, index }) => {
-    console.log(question)
     return (
       <ListItem
         key={index.toString()}
