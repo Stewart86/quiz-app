@@ -7,14 +7,12 @@ export const postNewQuestion = async (question) => {
 }
 
 export const updateNewCategories = async (categories) => {
-  console.log("before", categories)
   let preparedCat = {}
   Object.keys(categories).forEach((k) => {
     if (!Array.isArray(categories[k])) {
       preparedCat[k] = [categories[k]]
     }
   })
-  console.log("after isarray", preparedCat)
   const cursor = db.collection("questions").doc("categories")
   const doc = await cursor.get()
   const obj = _.mergeWith(categories, doc.data(), (obj, src) => {
@@ -27,7 +25,6 @@ export const updateNewCategories = async (categories) => {
       return ""
     }
   })
-  console.log("after", obj)
   await cursor.set(obj)
 }
 
@@ -55,11 +52,10 @@ export const getQuestions = async (categories) => {
 
   const snapshot = await cursor.get()
 
-  const data = []
+  const data = {}
   snapshot.forEach((doc) => {
-    if (doc.id !== "categories") data.push(doc.data())
+    if (doc.id !== "categories") data[doc.id] = doc.data()
   })
-  console.log(data)
   // randomise here
   // loop limit count with this and  append
   // var item = items[Math.floor(Math.random() * items.length)];

@@ -5,20 +5,33 @@ import {
   ListItemText,
   SwipeableDrawer,
 } from "@material-ui/core"
+import { green, red } from "@material-ui/core/colors"
 
+import { Cancel } from "@material-ui/icons"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import React from "react"
-import { green } from "@material-ui/core/colors"
 
 export const QuestionsDrawer = ({ questions, open, onHandleDrawer, goto }) => {
-  const QuestionItem = ({ completed, index }) => {
+  const QuestionItem = ({ question, index }) => {
     return (
-        <ListItem key={index.toString()} onClick={() => goto(index)} button divider>
-          <ListItemIcon>
-            {completed && <CheckCircleIcon style={{ color: green[500] }} />}
-          </ListItemIcon>
-          <ListItemText primary={`Question ${index + 1}`} />
-        </ListItem>
+      <ListItem
+        key={index.toString()}
+        onClick={() => goto(index)}
+        button
+        divider>
+        <ListItemIcon>
+          {question.result !== undefined ? (
+            question.result ? (
+              <CheckCircleIcon style={{ color: green[500] }} />
+            ) : (
+              <Cancel style={{ color: red[500] }} />
+            )
+          ) : (
+            ""
+          )}
+        </ListItemIcon>
+        <ListItemText primary={`Question ${index}`} />
+      </ListItem>
     )
   }
   return (
@@ -29,11 +42,11 @@ export const QuestionsDrawer = ({ questions, open, onHandleDrawer, goto }) => {
       onOpen={() => onHandleDrawer(true)}>
       <List component={"nav"}>
         {Object.keys(questions).map((key, i) => (
-            <QuestionItem
-              key={i.toString()}
-              completed={questions[key]}
-              index={i}
-            />
+          <QuestionItem
+            key={i.toString()}
+            question={questions[key]}
+            index={key}
+          />
         ))}
       </List>
     </SwipeableDrawer>
