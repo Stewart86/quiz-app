@@ -42,7 +42,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
       curQues["selectedAnswer"] = ans
       setQuestionsState(_.merge(questionsState, {[count]: curQues}))
     }
-    setRandom(random(100.0))
+    setRandom(random(9999))
   }
 
   const onHandleDrawer = (toggle) => {
@@ -85,7 +85,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
         xs={12}>
         <Question
           random={randomNum}
-          count={count}
+          index={count}
           question={questionsState[count]}
           onHandleAnswerClick={onHandleAnswerClick}
         />

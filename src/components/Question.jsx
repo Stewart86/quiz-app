@@ -13,19 +13,12 @@ import React from "react"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
-  answers: {
-    marginTop: theme.spacing(0),
-  },
   answerCard: {
     marginBottom: theme.spacing(4),
   },
 }))
 
-export const Question = ({
-  count,
-  question,
-  onHandleAnswerClick,
-}) => {
+export const Question = ({ index, question, onHandleAnswerClick }) => {
   const classes = useStyles()
 
   const showResult = (currentChoice) => {
@@ -46,7 +39,7 @@ export const Question = ({
         <Grow in={true}>
           <Card>
             <CardHeader
-              title={`Question ${count}`}
+              title={`Question ${index}`}
               subheader={`${question.subject} | ${question.level} | ${question.school} | ${question.year}`}
             />
             <CardContent>
@@ -68,19 +61,19 @@ export const Question = ({
           return (
             <Grow key={i.toString()} in={true}>
               <Card className={classes.answerCard}>
-                <CardContent
-                  style={{
-                    backgroundColor: showResult(i)
-                  }}>
-                  <CardActionArea
-                    disabled={question.result !== undefined}
-                    key={i}
-                    onClick={() => onHandleAnswerClick(i)}>
-                    <Typography variant={"h6"} >
-                      {i + 1}. {choice} 
+                <CardActionArea
+                  disabled={question.result !== undefined}
+                  key={i}
+                  onClick={() => onHandleAnswerClick(i)}>
+                  <CardContent
+                    style={{
+                      backgroundColor: showResult(i),
+                    }}>
+                    <Typography variant={"h6"}>
+                      {i + 1}. {choice}
                     </Typography>
-                  </CardActionArea>
-                </CardContent>
+                  </CardContent>
+                </CardActionArea>
               </Card>
             </Grow>
           )
