@@ -10,10 +10,10 @@ import {
 } from "@material-ui/core"
 import React, { useState } from "react"
 import { postNewQuestion, updateNewCategories } from "../firestore/questions"
-import { green } from "@material-ui/core/colors"
 
 import { Editor } from "@tinymce/tinymce-react"
 import { InsertMultipleChoice } from "./InsertMultipleChoice"
+import { green } from "@material-ui/core/colors"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +62,7 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
       setAnswerError(true)
     } else {
       setAnswerError(false)
-      setAnswer(val)
+      setAnswer(val - 1)
     }
   }
 

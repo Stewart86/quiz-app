@@ -6,7 +6,6 @@ import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
 import { QuizFunctionBar } from "./QuizFunctionBar"
 import { Result } from "./Result"
-import { makeDrawerList } from "../helper/utilities"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -18,45 +17,36 @@ const useStyles = makeStyles((theme) => ({
 export const Quiz = ({ questions, handlePrintable }) => {
   const classes = useStyles()
 
+  const [questionsState, setQuestionsState] = useState(questions)
   const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [count, setCount] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState({})
-  const [test, setTest] = useState("")
-  const [drawerQuestions, setDrawerQuestions] = useState(
-    makeDrawerList(questions)
-  )
+  const [count, setCount] = useState(1)
+  const [randomNum, setRandom] = useState(null)
 
   const handleNextClick = () => {
-    if (count < questions.length - 1) {
+    if (count < Object.keys(questions).length - 1) {
       setCount(count + 1)
     }
   }
 
   const handlePreviousClick = () => {
-    if (count > 0) {
+    if (count > 1) {
       setCount(count - 1)
     }
   }
 
   const onHandleAnswerClick = (ans) => {
-    const update = _.merge(selectedAnswer, { [count]: ans })
-    setSelectedAnswer(update)
-
-    const tempObj = drawerQuestions
-    tempObj[count] = true
-    setDrawerQuestions(tempObj)
-
-    setDrawerQuestions(tempObj)
-    // some how this random state is needed for state retention in child
-    setTest(random(100.0))
+    if (questionsState[count].result === undefined) {
+      let curQues = questions[count]
+      curQues["result"] = Number(curQues.answer) === ans
+      curQues["selectedAnswer"] = ans
+      setQuestionsState(_.merge(questionsState, {[count]: curQues}))
+    }
+    setRandom(random(9999))
   }
 
   const onHandleDrawer = (toggle) => {
     setDrawerOpen(toggle)
-
-    // some how this random state is needed for state retention in child
-    setTest(random(100.0))
   }
 
   const goto = (i) => {
@@ -64,12 +54,16 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const handleEndClick = () => {
-    console.log("handle end click")
     setShowResult(true)
   }
 
+  const fromResultGoTo = (index) => {
+    setCount(index)
+    setShowResult(false)
+  }
+
   return showResult ? (
-    <Result />
+    <Result questions={questionsState} fromResultGoTo={fromResultGoTo} />
   ) : (
     <>
       <QuizFunctionBar
@@ -78,11 +72,11 @@ export const Quiz = ({ questions, handlePrintable }) => {
         handlePreviousClick={handlePreviousClick}
         handleNextClick={handleNextClick}
         handleEndClick={handleEndClick}
-        handleDisablePreviousBtn={count === 0}
-        handleDisableNextBtn={questions.length - 1 === count}
+        handleDisablePreviousBtn={count === 1}
+        handleDisableNextBtn={Object.keys(questionsState).length - 1 === count}
       />
       <QuestionsDrawer
-        questions={drawerQuestions}
+        questions={questionsState}
         open={drawerOpen}
         onHandleDrawer={onHandleDrawer}
         goto={goto}
@@ -95,10 +89,9 @@ export const Quiz = ({ questions, handlePrintable }) => {
         item
         xs={12}>
         <Question
-          test={test}
-          count={count + 1}
-          question={questions[count]}
-          selectedAnswer={selectedAnswer[count]}
+          random={randomNum}
+          index={count}
+          question={questionsState[count]}
           onHandleAnswerClick={onHandleAnswerClick}
         />
       </Grid>

@@ -7,30 +7,30 @@ import {
   Grow,
   Typography,
 } from "@material-ui/core"
+import { green, red } from "@material-ui/core/colors"
 
 import React from "react"
-import grey from "@material-ui/core/colors/grey"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
-  answers: {
-    marginTop: theme.spacing(2),
-  },
   answerCard: {
     marginBottom: theme.spacing(4),
   },
 }))
 
-export const Question = ({
-  count,
-  question,
-  selectedAnswer,
-  onHandleAnswerClick,
-}) => {
+export const Question = ({ index, question, onHandleAnswerClick }) => {
   const classes = useStyles()
 
-  const handleAnswerClick = (ans) => {
-    onHandleAnswerClick(ans)
+  const showResult = (currentChoice) => {
+    if (question.result !== undefined) {
+      if (currentChoice === question.answer) {
+        return green[300]
+      } else if (currentChoice !== question.selectedAnswer) {
+        return "#fff"
+      } else {
+        return red[300]
+      }
+    }
   }
 
   return (
@@ -39,7 +39,7 @@ export const Question = ({
         <Grow in={true}>
           <Card>
             <CardHeader
-              title={`Question ${count}`}
+              title={`Question ${index}`}
               subheader={`${question.subject} | ${question.level} | ${question.school} | ${question.year}`}
             />
             <CardContent>
@@ -61,19 +61,19 @@ export const Question = ({
           return (
             <Grow key={i.toString()} in={true}>
               <Card className={classes.answerCard}>
-                <CardContent>
-                  <CardActionArea
+                <CardActionArea
+                  disabled={question.result !== undefined}
+                  key={i}
+                  onClick={() => onHandleAnswerClick(i)}>
+                  <CardContent
                     style={{
-                      backgroundColor:
-                        selectedAnswer === i ? grey[300] : "#fff",
-                    }}
-                    key={i}
-                    onClick={() => handleAnswerClick(i)}>
-                    <Typography variant={"body1"} display={"block"} paragraph>
+                      backgroundColor: showResult(i),
+                    }}>
+                    <Typography variant={"h6"}>
                       {i + 1}. {choice}
                     </Typography>
-                  </CardActionArea>
-                </CardContent>
+                  </CardContent>
+                </CardActionArea>
               </Card>
             </Grow>
           )

@@ -1,6 +1,5 @@
+import { InsertCategoriesForm, InsertQuestionForm } from "../components"
 import React, { useState } from "react"
-
-import { InsertQuestionForm, InsertCategoriesForm } from "../components"
 
 export const InsertQuestion = () => {
   const [showQuestionForm, setShowQuestionForm] = useState(false)
@@ -11,7 +10,6 @@ export const InsertQuestion = () => {
     Object.keys(categories).forEach((k, i) => {
       validate += 1
     })
-    console.log(validate)
     if (validate !== 5) {
       alert("all input must be completed")
     } else {
