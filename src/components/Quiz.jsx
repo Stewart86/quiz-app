@@ -1,12 +1,11 @@
 import React, { useState } from "react"
+import _, { random } from "lodash"
 
 import { Grid } from "@material-ui/core"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
 import { QuizFunctionBar } from "./QuizFunctionBar"
 import { Result } from "./Result"
-import _ from "lodash"
-import { makeDrawerList } from "../helper/utilities"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -18,12 +17,11 @@ const useStyles = makeStyles((theme) => ({
 export const Quiz = ({ questions, handlePrintable }) => {
   const classes = useStyles()
 
+  const [questionsState, setQuestionsState] = useState(questions)
   const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [count, setCount] = useState(1)
-  const [drawerQuestions, setDrawerQuestions] = useState(
-    makeDrawerList(questions)
-  )
+  const [randomNum, setRandom] = useState(null)
 
   const handleNextClick = () => {
     if (count < Object.keys(questions).length - 1) {
@@ -38,12 +36,13 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const onHandleAnswerClick = (ans) => {
-    // TODO: {1:{}, 2:{}, 3, {}}
-    // set selected answer directly into questions
-    // set attempted direcetly into questions
-    const tempObj = drawerQuestions
-    tempObj[count] = true
-    setDrawerQuestions(tempObj)
+    if (questionsState[count].result === undefined) {
+      let curQues = questions[count]
+      curQues["result"] = Number(curQues.answer) === ans
+      curQues["selectedAnswer"] = ans
+      setQuestionsState(_.merge(questionsState, {[count]: curQues}))
+    }
+    setRandom(random(100.0))
   }
 
   const onHandleDrawer = (toggle) => {
@@ -59,7 +58,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   return showResult ? (
-    <Result listOfNotAttempted={drawerQuestions} />
+    <Result questions={questionsState} />
   ) : (
     <>
       <QuizFunctionBar
@@ -69,10 +68,10 @@ export const Quiz = ({ questions, handlePrintable }) => {
         handleNextClick={handleNextClick}
         handleEndClick={handleEndClick}
         handleDisablePreviousBtn={count === 1}
-        handleDisableNextBtn={Object.keys(questions).length - 1 === count}
+        handleDisableNextBtn={Object.keys(questionsState).length - 1 === count}
       />
       <QuestionsDrawer
-        questions={drawerQuestions}
+        questions={questionsState}
         open={drawerOpen}
         onHandleDrawer={onHandleDrawer}
         goto={goto}
@@ -85,8 +84,9 @@ export const Quiz = ({ questions, handlePrintable }) => {
         item
         xs={12}>
         <Question
+          random={randomNum}
           count={count}
-          question={questions[count]}
+          question={questionsState[count]}
           onHandleAnswerClick={onHandleAnswerClick}
         />
       </Grid>

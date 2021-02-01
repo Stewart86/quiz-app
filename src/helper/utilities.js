@@ -35,6 +35,5 @@ export const questionKeyRename = (questions) => {
     result[i + 1] = questions[key]
   })
   
-  console.log(result)
   return result
 }
