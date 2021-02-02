@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -7,9 +8,9 @@ import {
   Grow,
   Typography,
 } from "@material-ui/core"
-import { green, red } from "@material-ui/core/colors"
+import React, { useState } from "react"
+import { blue, green, red } from "@material-ui/core/colors"
 
-import React from "react"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -18,11 +19,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const Question = ({ index, question, onHandleAnswerClick }) => {
+export const Question = ({ index, question, onHandleSelection, onHandleAnswerClick }) => {
   const classes = useStyles()
+  const [selection, setSelection] = useState(question.selection)
 
   const showResult = (currentChoice) => {
-    if (question.result !== undefined) {
+     if (question.result !== undefined) {
       if (currentChoice === question.answer) {
         return green[300]
       } else if (currentChoice !== question.selectedAnswer) {
@@ -31,6 +33,15 @@ export const Question = ({ index, question, onHandleAnswerClick }) => {
         return red[300]
       }
     }
+    if (question.selection !== undefined || question.selection !== null) {
+      if (currentChoice === question.selectedAnswer) {
+        return blue[300]
+      }
+    }
+  }
+  const handleSelection = (sel) => {
+    setSelection(sel)
+    onHandleSelection(sel)
   }
 
   return (
@@ -64,7 +75,7 @@ export const Question = ({ index, question, onHandleAnswerClick }) => {
                 <CardActionArea
                   disabled={question.result !== undefined}
                   key={i}
-                  onClick={() => onHandleAnswerClick(i)}>
+                  onClick={() => handleSelection(i)}>
                   <CardContent
                     style={{
                       backgroundColor: showResult(i),
@@ -78,6 +89,7 @@ export const Question = ({ index, question, onHandleAnswerClick }) => {
             </Grow>
           )
         })}
+        <Button color={"primary"} variant={"contained"} onClick={() => onHandleAnswerClick(selection)}>Confirm</Button>
       </Grid>
     </>
   )

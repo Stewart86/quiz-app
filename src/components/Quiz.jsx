@@ -29,7 +29,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
   useEffect(() => {
     unblockHandle.current = history.block(() => {
       setShowResult(true)
-      return false;
+      return false
     })
     return () => {
       unblockHandle.current.current && unblockHandle.current.current()
@@ -55,6 +55,13 @@ export const Quiz = ({ questions, handlePrintable }) => {
       curQues["selectedAnswer"] = ans
       setQuestionsState((state) => _.merge(state, { [count]: curQues }))
     }
+    setRandom(random(9999))
+  }
+
+  const onHandleSelection = (selection) => {
+    let curQues = questions[count]
+    curQues["selectedAnswer"] = selection
+    setQuestionsState((state) => _.merge(state, { [count]: curQues }))
     setRandom(random(9999))
   }
 
@@ -105,6 +112,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
           random={randomNum}
           index={count}
           question={questionsState[count]}
+          onHandleSelection={onHandleSelection}
           onHandleAnswerClick={onHandleAnswerClick}
         />
       </Grid>

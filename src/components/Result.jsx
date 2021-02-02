@@ -8,7 +8,7 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core"
-import { green, red } from "@material-ui/core/colors"
+import { blue, green, red } from "@material-ui/core/colors"
 
 import { Link } from "react-router-dom"
 import React from "react"
@@ -36,7 +36,13 @@ const ListOfButtons = ({ questions, handleFromResult }) => {
               onClick={() => handleFromResult(value.index)}
               style={{
                 width: 150,
-                color: value.result ? green[500] : red[500],
+                color: value.result
+                  ? green[500]
+                  : value.selectedAnswer !== undefined
+                  ? value.result === false
+                    ? red[500]
+                    : blue[500]
+                  : red[500],
               }}>
               Question {value.index}
             </Button>
@@ -112,7 +118,11 @@ export const Result = ({ questions, fromResultGoTo }) => {
             />
           </CardContent>
           <CardActions>
-            <Link to={"/question"} component={Button} color={"secondary"} variant={"contained"}>
+            <Link
+              to={"/question"}
+              component={Button}
+              color={"secondary"}
+              variant={"contained"}>
               Back
             </Link>
           </CardActions>
