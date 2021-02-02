@@ -40,7 +40,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
       let curQues = questions[count]
       curQues["result"] = Number(curQues.answer) === ans
       curQues["selectedAnswer"] = ans
-      setQuestionsState(_.merge(questionsState, {[count]: curQues}))
+      setQuestionsState((state) => _.merge(state, { [count]: curQues }))
     }
     setRandom(random(9999))
   }
@@ -50,15 +50,15 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const goto = (i) => {
-    setCount(i)
+    setCount((state) => Number(i))
   }
 
   const handleEndClick = () => {
     setShowResult(true)
   }
 
-  const fromResultGoTo = (index) => {
-    setCount(index)
+  const fromResultGoTo = (i) => {
+    setCount((state) => Number(i))
     setShowResult(false)
   }
 
