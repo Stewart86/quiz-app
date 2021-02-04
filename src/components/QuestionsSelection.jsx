@@ -12,7 +12,6 @@ import {
 import React, { useState } from "react"
 
 import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded"
-import DoneIcon from "@material-ui/icons/Done"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
