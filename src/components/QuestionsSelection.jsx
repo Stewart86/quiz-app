@@ -2,16 +2,23 @@ import {
   Button,
   ButtonGroup,
   Card,
+  Checkbox,
+  CircularProgress,
+  Divider,
+  FormControlLabel,
+  FormGroup,
   Grid,
   Step,
   StepContent,
   StepLabel,
   Stepper,
+  Switch,
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
 
 import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded"
+import { getTopic } from "../firestore/topics"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +37,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginRight: theme.spacing(1),
   },
+  buttonProgress: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }))
 export const QuestionsSelection = ({
   data,
@@ -42,6 +56,9 @@ export const QuestionsSelection = ({
 
   const [activeStep, setActiveStep] = useState(0)
   const [category, setCategory] = useState({})
+  const [topics, setTopics] = useState([])
+  const [getTopicsLoader, setGetTopicsLoader] = useState(false)
+  const [selectAll, setSelectAll] = useState(true)
 
   const handleNext = () => {
     setActiveStep((state) => state + 1)
@@ -50,18 +67,32 @@ export const QuestionsSelection = ({
     setActiveStep((state) => state - 1)
   }
 
-  const handleForm = (category) => {
-    const key = Object.keys(category)[0]
+  const handleForm = (incomingCategory) => {
+    const key = Object.keys(incomingCategory)[0]
+
     setCategory((state) => {
       const obj = {
         ...state,
-        [key]: category[key],
+        [key]: incomingCategory[key],
+      }
+      if (key === "level") {
+        handleGetTopics(obj["subject"], obj["level"])
       }
       return obj
     })
   }
 
-  // topic - checkboxes
+  const handleGetTopics = async (subject, level) => {
+    setGetTopicsLoader(true)
+    const dbTopics = await getTopic(subject, level)
+    setTopics(dbTopics)
+    setGetTopicsLoader(false)
+  }
+
+  const handleSelectAll = () => {
+    setSelectAll((state) => !state)
+  }
+
   // submit
 
   return (
@@ -125,8 +156,17 @@ export const QuestionsSelection = ({
                 <Button className={classes.button} onClick={handleBack}>
                   Back
                 </Button>
-                <Button className={classes.button} onClick={handleNext}>
-                  Next
+                <Button
+                  disabled={getTopicsLoader}
+                  className={classes.button}
+                  onClick={handleNext}>
+                  Next{" "}
+                  {getTopicsLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
                 </Button>
               </div>
             </StepContent>
@@ -137,6 +177,23 @@ export const QuestionsSelection = ({
               <Typography>
                 Pick a topic for the subject you selected above.
               </Typography>
+              <FormGroup row>
+                <FormControlLabel
+                  label={"Select All"}
+                  control={
+                    <Switch checked={selectAll} onChange={handleSelectAll} />
+                  }
+                />
+              </FormGroup>
+              <Divider />
+              <FormGroup style={{ maxHeight: "60vh" }}>
+                {topics.map((value) => (
+                  <FormControlLabel
+                    label={value}
+                    control={<Checkbox name={value} checked={selectAll} />}
+                  />
+                ))}
+              </FormGroup>
               <Button className={classes.button} onClick={handleBack}>
                 Back
               </Button>
