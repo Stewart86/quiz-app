@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
+  IconButton,
   Step,
   StepContent,
   StepLabel,
@@ -18,6 +19,7 @@ import {
 import React, { useState } from "react"
 
 import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded"
+import PrintIcon from "@material-ui/icons/Print"
 import { getTopic } from "../firestore/topics"
 import { makeStyles } from "@material-ui/core"
 
@@ -75,8 +77,10 @@ export const QuestionsSelection = ({
         ...state,
         [key]: incomingCategory[key],
       }
-      if (key === "level") {
-        handleGetTopics(obj["subject"], obj["level"])
+      if (key === "level" || key === "subject") {
+        if (obj["subject"] && obj["level"]) {
+          handleGetTopics(obj["subject"], obj["level"])
+        }
       }
       return obj
     })
@@ -92,8 +96,6 @@ export const QuestionsSelection = ({
   const handleSelectAll = () => {
     setSelectAll((state) => !state)
   }
-
-  // submit
 
   return (
     <Grid
@@ -129,8 +131,17 @@ export const QuestionsSelection = ({
                   onClick={handleBack}>
                   Back
                 </Button>
-                <Button className={classes.button} onClick={handleNext}>
+                <Button
+                  disabled={getTopicsLoader}
+                  className={classes.button}
+                  onClick={handleNext}>
                   Next
+                  {getTopicsLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
                 </Button>
               </div>
             </StepContent>
@@ -160,7 +171,7 @@ export const QuestionsSelection = ({
                   disabled={getTopicsLoader}
                   className={classes.button}
                   onClick={handleNext}>
-                  Next{" "}
+                  Next
                   {getTopicsLoader && (
                     <CircularProgress
                       size={24}
@@ -226,9 +237,16 @@ export const QuestionsSelection = ({
                 <Button className={classes.button} onClick={handleBack}>
                   Back
                 </Button>
-                <Button className={classes.button} onClick={handleNext}>
-                  Submit
+                <Button
+                  className={classes.button}
+                  onClick={() => handleGetQuestions(category)}>
+                  Start Quiz
                 </Button>
+                <IconButton
+                  className={classes.button}
+                  onClick={() => handlePrintable(category)}>
+                  <PrintIcon />
+                </IconButton>
               </div>
             </StepContent>
           </Step>

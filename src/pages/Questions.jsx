@@ -1,12 +1,11 @@
 import { Loading, Printable, QuestionsSelection, Quiz } from "../components"
 import React, { useEffect, useState } from "react"
 import { getCategories, getQuestions } from "../firestore/questions"
-import { getFirstArrayInObj, questionKeyRename } from "../helper/utilities"
 
 import { questionComponents as components } from "../helper/enum"
+import { questionKeyRename } from "../helper/utilities"
 
 export const Questions = () => {
-  const [selection, setSelection] = useState({})
   const [data, setData] = useState({})
   const [questions, setQuestions] = useState({})
   const [show, setShowComponent] = useState(components.loading)
@@ -14,27 +13,21 @@ export const Questions = () => {
   useEffect(() => {
     const fetchData = async () => {
       const categories = await getCategories()
-      setSelection(getFirstArrayInObj(categories))
       setData(categories)
       setShowComponent(components.questionsSelection)
     }
     fetchData()
   }, [])
 
-  const handleOnChange = (e, type) => {
-    setSelection({
-      ...selection,
-      [type]: e.target.value,
-    })
-  }
-
-  const handlePrintable = async () => {
+  const handlePrintable = async (selection) => {
+    console.log(selection)
     setShowComponent(components.loading)
     setQuestions(questionKeyRename(await getQuestions(selection)))
+    console.log(questions)
     setShowComponent(components.printable)
   }
 
-  const handleGetQuestions = async () => {
+  const handleGetQuestions = async (selection) => {
     setShowComponent(components.loading)
     setQuestions(questionKeyRename(await getQuestions(selection)))
     setShowComponent(components.startQuiz)
@@ -54,8 +47,6 @@ export const Questions = () => {
             return (
               <QuestionsSelection
                 data={data}
-                handleOnChange={handleOnChange}
-                selection={selection}
                 handlePrintable={handlePrintable}
                 handleGetQuestions={handleGetQuestions}
               />
