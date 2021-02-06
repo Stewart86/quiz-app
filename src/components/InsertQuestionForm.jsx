@@ -110,8 +110,8 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
       <CardHeader title={"Insert Question"} />
       <CardContent>
         <Editor
-          apiKey="nsjjba31x54f5slt84a74owxenrmbe9xlj1esq35wwm7h3w7"
-          initialValue=""
+          apiKey='nsjjba31x54f5slt84a74owxenrmbe9xlj1esq35wwm7h3w7'
+          initialValue=''
           init={{
             height: 500,
             menubar: false,

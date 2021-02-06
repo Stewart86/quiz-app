@@ -96,6 +96,7 @@ export const QuestionsSelection = ({
   const handleSelectAll = () => {
     setSelectAll((state) => !state)
   }
+  // TODO: add number of questions to retrieve
 
   return (
     <Grid
