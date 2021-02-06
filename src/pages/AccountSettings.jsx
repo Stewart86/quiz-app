@@ -1,9 +1,5 @@
-import React from 'react'
+import React from "react"
 
 export const AccountSettings = () => {
-    return (
-        <div>
-            Account settings
-        </div>
-    )
+  return <div>Account settings</div>
 }

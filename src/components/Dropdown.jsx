@@ -1,11 +1,6 @@
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select
-} from "@material-ui/core";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core"
 
-import React from "react";
+import React from "react"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -16,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const Dropdown = ({ handleOnChange, selection, data, type }) => {
-  const classes = useStyles();
+  const classes = useStyles()
   return (
     <FormControl className={classes.formControl}>
       <InputLabel id={type}>{type}</InputLabel>
@@ -27,14 +22,14 @@ export const Dropdown = ({ handleOnChange, selection, data, type }) => {
         onChange={(e) => handleOnChange(e, type)}>
         {data[type].length > 0
           ? data[type].map((k, i) => {
-            return (
-              <MenuItem key={i} value={k}>
-                {k}
-              </MenuItem>
-            );
-          })
+              return (
+                <MenuItem key={i} value={k}>
+                  {k}
+                </MenuItem>
+              )
+            })
           : ""}
       </Select>
     </FormControl>
-  );
-};
+  )
+}

@@ -12,11 +12,11 @@ export const InsertQuestion = () => {
     })
     if (validate !== 5) {
       alert("all input must be completed")
-    } 
+    }
   }
 
   const handleChange = (newValue) => {
-    setCategories((state) => ({...state, ...newValue}))
+    setCategories((state) => ({ ...state, ...newValue }))
   }
 
   return (
@@ -30,9 +30,7 @@ export const InsertQuestion = () => {
           />
         </Grid>
         <Grid item>
-          <InsertQuestionForm
-            categories={categories}
-          />
+          <InsertQuestionForm categories={categories} />
         </Grid>
       </Grid>
     </Container>

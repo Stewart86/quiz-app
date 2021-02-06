@@ -18,7 +18,6 @@ export const InsertCategoriesForm = ({
   handleChange,
   handleInsertClick,
 }) => {
-
   const [selSubject, setSubject] = useState()
   const [selLevel, setLevel] = useState()
   const [selDifficulty, setDifficulty] = useState()
@@ -60,6 +59,7 @@ export const InsertCategoriesForm = ({
               <RadioGroup row value={selSubject} onChange={handleSubjectChange}>
                 {subjects.map((value) => (
                   <FormControlLabel
+                    key={value}
                     value={value}
                     control={<Radio />}
                     label={value}
@@ -74,6 +74,7 @@ export const InsertCategoriesForm = ({
               <RadioGroup row value={selLevel} onChange={handleLevelChange}>
                 {levels.map((value) => (
                   <FormControlLabel
+                    key={value}
                     value={value}
                     control={<Radio />}
                     label={value}
@@ -91,6 +92,7 @@ export const InsertCategoriesForm = ({
                 onChange={handleDifficultyChange}>
                 {difficulties.map((value) => (
                   <FormControlLabel
+                    key={value}
                     value={value}
                     control={<Radio />}
                     label={value}

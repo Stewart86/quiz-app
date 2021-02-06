@@ -19,12 +19,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const Question = ({ index, question, onHandleSelection, onHandleAnswerClick }) => {
+export const Question = ({
+  index,
+  question,
+  onHandleSelection,
+  onHandleAnswerClick,
+}) => {
   const classes = useStyles()
   const [selection, setSelection] = useState(question.selection)
 
   const showResult = (currentChoice) => {
-     if (question.result !== undefined) {
+    if (question.result !== undefined) {
       if (currentChoice === question.answer) {
         return green[300]
       } else if (currentChoice !== question.selectedAnswer) {
@@ -89,7 +94,12 @@ export const Question = ({ index, question, onHandleSelection, onHandleAnswerCli
             </Grow>
           )
         })}
-        <Button color={"primary"} variant={"contained"} onClick={() => onHandleAnswerClick(selection)}>Confirm</Button>
+        <Button
+          color={"primary"}
+          variant={"contained"}
+          onClick={() => onHandleAnswerClick(selection)}>
+          Confirm
+        </Button>
       </Grid>
     </>
   )

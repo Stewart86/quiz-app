@@ -5,7 +5,7 @@ import React from "react"
 export const Loading = () => {
   return (
     <Backdrop open>
-      <CircularProgress color="inherit" />
+      <CircularProgress color='inherit' />
     </Backdrop>
   )
 }

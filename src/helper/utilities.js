@@ -34,24 +34,23 @@ export const questionKeyRename = (questions) => {
   Object.keys(questions).forEach((key, i) => {
     result[i + 1] = questions[key]
   })
-  
+
   return result
 }
 
 export const getAttempted = (questions) => {
-    let attempted = []
-    let notAttempted = []
+  let attempted = []
+  let notAttempted = []
 
-    Object.keys(questions).forEach((key) => {
-      let out = questions[key]
-      out["index"] = key
-      if (questions[key]["result"] !== undefined) {
-        attempted.push(out)
-      } else {
-        notAttempted.push(out)
-      }
-    })
+  Object.keys(questions).forEach((key) => {
+    let out = questions[key]
+    out["index"] = key
+    if (questions[key]["result"] !== undefined) {
+      attempted.push(out)
+    } else {
+      notAttempted.push(out)
+    }
+  })
 
-    return { attempted, notAttempted }
-  }
-
+  return { attempted, notAttempted }
+}

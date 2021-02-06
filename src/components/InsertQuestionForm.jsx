@@ -5,8 +5,8 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
-  FormLabel,
   TextField,
+  Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
 import { postNewQuestion, updateNewCategories } from "../firestore/questions"
@@ -46,13 +46,17 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  multipleChoiceTitle: {
+    marginTop: theme.spacing(6),
+    marginBottom: theme.spacing(3),
+  },
 }))
 
 export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
   const classes = useStyles()
   const [choices, setChoices] = useState([""])
   const [question, setQuestion] = useState("")
-  const [answer, setAnswer] = useState(-1)
+  const [answer, setAnswer] = useState(1)
   const [answerError, setAnswerError] = useState(true)
   const [loading, setLoading] = useState(false)
 
@@ -62,7 +66,7 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
       setAnswerError(true)
     } else {
       setAnswerError(false)
-      setAnswer(val - 1)
+      setAnswer(val)
     }
   }
 
@@ -126,7 +130,12 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
           }}
           onEditorChange={handleEditorChange}
         />
-        <FormLabel component={"legend"}>Question Category</FormLabel>
+        <Typography
+          className={classes.multipleChoiceTitle}
+          gutterBottom
+          variant={"h5"}>
+          Multiple Choices
+        </Typography>
         {choices.map((x, i) => {
           return (
             <InsertMultipleChoice
@@ -144,6 +153,7 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
           onChange={handleAnswerError}
           type={"number"}
           label={"Answer"}
+          value={answer}
           helperText={answerError ? "Enter the correct answer only" : ""}
         />
         <CardActions>

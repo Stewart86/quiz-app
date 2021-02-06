@@ -20,7 +20,10 @@ export const Quiz = ({ questions, handlePrintable }) => {
   const history = useHistory()
   const unblockHandle = useRef()
 
-  const [questionsState, setQuestionsState] = useState({...questions,selection:""})
+  const [questionsState, setQuestionsState] = useState({
+    ...questions,
+    selection: "",
+  })
   const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [count, setCount] = useState(1)

@@ -31,36 +31,36 @@ export const PrintableQuestions = ({
   }
 
   return (
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader
-            title={`Question ${count}`}
-            subheader={`${question.subject} | ${question.level} | ${question.school} | ${question.year}`}
-          />
-          <CardContent>
-            <Typography variant={"subtitle1"} gutterBottom>
-              <span dangerouslySetInnerHTML={{ __html: question.question }} />
-            </Typography>
-            {question.choices.map((choice, i) => {
-              return (
-                <CardActionArea
-                  style={{
-                    backgroundColor: selectedAnswer === i ? grey[300] : "#fff",
-                  }}
-                  key={i}
-                  onClick={() => handleAnswerClick(i)}>
-                  <Typography
-                    className={classes.answers}
-                    variant={"body1"}
-                    display={"block"}
-                    paragraph>
-                    {i + 1}. {choice}
-                  </Typography>
-                </CardActionArea>
-              )
-            })}
-          </CardContent>
-        </Card>
-      </Grid>
+    <Grid item xs={12}>
+      <Card>
+        <CardHeader
+          title={`Question ${count}`}
+          subheader={`${question.subject} | ${question.level} | ${question.school} | ${question.year}`}
+        />
+        <CardContent>
+          <Typography variant={"subtitle1"} gutterBottom>
+            <span dangerouslySetInnerHTML={{ __html: question.question }} />
+          </Typography>
+          {question.choices.map((choice, i) => {
+            return (
+              <CardActionArea
+                style={{
+                  backgroundColor: selectedAnswer === i ? grey[300] : "#fff",
+                }}
+                key={i}
+                onClick={() => handleAnswerClick(i)}>
+                <Typography
+                  className={classes.answers}
+                  variant={"body1"}
+                  display={"block"}
+                  paragraph>
+                  {i + 1}. {choice}
+                </Typography>
+              </CardActionArea>
+            )
+          })}
+        </CardContent>
+      </Card>
+    </Grid>
   )
 }

@@ -20,7 +20,10 @@ export const Login = () => {
   }
   return (
     <Card elevation={5}>
-      <CardHeader title={"Quiz App"} subheader={"Your One Stop Learning Solution"}/>
+      <CardHeader
+        title={"Quiz App"}
+        subheader={"Your One Stop Learning Solution"}
+      />
       <CardContent>
         <Grid item xs={12}>
           <TextField
