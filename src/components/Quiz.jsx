@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react"
-import _, { random } from "lodash"
 
 import { Grid } from "@material-ui/core"
 import { Question } from "./Question"
@@ -20,14 +19,10 @@ export const Quiz = ({ questions, handlePrintable }) => {
   const history = useHistory()
   const unblockHandle = useRef()
 
-  const [questionsState, setQuestionsState] = useState({
-    ...questions,
-    selection: "",
-  })
+  const [questionsState, setQuestionsState] = useState(questions)
   const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [count, setCount] = useState(1)
-  const [randomNum, setRandom] = useState(null)
 
   useEffect(() => {
     unblockHandle.current = history.block(() => {
@@ -40,7 +35,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
   })
 
   const handleNextClick = () => {
-    if (count < Object.keys(questions).length - 1) {
+    if (count < Object.keys(questions).length + 1) {
       setCount(count + 1)
     }
   }
@@ -54,18 +49,16 @@ export const Quiz = ({ questions, handlePrintable }) => {
   const onHandleAnswerClick = (ans) => {
     if (questionsState[count].result === undefined) {
       let curQues = questions[count]
-      curQues["result"] = Number(curQues.answer) === ans
+      curQues["result"] = Number(curQues.answer) === ans + 1
       curQues["selectedAnswer"] = ans
-      setQuestionsState((state) => _.merge(state, { [count]: curQues }))
+      setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
     }
-    setRandom(random(9999))
   }
 
   const onHandleSelection = (selection) => {
     let curQues = questions[count]
-    curQues["selectedAnswer"] = selection
-    setQuestionsState((state) => _.merge(state, { [count]: curQues }))
-    setRandom(random(9999))
+    curQues["selectedAnswer"] = selection 
+    setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
   }
 
   const onHandleDrawer = (toggle) => {
@@ -96,7 +89,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
         handleNextClick={handleNextClick}
         handleEndClick={handleEndClick}
         handleDisablePreviousBtn={count === 1}
-        handleDisableNextBtn={Object.keys(questionsState).length - 1 === count}
+        handleDisableNextBtn={Object.keys(questionsState).length  === count}
       />
       <QuestionsDrawer
         questions={questionsState}
@@ -112,7 +105,6 @@ export const Quiz = ({ questions, handlePrintable }) => {
         item
         xs={12}>
         <Question
-          random={randomNum}
           index={count}
           question={questionsState[count]}
           onHandleSelection={onHandleSelection}

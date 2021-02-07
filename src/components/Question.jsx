@@ -30,7 +30,7 @@ export const Question = ({
 
   const showResult = (currentChoice) => {
     if (question.result !== undefined) {
-      if (currentChoice === question.answer) {
+      if (currentChoice === Number(question.answer) - 1) {
         return green[300]
       } else if (currentChoice !== question.selectedAnswer) {
         return "#fff"

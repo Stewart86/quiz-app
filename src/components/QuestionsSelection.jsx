@@ -5,10 +5,14 @@ import {
   Checkbox,
   CircularProgress,
   Divider,
+  FormControl,
   FormControlLabel,
   FormGroup,
   Grid,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   Step,
   StepContent,
   StepLabel,
@@ -17,6 +21,12 @@ import {
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
+import { difficulties, levels, subjects } from "../helper/constants"
+import {
+  genNumOfQuestions,
+  getSelectionFromTopics,
+  isAllSelected,
+} from "../helper/utilities"
 
 import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded"
 import PrintIcon from "@material-ui/icons/Print"
@@ -46,6 +56,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  numOfQuestionsForm: {
+    margin: theme.spacing(1),
+    minWidth: 185,
+  },
 }))
 export const QuestionsSelection = ({
   data,
@@ -58,9 +72,10 @@ export const QuestionsSelection = ({
 
   const [activeStep, setActiveStep] = useState(0)
   const [category, setCategory] = useState({})
-  const [topics, setTopics] = useState([])
+  const [topics, setTopics] = useState({})
   const [getTopicsLoader, setGetTopicsLoader] = useState(false)
   const [selectAll, setSelectAll] = useState(true)
+  const [numOfQuestions, setNumOfQuestions] = useState([])
 
   const handleNext = () => {
     setActiveStep((state) => state + 1)
@@ -78,25 +93,83 @@ export const QuestionsSelection = ({
         [key]: incomingCategory[key],
       }
       if (key === "level" || key === "subject") {
-        if (obj["subject"] && obj["level"]) {
-          handleGetTopics(obj["subject"], obj["level"])
+        if (obj.subject && obj.level) {
+          handleGetTopics(obj.subject, obj.level)
         }
+      } else if (key === "numOfQuestions") {
+        setNumOfQuestions(obj.numOfQuestions)
       }
       return obj
     })
   }
+  /**
+   * if select all
+   * remove topics
+   * else
+   * selTopics.length === topics.length
+   * select all
+   */
 
   const handleGetTopics = async (subject, level) => {
     setGetTopicsLoader(true)
+
     const dbTopics = await getTopic(subject, level)
-    setTopics(dbTopics)
+    let topics = {}
+    dbTopics.forEach((value) => {
+      topics[value] = true
+    })
+    setTopics(topics)
+
     setGetTopicsLoader(false)
   }
 
   const handleSelectAll = () => {
-    setSelectAll((state) => !state)
+    setSelectAll((state) => {
+      const obj = topics
+
+      if (state) {
+        Object.keys(obj).forEach((key) => {
+          obj[key] = false
+        })
+        setTopics(obj)
+      } else {
+        Object.keys(obj).forEach((key) => {
+          obj[key] = true
+        })
+        setTopics(obj)
+      }
+
+      return !state
+    })
   }
-  // TODO: add number of questions to retrieve
+
+  const handleCheckBox = (event) => {
+    const checked = event.target.checked
+    let obj
+    if (checked) {
+      obj = { [event.target.name]: true }
+    } else {
+      obj = { [event.target.name]: false }
+    }
+    setTopics((state) => {
+      if (isAllSelected(state, checked)) {
+        setSelectAll(true)
+      } else {
+        setSelectAll(false)
+      }
+      return { ...state, ...obj }
+    })
+  }
+
+  const handleTopicNext = () => {
+    if (selectAll) {
+      handleForm({ topics: ["all"] })
+    } else {
+      handleForm({ topics: getSelectionFromTopics(topics) })
+    }
+
+    handleNext()
+  }
 
   return (
     <Grid
@@ -113,10 +186,10 @@ export const QuestionsSelection = ({
                 Please select subject to revise.
               </Typography>
               <ButtonGroup color={"primary"}>
-                {data.subject.map((value) => (
+                {subjects.map((value) => (
                   <Button
                     endIcon={
-                      category["subject"] === value ? (
+                      category.subject === value ? (
                         <AssignmentTurnedInRoundedIcon />
                       ) : null
                     }
@@ -152,10 +225,10 @@ export const QuestionsSelection = ({
             <StepContent>
               <Typography>Please select the education level.</Typography>
               <ButtonGroup color={"primary"}>
-                {data.level.map((value) => (
+                {levels.map((value) => (
                   <Button
                     endIcon={
-                      category["level"] === value ? (
+                      category.level === value ? (
                         <AssignmentTurnedInRoundedIcon />
                       ) : null
                     }
@@ -199,17 +272,23 @@ export const QuestionsSelection = ({
               </FormGroup>
               <Divider />
               <FormGroup style={{ maxHeight: "60vh" }}>
-                {topics.map((value) => (
+                {Object.keys(topics).map((value) => (
                   <FormControlLabel
                     label={value}
-                    control={<Checkbox name={value} checked={selectAll} />}
+                    control={
+                      <Checkbox
+                        name={value}
+                        checked={topics[value]}
+                        onChange={(event) => handleCheckBox(event)}
+                      />
+                    }
                   />
                 ))}
               </FormGroup>
               <Button className={classes.button} onClick={handleBack}>
                 Back
               </Button>
-              <Button className={classes.button} onClick={handleNext}>
+              <Button className={classes.button} onClick={handleTopicNext}>
                 Next
               </Button>
             </StepContent>
@@ -222,10 +301,11 @@ export const QuestionsSelection = ({
                 difficulties.
               </Typography>
               <ButtonGroup color={"primary"}>
-                {data.difficulty.map((value) => (
+                {difficulties.map((value) => (
                   <Button
+                    key={value}
                     endIcon={
-                      category["difficulty"] === value ? (
+                      category.difficulty === value ? (
                         <AssignmentTurnedInRoundedIcon />
                       ) : null
                     }
@@ -234,6 +314,45 @@ export const QuestionsSelection = ({
                   </Button>
                 ))}
               </ButtonGroup>
+              <div className={classes.actionContainer}>
+                <Button className={classes.button} onClick={handleBack}>
+                  Back
+                </Button>
+                <Button
+                  disabled={getTopicsLoader}
+                  className={classes.button}
+                  onClick={handleNext}>
+                  Next
+                  {getTopicsLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </Button>
+              </div>
+            </StepContent>
+          </Step>
+          <Step>
+            <StepLabel>Number of Questions</StepLabel>
+            <StepContent>
+              <Typography>
+                Select the number off questions to attempt.
+              </Typography>
+              <FormControl className={classes.numOfQuestionsForm}>
+                <InputLabel>Number of Questions</InputLabel>
+                <Select
+                  value={numOfQuestions}
+                  onChange={(event) =>
+                    handleForm({ numOfQuestions: event.target.value })
+                  }>
+                  {genNumOfQuestions().map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <div className={classes.actionContainer}>
                 <Button className={classes.button} onClick={handleBack}>
                   Back

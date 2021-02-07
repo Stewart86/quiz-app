@@ -5,16 +5,17 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
+  Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { postNewQuestion, updateNewCategories } from "../firestore/questions"
 
 import { Editor } from "@tinymce/tinymce-react"
 import { InsertMultipleChoice } from "./InsertMultipleChoice"
 import { green } from "@material-ui/core/colors"
 import { makeStyles } from "@material-ui/core/styles"
+import { postNewQuestion } from "../firestore/questions"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,14 +53,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
+export const InsertQuestionForm = ({ categories }) => {
   const classes = useStyles()
   const [choices, setChoices] = useState([""])
   const [question, setQuestion] = useState("")
   const [answer, setAnswer] = useState(1)
   const [answerError, setAnswerError] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [openSnackBar, setOpenSnackBar] = useState(false)
 
+  const handleSnackBarClose = () => {
+    setOpenSnackBar(false)
+  }
   const handleAnswerError = (answer) => {
     const val = answer.target.value
     if (val > choices.length || val < 1) {
@@ -103,10 +108,16 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
         type: "multipleChoice",
         answer: answer,
       })
-      await updateNewCategories(categories)
-      setLoading(false)
       handleNextInsert()
+      setLoading(false)
+      setOpenSnackBar(true)
     }
+  }
+
+  const handleNextInsert = () => {
+    setAnswer(1)
+    setQuestion("")
+    setChoices([""])
   }
 
   return (
@@ -115,7 +126,7 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
       <CardContent>
         <Editor
           apiKey='nsjjba31x54f5slt84a74owxenrmbe9xlj1esq35wwm7h3w7'
-          initialValue=''
+          value={question}
           init={{
             height: 500,
             menubar: false,
@@ -167,6 +178,13 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
           </div>
         </CardActions>
       </CardContent>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackBar}
+        message={"Question Successfully added."}
+        onClose={handleSnackBarClose}
+        autoHideDuration={3000}
+      />
     </Card>
   )
 }

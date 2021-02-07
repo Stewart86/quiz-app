@@ -28,24 +28,23 @@ export const updateNewCategories = async (categories) => {
   await cursor.set(obj)
 }
 
-export const getCategories = async () => {
-  const cursor = db.collection("questions").doc("categories")
-  const doc = await cursor.get()
-  return doc.data()
-}
-
 export const getQuestions = async (categories) => {
+  console.log(categories)
   var cursor = db.collection("questions")
   Object.keys(categories).forEach((k, i) => {
-    if (Array.isArray(categories[k])) {
-      if (categories[k].length > 0) {
-        categories[k].forEach((item, i) => {
-          cursor = cursor.where(k, "==", item)
-        })
-      }
-    } else {
-      if (categories[k] !== "") {
-        cursor = cursor.where(k, "==", categories[k])
+    if (k !== "numOfQuestions") {
+      if (Array.isArray(categories[k])) {
+        if (categories[k].length > 0) {
+          categories[k].forEach((item, i) => {
+            if (item !== "all") {
+              cursor = cursor.where(k, "==", item)
+            }
+          })
+        }
+      } else {
+        if (categories[k] !== "") {
+          cursor = cursor.where(k, "==", categories[k])
+        }
       }
     }
   })
@@ -61,5 +60,6 @@ export const getQuestions = async (categories) => {
   // var item = items[Math.floor(Math.random() * items.length)];
   // need to check if its alrady in list
   // doc.id is useful for uniqueness check
+  console.log("Number of questions returned", Object.keys(data).length)
   return data
 }

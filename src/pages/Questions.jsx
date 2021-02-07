@@ -1,23 +1,13 @@
 import { Loading, Printable, QuestionsSelection, Quiz } from "../components"
-import React, { useEffect, useState } from "react"
-import { getCategories, getQuestions } from "../firestore/questions"
+import React, { useState } from "react"
 
 import { questionComponents as components } from "../helper/enum"
+import { getQuestions } from "../firestore/questions"
 import { questionKeyRename } from "../helper/utilities"
 
 export const Questions = () => {
-  const [data, setData] = useState({})
   const [questions, setQuestions] = useState({})
-  const [show, setShowComponent] = useState(components.loading)
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const categories = await getCategories()
-      setData(categories)
-      setShowComponent(components.questionsSelection)
-    }
-    fetchData()
-  }, [])
+  const [show, setShowComponent] = useState(components.questionsSelection)
 
   const handlePrintable = async (selection) => {
     console.log(selection)
@@ -46,7 +36,6 @@ export const Questions = () => {
           case components.questionsSelection:
             return (
               <QuestionsSelection
-                data={data}
                 handlePrintable={handlePrintable}
                 handleGetQuestions={handleGetQuestions}
               />
