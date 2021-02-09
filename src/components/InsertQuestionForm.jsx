@@ -5,17 +5,19 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
+  Paper,
   Snackbar,
   TextField,
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
 
-import { Editor } from "@tinymce/tinymce-react"
+import Editor from "rich-markdown-editor"
 import { InsertMultipleChoice } from "./InsertMultipleChoice"
 import { green } from "@material-ui/core/colors"
 import { makeStyles } from "@material-ui/core/styles"
 import { postNewQuestion } from "../firestore/questions"
+import { uploadImage } from "../storage/questions"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,6 +53,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(6),
     marginBottom: theme.spacing(3),
   },
+  editorWrapper: {
+    padding: theme.spacing(3),
+  },
+  editor: theme.typography.body1,
 }))
 
 export const InsertQuestionForm = ({ categories }) => {
@@ -120,27 +126,23 @@ export const InsertQuestionForm = ({ categories }) => {
     setChoices([""])
   }
 
+  const handleUploadImage = async (file) => {
+    const url = await uploadImage(file)
+    return url
+  }
+
   return (
     <Card>
       <CardHeader title={"Insert Question"} />
       <CardContent>
-        <Editor
-          apiKey='nsjjba31x54f5slt84a74owxenrmbe9xlj1esq35wwm7h3w7'
-          value={question}
-          init={{
-            height: 500,
-            menubar: false,
-            plugins: [
-              "advlist autolink lists link image charmap print preview anchor",
-              "searchreplace visualblocks code fullscreen",
-              "insertdatetime media table paste code help wordcount",
-            ],
-            toolbar: `undo redo | formatselect | bold italic backcolor | \
-             alignleft aligncenter alignright alignjustify | \
-             bullist numlist outdent indent | removeformat | help`,
-          }}
-          onEditorChange={handleEditorChange}
-        />
+        <Paper className={classes.editorWrapper}>
+          <Editor
+            className={classes.editor}
+            onChange={(v) => handleEditorChange(v)}
+            placeholder={"Enter your question here..."}
+            uploadImage={async (file) => handleUploadImage(file)}
+          />
+        </Paper>
         <Typography
           className={classes.multipleChoiceTitle}
           gutterBottom
@@ -165,7 +167,7 @@ export const InsertQuestionForm = ({ categories }) => {
           type={"number"}
           label={"Answer"}
           value={answer}
-          helperText={answerError ? "Enter the correct answer only" : ""}
+          helperText={answerError && "Enter the correct answer only"}
         />
         <CardActions>
           <div className={classes.wrapper}>

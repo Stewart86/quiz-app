@@ -71,7 +71,7 @@ export const QuizFunctionBar = ({
             </Tooltip>
             <Divider orientation={"vertical"} flexItem />
             <Tooltip title={"Print"}>
-              <IconButton color={"secondary"} onClick={handlePrintable}>
+              <IconButton color={"secondary"} onClick={() =>handlePrintable()}>
                 <PrintIcon />
               </IconButton>
             </Tooltip>

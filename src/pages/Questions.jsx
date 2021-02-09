@@ -9,11 +9,14 @@ export const Questions = () => {
   const [questions, setQuestions] = useState({})
   const [show, setShowComponent] = useState(components.questionsSelection)
 
-  const handlePrintable = async (selection) => {
-    console.log(selection)
+  const handlePrintable = () => {
+    setShowComponent(components.loading)
+    setShowComponent(components.printable)
+  }
+
+  const handleDirectPrint = async (selection) => {
     setShowComponent(components.loading)
     setQuestions(questionKeyRename(await getQuestions(selection)))
-    console.log(questions)
     setShowComponent(components.printable)
   }
 
@@ -36,7 +39,7 @@ export const Questions = () => {
           case components.questionsSelection:
             return (
               <QuestionsSelection
-                handlePrintable={handlePrintable}
+                handlePrintable={handleDirectPrint}
                 handleGetQuestions={handleGetQuestions}
               />
             )

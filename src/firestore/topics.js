@@ -1,4 +1,4 @@
-import { db } from "../firestore"
+import { db } from "../firebase"
 
 export const getTopic = async (subject, level) => {
   const topics = db.collection("topics")

@@ -11,12 +11,14 @@ import {
 import React, { useState } from "react"
 import { blue, green, red } from "@material-ui/core/colors"
 
+import Editor from "rich-markdown-editor"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
   answerCard: {
     marginBottom: theme.spacing(4),
   },
+  question:{ ...theme.typography.body1, fontSize:"1.4em"},
 }))
 
 export const Question = ({
@@ -59,9 +61,12 @@ export const Question = ({
               subheader={`${question.subject} | ${question.level} | ${question.school} | ${question.year}`}
             />
             <CardContent>
-              <Typography variant={"subtitle1"} gutterBottom>
-                <span dangerouslySetInnerHTML={{ __html: question.question }} />
-              </Typography>
+              <Editor
+                className={classes.question}
+                readOnly
+                defaultValue={question.question}
+                value={question.question}
+              />
             </CardContent>
           </Card>
         </Grow>

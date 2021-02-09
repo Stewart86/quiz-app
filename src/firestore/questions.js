@@ -1,5 +1,5 @@
 import _ from "lodash"
-import { db } from "../firestore"
+import { db } from "../firebase"
 
 export const postNewQuestion = async (question) => {
   const questionsCollection = db.collection("questions")
@@ -30,26 +30,26 @@ export const updateNewCategories = async (categories) => {
 
 export const getQuestions = async (categories) => {
   console.log(categories)
-  var cursor = db.collection("questions")
+  var cur = db.collection("questions")
   Object.keys(categories).forEach((k, i) => {
     if (k !== "numOfQuestions") {
       if (Array.isArray(categories[k])) {
         if (categories[k].length > 0) {
           categories[k].forEach((item, i) => {
             if (item !== "all") {
-              cursor = cursor.where(k, "==", item)
+              cur = cur.where(k, "==", item)
             }
           })
         }
       } else {
         if (categories[k] !== "") {
-          cursor = cursor.where(k, "==", categories[k])
+          cur = cur.where(k, "==", categories[k])
         }
       }
     }
   })
 
-  const snapshot = await cursor.get()
+  const snapshot = await cur.get()
 
   const data = {}
   snapshot.forEach((doc) => {
