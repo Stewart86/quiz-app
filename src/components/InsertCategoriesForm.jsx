@@ -13,40 +13,35 @@ import {
 import React, { useState } from "react"
 import { difficulties, levels, subjects } from "../helper/constants"
 
-export const InsertCategoriesForm = ({
-  categories,
-  handleChange,
-  handleInsertClick,
-}) => {
+export const InsertCategoriesForm = ({ handleChange }) => {
   const [selSubject, setSubject] = useState()
   const [selLevel, setLevel] = useState()
   const [selDifficulty, setDifficulty] = useState()
   const [selTopic, setTopic] = useState()
 
   const handleSubjectChange = (event) => {
-    const val = event.target.value
-    setSubject(val)
-    handleChange({ subject: val })
+    const subject = event.target.value
+    setSubject(subject)
+    handleChange({ subject })
   }
 
   const handleLevelChange = (event) => {
-    const val = event.target.value
-    setLevel(val)
-    handleChange({ level: val })
+    const level = event.target.value
+    setLevel(level)
+    handleChange({ level })
   }
 
   const handleDifficultyChange = (event) => {
-    const val = event.target.value
-    setDifficulty(val)
-    handleChange({ difficulty: val })
+    const difficulty = event.target.value
+    setDifficulty(difficulty)
+    handleChange({ difficulty })
   }
 
   const handleTopicChange = (event) => {
-    const val = event.target.value
-    setTopic(val)
-    handleChange({ topic: val })
+    const topic = event.target.value
+    setTopic(topic)
+    handleChange({ topic: topic })
   }
-  // topic textbox
 
   return (
     <Card>

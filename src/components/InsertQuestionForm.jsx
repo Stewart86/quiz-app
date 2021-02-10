@@ -18,6 +18,8 @@ import { green } from "@material-ui/core/colors"
 import { makeStyles } from "@material-ui/core/styles"
 import { postNewQuestion } from "../firestore/questions"
 import { uploadImage } from "../storage/questions"
+import { random } from "nanoid"
+import { updateTopic } from "../firestore/topics"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(3),
   },
   editorWrapper: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(5),
   },
   editor: theme.typography.body1,
 }))
@@ -67,10 +69,12 @@ export const InsertQuestionForm = ({ categories }) => {
   const [answerError, setAnswerError] = useState(true)
   const [loading, setLoading] = useState(false)
   const [openSnackBar, setOpenSnackBar] = useState(false)
+  const [rand, setRandom] = useState(random(5))
 
   const handleSnackBarClose = () => {
     setOpenSnackBar(false)
   }
+
   const handleAnswerError = (answer) => {
     const val = answer.target.value
     if (val > choices.length || val < 1) {
@@ -81,7 +85,7 @@ export const InsertQuestionForm = ({ categories }) => {
     }
   }
 
-  const handleEditorChange = (content, editor) => {
+  const handleEditorChange = (content) => {
     setQuestion(content)
   }
 
@@ -101,22 +105,18 @@ export const InsertQuestionForm = ({ categories }) => {
   }
 
   const handleInsertQuestion = async () => {
-    // if empty dont insert
-    if (answer === -1) {
-      return
-    }
     if (answer < choices.length || answer > 1) {
       setLoading(true)
+      const type = "multipleChoice"
       await postNewQuestion({
         ...categories,
-        question: question,
-        choices: choices,
-        type: "multipleChoice",
-        answer: answer,
+        question,
+        choices,
+        answer,
+        type,
       })
+      await updateTopic(categories.subject, categories.level, categories.topic)
       handleNextInsert()
-      setLoading(false)
-      setOpenSnackBar(true)
     }
   }
 
@@ -124,6 +124,9 @@ export const InsertQuestionForm = ({ categories }) => {
     setAnswer(1)
     setQuestion("")
     setChoices([""])
+    setRandom(random().toString())
+    setLoading(false)
+    setOpenSnackBar(true)
   }
 
   const handleUploadImage = async (file) => {
@@ -133,12 +136,14 @@ export const InsertQuestionForm = ({ categories }) => {
 
   return (
     <Card>
-      <CardHeader title={"Insert Question"} />
+      <CardHeader title={"Question"} />
       <CardContent>
         <Paper className={classes.editorWrapper}>
           <Editor
+            id={rand}
+            key={rand}
             className={classes.editor}
-            onChange={(v) => handleEditorChange(v)}
+            onChange={handleEditorChange}
             placeholder={"Enter your question here..."}
             uploadImage={async (file) => handleUploadImage(file)}
           />

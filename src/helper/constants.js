@@ -1,3 +1,4 @@
+export const types = ["Multiple Choice", "Fill In The Blank", "Notes"]
 export const subjects = ["English", "Maths", "Science", "Chinese"]
 export const levels = [
   "Primary 1",

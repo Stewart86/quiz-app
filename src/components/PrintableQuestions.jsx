@@ -31,6 +31,7 @@ export const PrintableQuestions = ({ count, question }) => {
         />
         <CardContent>
           <Editor
+            id={count}
             className={classes.question}
             readOnly
             defaultValue={question.question}

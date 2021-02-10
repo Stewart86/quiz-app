@@ -21,7 +21,7 @@ import {
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { difficulties, levels, subjects } from "../helper/constants"
+import { difficulties, levels, subjects, types } from "../helper/constants"
 import {
   genNumOfQuestions,
   getSelectionFromTopics,
@@ -62,9 +62,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 export const QuestionsSelection = ({
-  data,
-  handleOnChange,
-  selection,
   handlePrintable,
   handleGetQuestions,
 }) => {
@@ -102,13 +99,6 @@ export const QuestionsSelection = ({
       return obj
     })
   }
-  /**
-   * if select all
-   * remove topics
-   * else
-   * selTopics.length === topics.length
-   * select all
-   */
 
   const handleGetTopics = async (subject, level) => {
     setGetTopicsLoader(true)
@@ -179,6 +169,47 @@ export const QuestionsSelection = ({
       container>
       <Card style={{ minWidth: 760 }}>
         <Stepper activeStep={activeStep} orientation={"vertical"}>
+          <Step>
+            <StepLabel>Type of Quiz</StepLabel>
+            <StepContent>
+              <Typography gutterBottom>
+                Please select the type of quiz to attempt or notes to study.
+              </Typography>
+              <ButtonGroup color={"primary"}>
+                {types.map((value) => (
+                  <Button
+                    endIcon={
+                      category.type === value ? (
+                        <AssignmentTurnedInRoundedIcon />
+                      ) : null
+                    }
+                    onClick={() => handleForm({ type: value })}>
+                    {value}
+                  </Button>
+                ))}
+              </ButtonGroup>
+              <div className={classes.actionContainer}>
+                <Button
+                  className={classes.button}
+                  disabled={activeStep === 0}
+                  onClick={handleBack}>
+                  Back
+                </Button>
+                <Button
+                  disabled={getTopicsLoader}
+                  className={classes.button}
+                  onClick={handleNext}>
+                  Next
+                  {getTopicsLoader && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </Button>
+              </div>
+            </StepContent>
+          </Step>
           <Step>
             <StepLabel>Subject</StepLabel>
             <StepContent>

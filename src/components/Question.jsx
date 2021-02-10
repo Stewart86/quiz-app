@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   answerCard: {
     marginBottom: theme.spacing(4),
   },
-  question:{ ...theme.typography.body1, fontSize:"1.4em"},
+  question: { ...theme.typography.body1, fontSize: "1.4em" },
 }))
 
 export const Question = ({
@@ -46,20 +46,20 @@ export const Question = ({
       }
     }
   }
+
   const handleSelection = (sel) => {
     setSelection(sel)
     onHandleSelection(sel)
   }
+
+  const subHeader = `${question.subject} | ${question.level} | ${question.topic} | ${question.year}`
 
   return (
     <>
       <Grid item xs={12} sm={8}>
         <Grow in={true}>
           <Card>
-            <CardHeader
-              title={`Question ${index}`}
-              subheader={`${question.subject} | ${question.level} | ${question.school} | ${question.year}`}
-            />
+            <CardHeader title={`Question ${index}`} subheader={subHeader} />
             <CardContent>
               <Editor
                 className={classes.question}
