@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 export const Question = ({
   index,
   question,
+  isLastQuestion,
   onHandleSelection,
   onHandleAnswerClick,
 }) => {
@@ -44,6 +45,18 @@ export const Question = ({
       if (currentChoice === question.selectedAnswer) {
         return blue[300]
       }
+    }
+  }
+  
+  const printButton = () => {
+    if (question.result !== undefined) {
+      if (isLastQuestion) {
+        return "End"
+      } else {
+        return "Next"
+      }
+    } else {
+      return "Submit"
     }
   }
 
@@ -103,7 +116,7 @@ export const Question = ({
           color={"primary"}
           variant={"contained"}
           onClick={() => onHandleAnswerClick(selection)}>
-          Confirm
+          {printButton()}
         </Button>
       </Grid>
     </>

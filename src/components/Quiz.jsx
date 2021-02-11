@@ -47,17 +47,24 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const onHandleAnswerClick = (ans) => {
+    // when undefiend === not answered
     if (questionsState[count].result === undefined) {
       let curQues = questions[count]
       curQues["result"] = Number(curQues.answer) === ans + 1
       curQues["selectedAnswer"] = ans
       setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
+    } else if (Object.keys(questionsState).length === count) {
+      // else if last question show result
+    setShowResult(true)
+    } else {
+      // else, answered goto next
+      setCount((state) => Number(state + 1))
     }
   }
 
   const onHandleSelection = (selection) => {
     let curQues = questions[count]
-    curQues["selectedAnswer"] = selection 
+    curQues["selectedAnswer"] = selection
     setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
   }
 
@@ -89,7 +96,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
         handleNextClick={handleNextClick}
         handleEndClick={handleEndClick}
         handleDisablePreviousBtn={count === 1}
-        handleDisableNextBtn={Object.keys(questionsState).length  === count}
+        handleDisableNextBtn={Object.keys(questionsState).length === count}
       />
       <QuestionsDrawer
         questions={questionsState}
@@ -107,6 +114,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
         <Question
           index={count}
           question={questionsState[count]}
+          isLastQuestion={Object.keys(questions).length === count}
           onHandleSelection={onHandleSelection}
           onHandleAnswerClick={onHandleAnswerClick}
         />
