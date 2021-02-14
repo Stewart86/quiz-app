@@ -46,6 +46,7 @@ export const InsertMultipleChoice = ({
               className={classes.input}
               fullWidth
               placeholder={`Choice ${index + 1}`}
+              value={choices[index]}
               onChange={(event) => handleSetChoice(event.target.value, index)}
             />
             <Divider className={classes.divider} orientation={"vertical"} />

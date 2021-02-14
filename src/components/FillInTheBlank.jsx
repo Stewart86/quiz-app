@@ -40,7 +40,7 @@ export const FillInTheBlank = () => {
                 <FormLabel component={"legend"}>Enter sentences</FormLabel>
                 <TextareaAutosize
                   onKeyDown={handleChange}
-                  style={{ flex:1, width:"40vw", marginTop: 10 }}
+                  style={{ flex: 1, width: "40vw", marginTop: 10 }}
                   rowsMin={10}
                 />
               </FormControl>

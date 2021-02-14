@@ -5,16 +5,23 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
-  FormLabel,
+  Paper,
+  Snackbar,
   TextField,
+  Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { postNewQuestion, updateNewCategories } from "../firestore/questions"
 
-import { Editor } from "@tinymce/tinymce-react"
+import Editor from "rich-markdown-editor"
 import { InsertMultipleChoice } from "./InsertMultipleChoice"
+import { WarningSnackBar } from "./WarningSnackBar"
 import { green } from "@material-ui/core/colors"
+import { isMultipleChoiceQuestionValid } from "../helper/validation"
 import { makeStyles } from "@material-ui/core/styles"
+import { postNewQuestion } from "../firestore/questions"
+import { random } from "nanoid"
+import { updateTopic } from "../firestore/topics"
+import { uploadImage } from "../storage/questions"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,15 +53,30 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  multipleChoiceTitle: {
+    marginTop: theme.spacing(6),
+    marginBottom: theme.spacing(3),
+  },
+  editorWrapper: {
+    padding: theme.spacing(5),
+  },
+  editor: theme.typography.body1,
 }))
 
-export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
+export const InsertQuestionForm = ({ categories }) => {
   const classes = useStyles()
   const [choices, setChoices] = useState([""])
   const [question, setQuestion] = useState("")
-  const [answer, setAnswer] = useState(-1)
+  const [answer, setAnswer] = useState(1)
   const [answerError, setAnswerError] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [openSnackBar, setOpenSnackBar] = useState(false)
+  const [rand, setRandom] = useState(random(5))
+  const [warning, setWarning] = useState({ open: false, msg: "" })
+
+  const handleSnackBarClose = () => {
+    setOpenSnackBar(false)
+  }
 
   const handleAnswerError = (answer) => {
     const val = answer.target.value
@@ -62,11 +84,11 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
       setAnswerError(true)
     } else {
       setAnswerError(false)
-      setAnswer(val - 1)
+      setAnswer(Number(val))
     }
   }
 
-  const handleEditorChange = (content, editor) => {
+  const handleEditorChange = (content) => {
     setQuestion(content)
   }
 
@@ -86,47 +108,72 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
   }
 
   const handleInsertQuestion = async () => {
-    // if empty dont insert
-    if (answer === -1) {
-      return
+    setLoading(true)
+    const type = "multipleChoice"
+    const fullQuestion = {
+      ...categories,
+      question,
+      choices,
+      answer,
+      type,
     }
-    if (answer < choices.length || answer > 1) {
-      setLoading(true)
-      await postNewQuestion({
-        ...categories,
-        question: question,
-        choices: choices,
-        type: "multipleChoice",
-        answer: answer,
-      })
-      await updateNewCategories(categories)
+    // todo: validate submission before sending
+    try {
+      const validation = isMultipleChoiceQuestionValid(fullQuestion)
+
+      if (validation) {
+        await postNewQuestion(fullQuestion)
+        await updateTopic(
+          categories.subject,
+          categories.level,
+          categories.topic
+        )
+        handleNextInsert()
+      }
+    } catch (error) {
+      setWarning({ open: true, msg: error.message })
       setLoading(false)
-      handleNextInsert()
     }
+  }
+
+  const handleNextInsert = () => {
+    setAnswer(1)
+    setQuestion("")
+    setChoices([""])
+    setRandom(random(5))
+    setLoading(false)
+    setOpenSnackBar(true)
+  }
+
+  const handleUploadImage = async (file) => {
+    const url = await uploadImage(file)
+    return url
+  }
+
+  const handleWarningClose = () => {
+    setWarning({ open: false, msg: "" })
   }
 
   return (
     <Card>
-      <CardHeader title={"Insert Question"} />
+      <CardHeader title={"Question"} />
       <CardContent>
-        <Editor
-          apiKey="nsjjba31x54f5slt84a74owxenrmbe9xlj1esq35wwm7h3w7"
-          initialValue=""
-          init={{
-            height: 500,
-            menubar: false,
-            plugins: [
-              "advlist autolink lists link image charmap print preview anchor",
-              "searchreplace visualblocks code fullscreen",
-              "insertdatetime media table paste code help wordcount",
-            ],
-            toolbar: `undo redo | formatselect | bold italic backcolor | \
-             alignleft aligncenter alignright alignjustify | \
-             bullist numlist outdent indent | removeformat | help`,
-          }}
-          onEditorChange={handleEditorChange}
-        />
-        <FormLabel component={"legend"}>Question Category</FormLabel>
+        <Paper className={classes.editorWrapper}>
+          <Editor
+            id={rand}
+            key={rand}
+            className={classes.editor}
+            onChange={handleEditorChange}
+            placeholder={"Enter your question here..."}
+            uploadImage={async (file) => handleUploadImage(file)}
+          />
+        </Paper>
+        <Typography
+          className={classes.multipleChoiceTitle}
+          gutterBottom
+          variant={"h5"}>
+          Multiple Choices
+        </Typography>
         {choices.map((x, i) => {
           return (
             <InsertMultipleChoice
@@ -144,7 +191,8 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
           onChange={handleAnswerError}
           type={"number"}
           label={"Answer"}
-          helperText={answerError ? "Enter the correct answer only" : ""}
+          value={answer}
+          helperText={answerError && "Enter the correct answer only"}
         />
         <CardActions>
           <div className={classes.wrapper}>
@@ -157,6 +205,20 @@ export const InsertQuestionForm = ({ categories, handleNextInsert }) => {
           </div>
         </CardActions>
       </CardContent>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackBar}
+        message={"Question Successfully added."}
+        onClose={handleSnackBarClose}
+        autoHideDuration={3000}
+      />
+      <WarningSnackBar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={warning.open}
+        message={warning.msg}
+        onClose={handleWarningClose}
+        autoHideDuration={3000}
+      />
     </Card>
   )
 }

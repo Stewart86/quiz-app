@@ -1,107 +1,110 @@
-import React from "react"
 import {
-  Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
-  Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
+  Grid,
   Radio,
   RadioGroup,
   TextField,
 } from "@material-ui/core"
-import _ from "lodash"
+import React, { useState } from "react"
+import { difficulties, levels, subjects } from "../helper/constants"
 
-import { makeStyles } from "@material-ui/core/styles"
+export const InsertCategoriesForm = ({ handleChange }) => {
+  const [selSubject, setSubject] = useState(subjects[0])
+  const [selLevel, setLevel] = useState(levels[0])
+  const [selDifficulty, setDifficulty] = useState(difficulties[0])
+  const [selTopic, setTopic] = useState()
 
-const useStyles = makeStyles((theme) => ({
-  cardAction: {
-    float: "right",
-  },
-}))
+  const handleSubjectChange = (event) => {
+    const subject = event.target.value
+    setSubject(subject)
+    handleChange({ subject })
+  }
 
-export const InsertCategoriesForm = ({
-  categories,
-  handleChange,
-  handleInsertClick,
-}) => {
-  const classes = useStyles()
+  const handleLevelChange = (event) => {
+    const level = event.target.value
+    setLevel(level)
+    handleChange({ level })
+  }
+
+  const handleDifficultyChange = (event) => {
+    const difficulty = event.target.value
+    setDifficulty(difficulty)
+    handleChange({ difficulty })
+  }
+
+  const handleTopicChange = (event) => {
+    const topic = event.target.value
+    setTopic(topic)
+    handleChange({ topic: topic })
+  }
 
   return (
     <Card>
-      <CardHeader title={"Input Category"} />
+      <CardHeader title={"Question Categories"} />
       <CardContent>
-        <form>
-          <FormControl component={"fieldset"}>
-            <FormLabel component={"legend"}>Question Category</FormLabel>
-            <TextField
-              id={"subject"}
-              label="Subject"
-              className={classes.textField}
-              variant="filled"
-              size={"small"}
-              onChange={handleChange}
-              fullWidth
-              helperText={"e.g. 'English', 'Mathematics' or 'Science' etc."}
-            />
-            <TextField
-              id={"level"}
-              label="Educational Level"
-              className={classes.textField}
-              variant="filled"
-              size={"small"}
-              onChange={handleChange}
-              fullWidth
-              helperText={"e.g. 'Primary 1' or 'Secondary 1' etc."}
-            />
-            <TextField
-              id={"school"}
-              label="School"
-              className={classes.textField}
-              variant="filled"
-              size={"small"}
-              onChange={handleChange}
-              fullWidth
-              helperText={"School that this question is produced"}
-            />
-            <TextField
-              id={"year"}
-              label="Year"
-              className={classes.textField}
-              variant="filled"
-              size={"small"}
-              onChange={handleChange}
-              fullWidth
-              helperText={"Year that this question is produced"}
-            />
-          </FormControl>
-          <Divider
-            variant={"middle"}
-            style={{ marginBottom: "2rem", marginTop: "2rem" }}
-          />
-          <FormControl component={"fieldset"}>
-            <FormLabel component={"legend"}>Answer Input Type</FormLabel>
-            <RadioGroup value="multipleChoice" onChange={handleChange}>
-              {categories.type.map((n, i) => {
-                return (
+        <Grid container spacing={3} direction={"column"}>
+          <Grid item>
+            <FormControl component={"fieldset"}>
+              <FormLabel component={"legend"}>Subject</FormLabel>
+              <RadioGroup row value={selSubject} onChange={handleSubjectChange}>
+                {subjects.map((value) => (
                   <FormControlLabel
-                    key={i}
-                    value={n}
+                    key={value}
+                    value={value}
                     control={<Radio />}
-                    label={_.startCase(n)}
+                    label={value}
                   />
-                )
-              })}
-            </RadioGroup>
-          </FormControl>
-        </form>
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControl component={"fieldset"}>
+              <FormLabel component={"legend"}>Level</FormLabel>
+              <RadioGroup row value={selLevel} onChange={handleLevelChange}>
+                {levels.map((value) => (
+                  <FormControlLabel
+                    key={value}
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControl component={"fieldset"}>
+              <FormLabel component={"legend"}>Difficulty</FormLabel>
+              <RadioGroup
+                row
+                value={selDifficulty}
+                onChange={handleDifficultyChange}>
+                {difficulties.map((value) => (
+                  <FormControlLabel
+                    key={value}
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <TextField
+            value={selTopic}
+            onChange={handleTopicChange}
+            label={"Topic"}
+          />
+        </Grid>
       </CardContent>
-      <CardActions className={classes.cardAction}>
-        <Button onClick={handleInsertClick}>Next</Button>
-      </CardActions>
     </Card>
   )
 }

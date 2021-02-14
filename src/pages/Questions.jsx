@@ -1,43 +1,48 @@
 import { Loading, Printable, QuestionsSelection, Quiz } from "../components"
-import React, { useEffect, useState } from "react"
-import { getCategories, getQuestions } from "../firestore/questions"
-import { getFirstArrayInObj, questionKeyRename } from "../helper/utilities"
+import React, { useState } from "react"
 
 import { questionComponents as components } from "../helper/enum"
+import { getQuestions } from "../firestore/questions"
+import { questionKeyRename } from "../helper/utilities"
+import { WarningSnackBar } from "../components/WarningSnackBar"
 
 export const Questions = () => {
-  const [selection, setSelection] = useState({})
-  const [data, setData] = useState({})
   const [questions, setQuestions] = useState({})
-  const [show, setShowComponent] = useState(components.loading)
+  const [show, setShowComponent] = useState(components.questionsSelection)
+  const [openSnackBar, setOpenSnackBar] = useState(false)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const categories = await getCategories()
-      setSelection(getFirstArrayInObj(categories))
-      setData(categories)
-      setShowComponent(components.questionsSelection)
-    }
-    fetchData()
-  }, [])
-
-  const handleOnChange = (e, type) => {
-    setSelection({
-      ...selection,
-      [type]: e.target.value,
-    })
-  }
-
-  const handlePrintable = async () => {
+  const handlePrintable = () => {
     setShowComponent(components.loading)
-    setQuestions(questionKeyRename(await getQuestions(selection)))
     setShowComponent(components.printable)
   }
 
-  const handleGetQuestions = async () => {
+  const tryGetQuestionsOrThrowWarning = async (selection) => {
+    const dbQuestions = await getQuestions(selection)
+    if (dbQuestions.length === 0) {
+      setOpenSnackBar(true)
+      return false
+    } else {
+      setQuestions(questionKeyRename(dbQuestions))
+      return true
+    }
+  }
+
+  const handleDirectPrint = async (selection) => {
     setShowComponent(components.loading)
-    setQuestions(questionKeyRename(await getQuestions(selection)))
-    setShowComponent(components.startQuiz)
+    if (await tryGetQuestionsOrThrowWarning(selection)) {
+      setShowComponent(components.printable)
+    } else {
+      setShowComponent(components.questionsSelection)
+    }
+  }
+
+  const handleGetQuestions = async (selection) => {
+    setShowComponent(components.loading)
+    if (await tryGetQuestionsOrThrowWarning(selection)) {
+      setShowComponent(components.startQuiz)
+    } else {
+      setShowComponent(components.questionsSelection)
+    }
   }
 
   return (
@@ -53,10 +58,7 @@ export const Questions = () => {
           case components.questionsSelection:
             return (
               <QuestionsSelection
-                data={data}
-                handleOnChange={handleOnChange}
-                selection={selection}
-                handlePrintable={handlePrintable}
+                handlePrintable={handleDirectPrint}
                 handleGetQuestions={handleGetQuestions}
               />
             )
@@ -70,6 +72,14 @@ export const Questions = () => {
             return <Loading />
         }
       })()}
+      <WarningSnackBar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={openSnackBar}
+        role='alert'
+        message={"Question not found."}
+        onClose={() => setOpenSnackBar(false)}
+        autoHideDuration={3000}
+      />
     </>
   )
 }

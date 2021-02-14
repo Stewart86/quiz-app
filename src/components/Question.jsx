@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardActionArea,
   CardContent,
@@ -7,23 +8,32 @@ import {
   Grow,
   Typography,
 } from "@material-ui/core"
-import { green, red } from "@material-ui/core/colors"
+import React, { useState } from "react"
+import { blue, green, red } from "@material-ui/core/colors"
 
-import React from "react"
+import Editor from "rich-markdown-editor"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
   answerCard: {
     marginBottom: theme.spacing(4),
   },
+  question: { ...theme.typography.body1, fontSize: "1.4em" },
 }))
 
-export const Question = ({ index, question, onHandleAnswerClick }) => {
+export const Question = ({
+  index,
+  question,
+  isLastQuestion,
+  onHandleSelection,
+  onHandleAnswerClick,
+}) => {
   const classes = useStyles()
+  const [selection, setSelection] = useState(question.selection)
 
   const showResult = (currentChoice) => {
     if (question.result !== undefined) {
-      if (currentChoice === question.answer) {
+      if (currentChoice === Number(question.answer) - 1) {
         return green[300]
       } else if (currentChoice !== question.selectedAnswer) {
         return "#fff"
@@ -31,21 +41,45 @@ export const Question = ({ index, question, onHandleAnswerClick }) => {
         return red[300]
       }
     }
+    if (question.selection !== undefined || question.selection !== null) {
+      if (currentChoice === question.selectedAnswer) {
+        return blue[300]
+      }
+    }
   }
+  
+  const printButton = () => {
+    if (question.result !== undefined) {
+      if (isLastQuestion) {
+        return "End"
+      } else {
+        return "Next"
+      }
+    } else {
+      return "Submit"
+    }
+  }
+
+  const handleSelection = (sel) => {
+    setSelection(sel)
+    onHandleSelection(sel)
+  }
+
+  const subHeader = `${question.subject} | ${question.level} | ${question.topic} | ${question.year}`
 
   return (
     <>
       <Grid item xs={12} sm={8}>
         <Grow in={true}>
           <Card>
-            <CardHeader
-              title={`Question ${index}`}
-              subheader={`${question.subject} | ${question.level} | ${question.school} | ${question.year}`}
-            />
+            <CardHeader title={`Question ${index}`} subheader={subHeader} />
             <CardContent>
-              <Typography variant={"subtitle1"} gutterBottom>
-                <span dangerouslySetInnerHTML={{ __html: question.question }} />
-              </Typography>
+              <Editor
+                className={classes.question}
+                readOnly
+                defaultValue={question.question}
+                value={question.question}
+              />
             </CardContent>
           </Card>
         </Grow>
@@ -64,7 +98,7 @@ export const Question = ({ index, question, onHandleAnswerClick }) => {
                 <CardActionArea
                   disabled={question.result !== undefined}
                   key={i}
-                  onClick={() => onHandleAnswerClick(i)}>
+                  onClick={() => handleSelection(i)}>
                   <CardContent
                     style={{
                       backgroundColor: showResult(i),
@@ -78,6 +112,12 @@ export const Question = ({ index, question, onHandleAnswerClick }) => {
             </Grow>
           )
         })}
+        <Button
+          color={"primary"}
+          variant={"contained"}
+          onClick={() => onHandleAnswerClick(selection)}>
+          {printButton()}
+        </Button>
       </Grid>
     </>
   )

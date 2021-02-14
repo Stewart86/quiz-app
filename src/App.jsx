@@ -6,7 +6,11 @@ import {
   Login,
   Questions,
 } from "./pages"
-import { CenterContentRoute, FullScreenContentRoute, LoginPageRoute } from "./layouts"
+import {
+  CenterContentRoute,
+  FullScreenContentRoute,
+  LoginPageRoute,
+} from "./layouts"
 import {
   Redirect,
   Route,
@@ -22,30 +26,30 @@ export default function App() {
   return (
     <>
       <CssBaseline />
-        <Router>
-          <Switch>
-            <Route path='/fillintheblank'>
-              <FillInTheBlank />
-            </Route>
-            <CenterContentRoute
-              path='/insertquestion'
-              component={InsertQuestion}
-            />
-            <FullScreenContentRoute path='/question' component={Questions} />
-            <CenterContentRoute
-              path='/accountsettings'
-              component={AccountSettings}
-            />
-            <CenterContentRoute path='/admin' component={Admin} />
-            <LoginPageRoute path='/login' component={Login} />
-            <Route exact path='/'>
-              <Redirect to='/login' />
-            </Route>
-            <Route path='*'>
-              <Error />
-            </Route>
-          </Switch>
-        </Router>
+      <Router>
+        <Switch>
+          <Route path='/fillintheblank'>
+            <FillInTheBlank />
+          </Route>
+          <CenterContentRoute
+            path='/insertquestion'
+            component={InsertQuestion}
+          />
+          <FullScreenContentRoute path='/question' component={Questions} />
+          <CenterContentRoute
+            path='/accountsettings'
+            component={AccountSettings}
+          />
+          <CenterContentRoute path='/admin' component={Admin} />
+          <LoginPageRoute path='/login' component={Login} />
+          <Route exact path='/'>
+            <Redirect to='/login' />
+          </Route>
+          <Route path='*'>
+            <Error />
+          </Route>
+        </Switch>
+      </Router>
     </>
   )
 }

@@ -1,5 +1,4 @@
-import React, { useState } from "react"
-import _, { random } from "lodash"
+import React, { useEffect, useRef, useState } from "react"
 
 import { Grid } from "@material-ui/core"
 import { Question } from "./Question"
@@ -7,6 +6,7 @@ import { QuestionsDrawer } from "./QuestionsDrawer"
 import { QuizFunctionBar } from "./QuizFunctionBar"
 import { Result } from "./Result"
 import { makeStyles } from "@material-ui/core"
+import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
   questionContainer: {
@@ -16,15 +16,26 @@ const useStyles = makeStyles((theme) => ({
 
 export const Quiz = ({ questions, handlePrintable }) => {
   const classes = useStyles()
+  const history = useHistory()
+  const unblockHandle = useRef()
 
   const [questionsState, setQuestionsState] = useState(questions)
   const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [count, setCount] = useState(1)
-  const [randomNum, setRandom] = useState(null)
+
+  useEffect(() => {
+    unblockHandle.current = history.block(() => {
+      setShowResult(true)
+      return false
+    })
+    return () => {
+      unblockHandle.current.current && unblockHandle.current.current()
+    }
+  })
 
   const handleNextClick = () => {
-    if (count < Object.keys(questions).length - 1) {
+    if (count < Object.keys(questions).length + 1) {
       setCount(count + 1)
     }
   }
@@ -36,13 +47,25 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const onHandleAnswerClick = (ans) => {
+    // when undefiend === not answered
     if (questionsState[count].result === undefined) {
       let curQues = questions[count]
-      curQues["result"] = Number(curQues.answer) === ans
+      curQues["result"] = Number(curQues.answer) === ans + 1
       curQues["selectedAnswer"] = ans
-      setQuestionsState(_.merge(questionsState, {[count]: curQues}))
+      setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
+    } else if (Object.keys(questionsState).length === count) {
+      // else if last question show result
+    setShowResult(true)
+    } else {
+      // else, answered goto next
+      setCount((state) => Number(state + 1))
     }
-    setRandom(random(9999))
+  }
+
+  const onHandleSelection = (selection) => {
+    let curQues = questions[count]
+    curQues["selectedAnswer"] = selection
+    setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
   }
 
   const onHandleDrawer = (toggle) => {
@@ -50,15 +73,15 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const goto = (i) => {
-    setCount(i)
+    setCount((state) => Number(i))
   }
 
   const handleEndClick = () => {
     setShowResult(true)
   }
 
-  const fromResultGoTo = (index) => {
-    setCount(index)
+  const fromResultGoTo = (i) => {
+    setCount((state) => Number(i))
     setShowResult(false)
   }
 
@@ -73,7 +96,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
         handleNextClick={handleNextClick}
         handleEndClick={handleEndClick}
         handleDisablePreviousBtn={count === 1}
-        handleDisableNextBtn={Object.keys(questionsState).length - 1 === count}
+        handleDisableNextBtn={Object.keys(questionsState).length === count}
       />
       <QuestionsDrawer
         questions={questionsState}
@@ -89,9 +112,10 @@ export const Quiz = ({ questions, handlePrintable }) => {
         item
         xs={12}>
         <Question
-          random={randomNum}
           index={count}
           question={questionsState[count]}
+          isLastQuestion={Object.keys(questions).length === count}
+          onHandleSelection={onHandleSelection}
           onHandleAnswerClick={onHandleAnswerClick}
         />
       </Grid>
