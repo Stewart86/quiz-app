@@ -14,8 +14,11 @@ import Editor from "rich-markdown-editor"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
+  answerHeader: {
+    marginTop: theme.spacing(5)
+  },
   answerCard: {
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(1),
   },
   question: { ...theme.typography.body1, fontSize: "1.4em" },
 }))
@@ -68,7 +71,7 @@ export const Question = ({
 
   return (
     <>
-      <Grid item xs={12} sm={8}>
+      <Grid item xs={12}>
         <Card>
           <CardHeader title={`Question ${index}`} subheader={subHeader} />
           <CardContent>
@@ -86,8 +89,10 @@ export const Question = ({
         container
         direction={"column"}
         item
-        xs={12}
-        sm={4}>
+        xs={12}>
+        <Typography className={classes.answerHeader} gutterBottom variant={"h5"}>
+          Choose One
+        </Typography>
         {question.choices.map((choice, i) => {
           return (
             <Card className={classes.answerCard}>
@@ -107,7 +112,10 @@ export const Question = ({
             </Card>
           )
         })}
+      </Grid>
+      <Grid item>
         <Button
+          style={{ float: "right" }}
           color={"primary"}
           variant={"contained"}
           onClick={() => onHandleAnswerClick(selection)}>
