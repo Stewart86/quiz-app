@@ -14,14 +14,14 @@ import React, { useState } from "react"
 
 import Editor from "rich-markdown-editor"
 import { InsertMultipleChoice } from "./InsertMultipleChoice"
-import { WarningSnackBar } from "./WarningSnackBar"
+import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { green } from "@material-ui/core/colors"
-import { isMultipleChoiceQuestionValid } from "../helper/validation"
+import { isMultipleChoiceQuestionValid } from "../../helper/validation"
 import { makeStyles } from "@material-ui/core/styles"
-import { postNewQuestion } from "../firestore/questions"
+import { postNewQuestion } from "../../firestore/questions"
 import { random } from "nanoid"
-import { updateTopic } from "../firestore/topics"
-import { uploadImage } from "../storage/questions"
+import { updateTopic } from "../../firestore/topics"
+import { uploadImage } from "../../storage/questions"
 
 const useStyles = makeStyles((theme) => ({
   root: {

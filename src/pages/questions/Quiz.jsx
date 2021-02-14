@@ -1,6 +1,6 @@
+import { Grid, Slide } from "@material-ui/core"
 import React, { useEffect, useRef, useState } from "react"
 
-import { Grid } from "@material-ui/core"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
 import { QuizFunctionBar } from "./QuizFunctionBar"
@@ -23,6 +23,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
   const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [count, setCount] = useState(1)
+  const [slideDirection, setSlideDirection] = useState("left")
 
   useEffect(() => {
     unblockHandle.current = history.block(() => {
@@ -36,12 +37,14 @@ export const Quiz = ({ questions, handlePrintable }) => {
 
   const handleNextClick = () => {
     if (count < Object.keys(questions).length + 1) {
+      setSlideDirection("left")
       setCount(count + 1)
     }
   }
 
   const handlePreviousClick = () => {
     if (count > 1) {
+      setSlideDirection("right")
       setCount(count - 1)
     }
   }
@@ -55,7 +58,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
       setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
     } else if (Object.keys(questionsState).length === count) {
       // else if last question show result
-    setShowResult(true)
+      setShowResult(true)
     } else {
       // else, answered goto next
       setCount((state) => Number(state + 1))
@@ -73,15 +76,18 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const goto = (i) => {
-    setCount((state) => Number(i))
+    setSlideDirection("top")
+    setCount(() => Number(i))
   }
 
   const handleEndClick = () => {
+    setSlideDirection("top")
     setShowResult(true)
   }
 
   const fromResultGoTo = (i) => {
-    setCount((state) => Number(i))
+    setSlideDirection("top")
+    setCount(() => Number(i))
     setShowResult(false)
   }
 
@@ -104,21 +110,24 @@ export const Quiz = ({ questions, handlePrintable }) => {
         onHandleDrawer={onHandleDrawer}
         goto={goto}
       />
-      <Grid
-        container
-        className={classes.questionContainer}
-        direction={"row"}
-        spacing={4}
-        item
-        xs={12}>
-        <Question
-          index={count}
-          question={questionsState[count]}
-          isLastQuestion={Object.keys(questions).length === count}
-          onHandleSelection={onHandleSelection}
-          onHandleAnswerClick={onHandleAnswerClick}
-        />
-      </Grid>
+      <Slide key={count} in={true} direction={slideDirection}>
+        <Grid
+          container
+          className={classes.questionContainer}
+          direction={"row"}
+          spacing={4}
+          item
+          xs={12}>
+          <Question
+            key={count}
+            index={count}
+            question={questionsState[count]}
+            isLastQuestion={Object.keys(questions).length === count}
+            onHandleSelection={onHandleSelection}
+            onHandleAnswerClick={onHandleAnswerClick}
+          />
+        </Grid>
+      </Slide>
     </>
   )
 }

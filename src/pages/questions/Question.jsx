@@ -5,7 +5,6 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  Grow,
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
@@ -47,7 +46,7 @@ export const Question = ({
       }
     }
   }
-  
+
   const printButton = () => {
     if (question.result !== undefined) {
       if (isLastQuestion) {
@@ -70,19 +69,17 @@ export const Question = ({
   return (
     <>
       <Grid item xs={12} sm={8}>
-        <Grow in={true}>
-          <Card>
-            <CardHeader title={`Question ${index}`} subheader={subHeader} />
-            <CardContent>
-              <Editor
-                className={classes.question}
-                readOnly
-                defaultValue={question.question}
-                value={question.question}
-              />
-            </CardContent>
-          </Card>
-        </Grow>
+        <Card>
+          <CardHeader title={`Question ${index}`} subheader={subHeader} />
+          <CardContent>
+            <Editor
+              className={classes.question}
+              readOnly
+              defaultValue={question.question}
+              value={question.question}
+            />
+          </CardContent>
+        </Card>
       </Grid>
       <Grid
         className={classes.root}
@@ -93,23 +90,21 @@ export const Question = ({
         sm={4}>
         {question.choices.map((choice, i) => {
           return (
-            <Grow key={i.toString()} in={true}>
-              <Card className={classes.answerCard}>
-                <CardActionArea
-                  disabled={question.result !== undefined}
-                  key={i}
-                  onClick={() => handleSelection(i)}>
-                  <CardContent
-                    style={{
-                      backgroundColor: showResult(i),
-                    }}>
-                    <Typography variant={"h6"}>
-                      {i + 1}. {choice}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grow>
+            <Card className={classes.answerCard}>
+              <CardActionArea
+                disabled={question.result !== undefined}
+                key={i}
+                onClick={() => handleSelection(i)}>
+                <CardContent
+                  style={{
+                    backgroundColor: showResult(i),
+                  }}>
+                  <Typography variant={"h6"}>
+                    {i + 1}. {choice}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
           )
         })}
         <Button
