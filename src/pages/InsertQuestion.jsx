@@ -1,9 +1,15 @@
 import { Container, Grid } from "@material-ui/core"
 import { InsertCategoriesForm, InsertQuestionForm } from "../components"
 import React, { useState } from "react"
+import { difficulties, levels, subjects } from "../helper/constants"
 
 export const InsertQuestion = () => {
-  const [categories, setCategories] = useState({ type: ["multipleChoice"] })
+  const [categories, setCategories] = useState({
+    subject: subjects[0],
+    level: levels[0],
+    difficulty: difficulties[0],
+    type: ["multipleChoice"],
+  })
 
   const handleInsertClick = () => {
     let validate = 0

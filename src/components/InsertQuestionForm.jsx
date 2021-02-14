@@ -14,12 +14,14 @@ import React, { useState } from "react"
 
 import Editor from "rich-markdown-editor"
 import { InsertMultipleChoice } from "./InsertMultipleChoice"
+import { WarningSnackBar } from "./WarningSnackBar"
 import { green } from "@material-ui/core/colors"
+import { isMultipleChoiceQuestionValid } from "../helper/validation"
 import { makeStyles } from "@material-ui/core/styles"
 import { postNewQuestion } from "../firestore/questions"
-import { uploadImage } from "../storage/questions"
 import { random } from "nanoid"
 import { updateTopic } from "../firestore/topics"
+import { uploadImage } from "../storage/questions"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,6 +72,7 @@ export const InsertQuestionForm = ({ categories }) => {
   const [loading, setLoading] = useState(false)
   const [openSnackBar, setOpenSnackBar] = useState(false)
   const [rand, setRandom] = useState(random(5))
+  const [warning, setWarning] = useState({ open: false, msg: "" })
 
   const handleSnackBarClose = () => {
     setOpenSnackBar(false)
@@ -81,7 +84,7 @@ export const InsertQuestionForm = ({ categories }) => {
       setAnswerError(true)
     } else {
       setAnswerError(false)
-      setAnswer(val)
+      setAnswer(Number(val))
     }
   }
 
@@ -105,18 +108,31 @@ export const InsertQuestionForm = ({ categories }) => {
   }
 
   const handleInsertQuestion = async () => {
-    if (answer < choices.length || answer > 1) {
-      setLoading(true)
-      const type = "multipleChoice"
-      await postNewQuestion({
-        ...categories,
-        question,
-        choices,
-        answer,
-        type,
-      })
-      await updateTopic(categories.subject, categories.level, categories.topic)
-      handleNextInsert()
+    setLoading(true)
+    const type = "multipleChoice"
+    const fullQuestion = {
+      ...categories,
+      question,
+      choices,
+      answer,
+      type,
+    }
+    // todo: validate submission before sending
+    try {
+      const validation = isMultipleChoiceQuestionValid(fullQuestion)
+
+      if (validation) {
+        await postNewQuestion(fullQuestion)
+        await updateTopic(
+          categories.subject,
+          categories.level,
+          categories.topic
+        )
+        handleNextInsert()
+      }
+    } catch (error) {
+      setWarning({ open: true, msg: error.message })
+      setLoading(false)
     }
   }
 
@@ -124,7 +140,7 @@ export const InsertQuestionForm = ({ categories }) => {
     setAnswer(1)
     setQuestion("")
     setChoices([""])
-    setRandom(random().toString())
+    setRandom(random(5))
     setLoading(false)
     setOpenSnackBar(true)
   }
@@ -132,6 +148,10 @@ export const InsertQuestionForm = ({ categories }) => {
   const handleUploadImage = async (file) => {
     const url = await uploadImage(file)
     return url
+  }
+
+  const handleWarningClose = () => {
+    setWarning({ open: false, msg: "" })
   }
 
   return (
@@ -190,6 +210,13 @@ export const InsertQuestionForm = ({ categories }) => {
         open={openSnackBar}
         message={"Question Successfully added."}
         onClose={handleSnackBarClose}
+        autoHideDuration={3000}
+      />
+      <WarningSnackBar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={warning.open}
+        message={warning.msg}
+        onClose={handleWarningClose}
         autoHideDuration={3000}
       />
     </Card>

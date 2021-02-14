@@ -14,9 +14,9 @@ import React, { useState } from "react"
 import { difficulties, levels, subjects } from "../helper/constants"
 
 export const InsertCategoriesForm = ({ handleChange }) => {
-  const [selSubject, setSubject] = useState()
-  const [selLevel, setLevel] = useState()
-  const [selDifficulty, setDifficulty] = useState()
+  const [selSubject, setSubject] = useState(subjects[0])
+  const [selLevel, setLevel] = useState(levels[0])
+  const [selDifficulty, setDifficulty] = useState(difficulties[0])
   const [selTopic, setTopic] = useState()
 
   const handleSubjectChange = (event) => {
