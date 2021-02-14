@@ -13,7 +13,7 @@ import { CorrectAnswer } from "./CorrectAnswer"
 import { Link } from "react-router-dom"
 import { ListOfButtons } from "./ListOfButtons"
 import React from "react"
-import { getAttempted } from "../helper/utilities"
+import { getAttempted } from "../../helper/utilities"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({

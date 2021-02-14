@@ -1,10 +1,15 @@
-import { Loading, Printable, QuestionsSelection, Quiz } from "../components"
+//import { Loading, Printable, QuestionsSelection, Quiz } from "../../components"
+
 import React, { useState } from "react"
 
-import { questionComponents as components } from "../helper/enum"
-import { getQuestions } from "../firestore/questions"
-import { questionKeyRename } from "../helper/utilities"
-import { WarningSnackBar } from "../components/WarningSnackBar"
+import { Loading } from "../../components"
+import { Printable } from "./Printable"
+import { QuestionsSelection } from "./QuestionsSelection"
+import { Quiz } from "./Quiz"
+import { WarningSnackBar } from "../../components/WarningSnackBar"
+import { questionComponents as components } from "../../helper/enum"
+import { getQuestions } from "../../firestore/questions"
+import { questionKeyRename } from "../../helper/utilities"
 
 export const Questions = () => {
   const [questions, setQuestions] = useState({})

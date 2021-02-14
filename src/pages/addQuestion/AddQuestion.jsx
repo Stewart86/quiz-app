@@ -1,9 +1,11 @@
 import { Container, Grid } from "@material-ui/core"
-import { InsertCategoriesForm, InsertQuestionForm } from "../components"
 import React, { useState } from "react"
-import { difficulties, levels, subjects } from "../helper/constants"
+import { difficulties, levels, subjects } from "../../helper/constants"
 
-export const InsertQuestion = () => {
+import { InsertCategoriesForm } from "./InsertCategoriesForm"
+import { InsertQuestionForm } from "./InsertQuestionForm"
+
+export const AddQuestion = () => {
   const [categories, setCategories] = useState({
     subject: subjects[0],
     level: levels[0],

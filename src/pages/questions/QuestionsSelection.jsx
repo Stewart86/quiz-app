@@ -21,16 +21,16 @@ import {
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { difficulties, levels, subjects, types } from "../helper/constants"
+import { difficulties, levels, subjects, types } from "../../helper/constants"
 import {
   genNumOfQuestions,
   getSelectionFromTopics,
   isAllSelected,
-} from "../helper/utilities"
+} from "../../helper/utilities"
 
 import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded"
 import PrintIcon from "@material-ui/icons/Print"
-import { getTopic } from "../firestore/topics"
+import { getTopic } from "../../firestore/topics"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({

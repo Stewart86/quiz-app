@@ -1,11 +1,4 @@
-import {
-  AccountSettings,
-  Admin,
-  Error,
-  InsertQuestion,
-  Login,
-  Questions,
-} from "./pages"
+import { AccountSettings, Admin, Error, Login } from "./pages"
 import {
   CenterContentRoute,
   FullScreenContentRoute,
@@ -18,8 +11,10 @@ import {
   Switch,
 } from "react-router-dom"
 
+import { AddQuestion } from "./pages/addQuestion/AddQuestion"
 import { CssBaseline } from "@material-ui/core"
 import { FillInTheBlank } from "./components"
+import { Questions } from "./pages/questions/Questions"
 import React from "react"
 
 export default function App() {
@@ -33,7 +28,7 @@ export default function App() {
           </Route>
           <CenterContentRoute
             path='/insertquestion'
-            component={InsertQuestion}
+            component={AddQuestion}
           />
           <FullScreenContentRoute path='/question' component={Questions} />
           <CenterContentRoute

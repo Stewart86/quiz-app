@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { difficulties, levels, subjects } from "../helper/constants"
+import { difficulties, levels, subjects } from "../../helper/constants"
 
 export const InsertCategoriesForm = ({ handleChange }) => {
   const [selSubject, setSubject] = useState(subjects[0])
