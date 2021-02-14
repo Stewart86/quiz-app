@@ -15,7 +15,7 @@ import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
   answerHeader: {
-    marginTop: theme.spacing(5)
+    marginTop: theme.spacing(5),
   },
   answerCard: {
     marginBottom: theme.spacing(1),
@@ -90,7 +90,10 @@ export const Question = ({
         direction={"column"}
         item
         xs={12}>
-        <Typography className={classes.answerHeader} gutterBottom variant={"h5"}>
+        <Typography
+          className={classes.answerHeader}
+          gutterBottom
+          variant={"h5"}>
           Choose One
         </Typography>
         {question.choices.map((choice, i) => {
@@ -104,8 +107,11 @@ export const Question = ({
                   style={{
                     backgroundColor: showResult(i),
                   }}>
-                  <Typography variant={"h6"}>
-                    {i + 1}. {choice}
+                  <Typography variant={"h5"}>
+                    <Typography component={"span"} variant={"subtitle2"}>
+                      {i + 1}.
+                    </Typography>
+                   {" "}{choice}
                   </Typography>
                 </CardContent>
               </CardActionArea>

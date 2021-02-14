@@ -5,9 +5,8 @@ import {
   Paper,
 } from "@material-ui/core"
 
-import AddIcon from "@material-ui/icons/Add"
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import React from "react"
-import RemoveIcon from "@material-ui/icons/Remove"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -21,9 +20,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
     flex: 1,
   },
-  iconButton: {
-    padding: 10,
-  },
   divider: {
     height: 28,
     margin: 4,
@@ -33,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
 export const InsertMultipleChoice = ({
   index,
   choices,
-  handleAddClick,
   handleRemoveClick,
   handleSetChoice,
 }) => {
@@ -53,17 +48,10 @@ export const InsertMultipleChoice = ({
             <IconButton
               disabled={choices.length === 1}
               variant='contained'
-              color={"primary"}
+              color={"secondary"}
               onClick={(e) => handleRemoveClick(index)}>
-              <RemoveIcon />
+              <DeleteOutlineOutlinedIcon />
             </IconButton>
-            <IconButton
-              variant='contained'
-              color={"primary"}
-              onClick={handleAddClick}>
-              <AddIcon />
-            </IconButton>
-            <Divider className={classes.divider} orientation={"vertical"} />
           </Paper>
     </>
   )
