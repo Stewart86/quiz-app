@@ -33,7 +33,7 @@ export default function App() {
           <CenterContentRoute path='/admin' component={Admin} />
           <LoginPageRoute path='/login' component={Login} />
           <Route exact path='/'>
-            <Redirect to='/login' />
+            <Redirect to='/question' />
           </Route>
           <Route path='*'>
             <Error />

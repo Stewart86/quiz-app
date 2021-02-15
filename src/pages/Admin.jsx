@@ -6,8 +6,12 @@ import { Route } from "react-router"
 export const Admin = () => {
   return (
     <>
-      <Route path={"/admin/addquestion"} component={AddQuestion} />
-      <Route path={"/admin/managequestion"} companent={ManageQuestions} />
+      <Route path={"/admin/manageQuestion"}>
+        <ManageQuestions />
+      </Route>
+      <Route path={"/admin/addQuestion"}>
+        <AddQuestion />
+      </Route>
     </>
   )
 }

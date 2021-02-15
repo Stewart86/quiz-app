@@ -8,3 +8,13 @@ export const levels = [
   "Primary 5",
   "Primary 6",
 ]
+
+export const dataColumn = [
+  { field: "id", headerName: "ID", width: 140 },
+  { field: "subject", headerName: "Subject", width: 140 },
+  { field: "level", headerName: "Level", width: 140 },
+  { field: "type", headerName: "Type", width: 140 },
+  { field: "question", headerName: "Question", width: 300 },
+  { field: "answer", headerName: "Answer", type: "number", width: 70 },
+  { field: "explain", headerName: "Explaination", width: 300 },
+]
