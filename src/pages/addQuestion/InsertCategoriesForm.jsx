@@ -1,3 +1,6 @@
+import Autocomplete, {
+  createFilterOptions,
+} from "@material-ui/lab/Autocomplete"
 import {
   Card,
   CardContent,
@@ -10,30 +13,39 @@ import {
   RadioGroup,
   TextField,
 } from "@material-ui/core"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { levels, subjects } from "../../helper/constants"
+
+import { getTopic } from "../../firestore/topics"
+
+const filter = createFilterOptions()
 
 export const InsertCategoriesForm = ({ handleChange }) => {
   const [selSubject, setSubject] = useState(subjects[0])
   const [selLevel, setLevel] = useState(levels[0])
-  const [selTopic, setTopic] = useState()
+  const [selTopic, setSelTopic] = useState("")
+  const [topicOptions, setTopicOptions] = useState([])
 
-  const handleSubjectChange = (event) => {
+  useEffect(() => {
+    const setOptions = async () => {
+      const topics = await getTopic(selSubject, selLevel)
+      let arr = []
+      topics.forEach((topic) => arr.push({ topic }))
+      setTopicOptions(arr)
+    }
+    setOptions()
+  }, [topicOptions, selSubject, selLevel])
+
+  const handleSubjectChange = async (event) => {
     const subject = event.target.value
     setSubject(subject)
     handleChange({ subject })
   }
 
-  const handleLevelChange = (event) => {
+  const handleLevelChange = async (event) => {
     const level = event.target.value
     setLevel(level)
     handleChange({ level })
-  }
-
-  const handleTopicChange = (event) => {
-    const topic = event.target.value
-    setTopic(topic)
-    handleChange({ topic: topic })
   }
 
   return (
@@ -73,10 +85,62 @@ export const InsertCategoriesForm = ({ handleChange }) => {
           </Grid>
         </Grid>
         <Grid item>
-          <TextField
+          <Autocomplete
             value={selTopic}
-            onChange={handleTopicChange}
-            label={"Topic"}
+            onChange={(event, newValue) => {
+              if (typeof newValue === "string") {
+                setSelTopic({
+                  topic: newValue,
+                })
+                handleChange({ topic: newValue })
+              } else if (newValue && newValue.inputValue) {
+                // Create a new value from the user input
+                setSelTopic({
+                  topic: newValue.inputValue,
+                })
+                handleChange({
+                  topic: newValue.inputValue,
+                })
+              } else {
+                setSelTopic(newValue)
+                handleChange(newValue)
+              }
+            }}
+            filterOptions={(options, params) => {
+              const filtered = filter(options, params)
+
+              // Suggest the creation of a new value
+              if (params.inputValue !== "") {
+                filtered.push({
+                  inputValue: params.inputValue,
+                  topic: `Add "${params.inputValue}"`,
+                })
+              }
+
+              return filtered
+            }}
+            selectOnFocus
+            clearOnBlur
+            handleHomeEndKeys
+            options={topicOptions}
+            getOptionLabel={(option) => {
+              // Value selected with enter, right from the input
+              if (typeof option === "string") {
+                return option
+              }
+              // Add "xxx" option created dynamically
+              if (option.inputValue) {
+                return option.inputValue
+              }
+              // Regular option
+              return option.topic
+            }}
+            renderOption={(option) => option.topic}
+            style={{ width: 300 }}
+            freeSolo
+            renderInput={(params) => (
+              <TextField {...params} label='Topic' variant='outlined' />
+            )}
           />
         </Grid>
       </CardContent>

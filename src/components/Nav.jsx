@@ -28,7 +28,7 @@ export const Nav = () => {
           </Typography>
           <Button
             className={classes.btn}
-            href='/insertquestion'
+            href='admin/addquestion'
             color='inherit'>
             Add
           </Button>
