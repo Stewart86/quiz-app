@@ -33,6 +33,7 @@ export const updateNewCategories = async (categories) => {
 }
 
 export const getQuestions = async (categories) => {
+  console.log(categories)
   var cur = db.collection("questions")
 
   Object.keys(categories).forEach((k, i) => {
@@ -41,7 +42,11 @@ export const getQuestions = async (categories) => {
         if (categories[k].length > 0) {
           categories[k].forEach((item, i) => {
             if (item !== "all") {
-              cur = cur.where(k, "==", item)
+              if (k === "topics") {
+                cur = cur.where("topic", "==", item)
+              } else {
+                cur = cur.where(k, "==", item)
+              }
             }
           })
         }

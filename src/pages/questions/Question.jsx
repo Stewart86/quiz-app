@@ -5,6 +5,7 @@ import {
   CardContent,
   CardHeader,
   Grid,
+  Slide,
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
@@ -50,7 +51,7 @@ export const Question = ({
     }
   }
 
-  const printButton = () => {
+  const printButtonText = () => {
     if (question.result !== undefined) {
       if (isLastQuestion) {
         return "End"
@@ -67,11 +68,14 @@ export const Question = ({
     onHandleSelection(sel)
   }
 
+  const showExplain = () =>
+    question.result !== undefined && question.explain !== undefined
+
   const subHeader = `${question.subject} | ${question.level} | ${question.topic} | ${question.year}`
 
   return (
     <>
-      <Grid item xs={12}>
+      <Grid item>
         <Card>
           <CardHeader title={`Question ${index}`} subheader={subHeader} />
           <CardContent>
@@ -84,12 +88,7 @@ export const Question = ({
           </CardContent>
         </Card>
       </Grid>
-      <Grid
-        className={classes.root}
-        container
-        direction={"column"}
-        item
-        xs={12}>
+      <Grid container direction={"column"} item>
         <Typography
           className={classes.answerHeader}
           gutterBottom
@@ -110,8 +109,8 @@ export const Question = ({
                   <Typography variant={"h5"}>
                     <Typography component={"span"} variant={"subtitle2"}>
                       {i + 1}.
-                    </Typography>
-                   {" "}{choice}
+                    </Typography>{" "}
+                    {choice}
                   </Typography>
                 </CardContent>
               </CardActionArea>
@@ -119,13 +118,30 @@ export const Question = ({
           )
         })}
       </Grid>
+      {showExplain() && (
+        <Grid item>
+          <Slide in direction={"down"}>
+            <Card className={classes.answerCard}>
+              <CardHeader title={"Explaination"} />
+              <CardContent>
+                <Editor
+                  className={classes.question}
+                  readOnly
+                  defaultValue={question.explain}
+                  value={question.explain}
+                />
+              </CardContent>
+            </Card>
+          </Slide>
+        </Grid>
+      )}
       <Grid item>
         <Button
           style={{ float: "right" }}
           color={"primary"}
           variant={"contained"}
           onClick={() => onHandleAnswerClick(selection)}>
-          {printButton()}
+          {printButtonText()}
         </Button>
       </Grid>
     </>
