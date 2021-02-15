@@ -21,12 +21,12 @@ import {
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { difficulties, levels, subjects, types } from "../../helper/constants"
 import {
   genNumOfQuestions,
   getSelectionFromTopics,
   isAllSelected,
 } from "../../helper/utilities"
+import { levels, subjects, types } from "../../helper/constants"
 
 import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded"
 import PrintIcon from "@material-ui/icons/Print"
@@ -322,46 +322,6 @@ export const QuestionsSelection = ({
               <Button className={classes.button} onClick={handleTopicNext}>
                 Next
               </Button>
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Select difficulty</StepLabel>
-            <StepContent>
-              <Typography>
-                Choose a difficulty level or select all for randomised
-                difficulties.
-              </Typography>
-              <ButtonGroup color={"primary"}>
-                {difficulties.map((value) => (
-                  <Button
-                    key={value}
-                    endIcon={
-                      category.difficulty === value ? (
-                        <AssignmentTurnedInRoundedIcon />
-                      ) : null
-                    }
-                    onClick={() => handleForm({ difficulty: value })}>
-                    {value}
-                  </Button>
-                ))}
-              </ButtonGroup>
-              <div className={classes.actionContainer}>
-                <Button className={classes.button} onClick={handleBack}>
-                  Back
-                </Button>
-                <Button
-                  disabled={getTopicsLoader}
-                  className={classes.button}
-                  onClick={handleNext}>
-                  Next
-                  {getTopicsLoader && (
-                    <CircularProgress
-                      size={24}
-                      className={classes.buttonProgress}
-                    />
-                  )}
-                </Button>
-              </div>
             </StepContent>
           </Step>
           <Step>

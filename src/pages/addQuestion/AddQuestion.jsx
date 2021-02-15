@@ -7,7 +7,7 @@ import {
   Snackbar,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { difficulties, levels, subjects } from "../../helper/constants"
+import { levels, subjects } from "../../helper/constants"
 
 import { InsertAnswerForm } from "./InsertAnswerForm"
 import { InsertCategoriesForm } from "./InsertCategoriesForm"
@@ -41,7 +41,6 @@ export const AddQuestion = () => {
   const [categories, setCategories] = useState({
     subject: subjects[0],
     level: levels[0],
-    difficulty: difficulties[0],
     type: ["multipleChoice"],
   })
   const [openSnackBar, setOpenSnackBar] = useState(false)

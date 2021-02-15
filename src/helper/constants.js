@@ -8,4 +8,3 @@ export const levels = [
   "Primary 5",
   "Primary 6",
 ]
-export const difficulties = ["Easy", "Medium", "Hard"]

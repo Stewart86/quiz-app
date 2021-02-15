@@ -11,12 +11,11 @@ import {
   TextField,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { difficulties, levels, subjects } from "../../helper/constants"
+import { levels, subjects } from "../../helper/constants"
 
 export const InsertCategoriesForm = ({ handleChange }) => {
   const [selSubject, setSubject] = useState(subjects[0])
   const [selLevel, setLevel] = useState(levels[0])
-  const [selDifficulty, setDifficulty] = useState(difficulties[0])
   const [selTopic, setTopic] = useState()
 
   const handleSubjectChange = (event) => {
@@ -29,12 +28,6 @@ export const InsertCategoriesForm = ({ handleChange }) => {
     const level = event.target.value
     setLevel(level)
     handleChange({ level })
-  }
-
-  const handleDifficultyChange = (event) => {
-    const difficulty = event.target.value
-    setDifficulty(difficulty)
-    handleChange({ difficulty })
   }
 
   const handleTopicChange = (event) => {
@@ -68,24 +61,6 @@ export const InsertCategoriesForm = ({ handleChange }) => {
               <FormLabel component={"legend"}>Level</FormLabel>
               <RadioGroup row value={selLevel} onChange={handleLevelChange}>
                 {levels.map((value) => (
-                  <FormControlLabel
-                    key={value}
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl component={"fieldset"}>
-              <FormLabel component={"legend"}>Difficulty</FormLabel>
-              <RadioGroup
-                row
-                value={selDifficulty}
-                onChange={handleDifficultyChange}>
-                {difficulties.map((value) => (
                   <FormControlLabel
                     key={value}
                     value={value}

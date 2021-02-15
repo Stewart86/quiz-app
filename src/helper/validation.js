@@ -6,7 +6,6 @@ export const isMultipleChoiceQuestionValid = (question) => {
   const requiredKeys = [
     "subject",
     "level",
-    "difficulty",
     "topic",
     "question",
     "answer",
