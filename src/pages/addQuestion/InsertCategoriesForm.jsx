@@ -34,7 +34,7 @@ export const InsertCategoriesForm = ({ handleChange }) => {
       setTopicOptions(arr)
     }
     setOptions()
-  }, [topicOptions, selSubject, selLevel])
+  }, [selSubject, selLevel])
 
   const handleSubjectChange = async (event) => {
     const subject = event.target.value

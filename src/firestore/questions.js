@@ -33,8 +33,7 @@ export const updateNewCategories = async (categories) => {
 }
 
 export const getQuestions = async (categories) => {
-  console.log(categories)
-  var cur = db.collection("questions")
+  let cur = db.collection("questions")
 
   Object.keys(categories).forEach((k, i) => {
     if (k !== "numOfQuestions" && k !== "type") {
@@ -66,6 +65,19 @@ export const getQuestions = async (categories) => {
   snapshot.forEach((doc) => {
     if (doc.id !== "categories") data[doc.id] = doc.data()
   })
-
+  if (categories.numOfQuestions === undefined) {
+    return data
+  }
   return _.sampleSize(data, Number(categories.numOfQuestions))
+}
+
+export const deleteQuestions = async (questions) => {
+  let cur = db.collection("questions")
+  let deleteActions = []
+  questions.forEach((id) => {
+    deleteActions.push(cur.doc(id).delete())
+  })
+
+  await Promise.all(deleteActions)
+  return true
 }

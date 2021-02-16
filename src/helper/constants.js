@@ -10,11 +10,22 @@ export const levels = [
 ]
 
 export const dataColumn = [
-  { field: "id", headerName: "ID", width: 140 },
-  { field: "subject", headerName: "Subject", width: 140 },
-  { field: "level", headerName: "Level", width: 140 },
+  { field: "id", headerName: "ID", width: 210 },
   { field: "type", headerName: "Type", width: 140 },
   { field: "question", headerName: "Question", width: 300 },
-  { field: "answer", headerName: "Answer", type: "number", width: 70 },
+  { field: "choices", headerName: "Choices", width: 200 },
+  { field: "answer", headerName: "Answer", type: "number", width: 100 },
   { field: "explain", headerName: "Explaination", width: 300 },
+]
+
+export const defaultRow = [
+  {
+    id: "",
+    subject: "",
+    level: "",
+    type: "",
+    question: "",
+    answer: "",
+    explain: "",
+  },
 ]
