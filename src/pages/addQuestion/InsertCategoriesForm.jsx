@@ -17,13 +17,22 @@ import React, { useEffect, useState } from "react"
 import { levels, subjects } from "../../helper/constants"
 
 import { getTopic } from "../../firestore/topics"
+import { makeStyles } from "@material-ui/core/styles"
+
+const useStyles = makeStyles((theme) => ({
+  topicInput: {
+    marginTop: theme.spacing(3),
+  },
+}))
 
 const filter = createFilterOptions()
 
-export const InsertCategoriesForm = ({ handleChange }) => {
-  const [selSubject, setSubject] = useState(subjects[0])
-  const [selLevel, setLevel] = useState(levels[0])
-  const [selTopic, setSelTopic] = useState("")
+export const InsertCategoriesForm = ({ categories, handleChange }) => {
+  const classes = useStyles()
+
+  const [selSubject, setSubject] = useState(categories.subject || subjects[0])
+  const [selLevel, setLevel] = useState(categories.level || levels[0])
+  const [selTopic, setSelTopic] = useState({ topic: categories.topic})
   const [topicOptions, setTopicOptions] = useState([])
 
   useEffect(() => {
@@ -33,8 +42,12 @@ export const InsertCategoriesForm = ({ handleChange }) => {
       topics.forEach((topic) => arr.push({ topic }))
       setTopicOptions(arr)
     }
-    setOptions()
-  }, [selSubject, selLevel])
+    if (categories.topic) {
+      setSelTopic({topic:categories.topic || ""})
+    } else {
+      setOptions()
+    }
+  }, [selSubject, selLevel, categories.topic])
 
   const handleSubjectChange = async (event) => {
     const subject = event.target.value
@@ -86,6 +99,7 @@ export const InsertCategoriesForm = ({ handleChange }) => {
         </Grid>
         <Grid item>
           <Autocomplete
+            className={classes.topicInput}
             value={selTopic}
             onChange={(event, newValue) => {
               if (typeof newValue === "string") {

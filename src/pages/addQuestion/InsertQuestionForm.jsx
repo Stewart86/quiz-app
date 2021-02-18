@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   editor: { ...theme.typography.body1, maxWidth: "50vw" },
 }))
 
-export const InsertQuestionForm = ({ editorTitle, handleEditorChange }) => {
+export const InsertQuestionForm = ({ question, editorTitle, handleEditorChange }) => {
   const classes = useStyles()
 
   const handleUploadImage = async (file) => {
@@ -25,6 +25,7 @@ export const InsertQuestionForm = ({ editorTitle, handleEditorChange }) => {
       <CardHeader title={editorTitle} />
       <CardContent className={classes.editorWrapper}>
         <Editor
+          value={question}
           className={classes.editor}
           onChange={handleEditorChange}
           placeholder={`Enter your ${editorTitle.toLowerCase()} here...`}

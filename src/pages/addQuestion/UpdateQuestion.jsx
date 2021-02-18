@@ -6,10 +6,8 @@ import {
   Grid,
   Snackbar,
 } from "@material-ui/core"
-import React, { useEffect, useState } from "react"
-import { getOne, post, updateOne } from "../../firestore/questions"
+import React, { useState } from "react"
 import { levels, subjects } from "../../helper/constants"
-import { useHistory, useParams } from "react-router"
 
 import { InsertAnswerForm } from "./InsertAnswerForm"
 import { InsertCategoriesForm } from "./InsertCategoriesForm"
@@ -18,6 +16,7 @@ import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { green } from "@material-ui/core/colors"
 import { isMultipleChoiceQuestionValid } from "../../helper/validation"
 import { makeStyles } from "@material-ui/core/styles"
+import { post } from "../../firestore/questions"
 import { random } from "nanoid"
 import { updateTopic } from "../../firestore/topics"
 
@@ -36,36 +35,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const AddQuestion = () => {
+export const UpdateQuestion = () => {
   const classes = useStyles()
-  const { id } = useParams()
-  const history = useHistory()
 
   const [categories, setCategories] = useState({
     subject: subjects[0],
     level: levels[0],
     type: ["multipleChoice"],
-    choices: [""],
   })
-  const [openSnackBar, setOpenSnackBar] = useState({ open: false, msg: "" })
+  const [openSnackBar, setOpenSnackBar] = useState(false)
   const [loading, setLoading] = useState(false)
   const [warning, setWarning] = useState({ open: false, msg: "" })
   const [question, setQuestion] = useState("")
+  const [choices, setChoices] = useState([""])
   const [answer, setAnswer] = useState(1)
   const [rand, setRandom] = useState(random(5))
   const [explain, setExplain] = useState("")
-
-  useEffect(() => {
-    const getQuestion = async (id) => {
-      const db = await getOne(id)
-      setCategories(db)
-      setQuestion(db.question)
-      return db
-    }
-    if (id) {
-      getQuestion(id)
-    }
-  }, [id])
 
   const handleAnswer = (answer) => {
     const val = answer.target.value
@@ -80,21 +65,18 @@ export const AddQuestion = () => {
   }
 
   const handleRemoveClick = (index) => {
-    const list = [...categories.choices]
+    const list = [...choices]
     list.splice(index, 1)
-    setCategories({ ...categories, choices: list })
+    setChoices(list)
   }
 
   const handleAddClick = (event) => {
-    setCategories({
-      ...categories,
-      choices: [...categories.choices, event.target.value],
-    })
+    setChoices([...choices, event.target.value])
   }
   const handleSetChoice = (value, i) => {
-    let list = [...categories.choices]
+    let list = [...choices]
     list[i] = value
-    setCategories({ ...categories, choices: list })
+    setChoices(list)
   }
   const handleChange = (newValue) => {
     setCategories((state) => ({ ...state, ...newValue }))
@@ -111,7 +93,7 @@ export const AddQuestion = () => {
     const fullQuestion = {
       ...categories,
       question,
-      choices: categories.choices,
+      choices,
       answer,
       explain,
       type,
@@ -120,19 +102,13 @@ export const AddQuestion = () => {
       const validation = isMultipleChoiceQuestionValid(fullQuestion)
 
       if (validation) {
-        if (id) {
-          await updateOne(id, fullQuestion)
-          setOpenSnackBar({ open: true, msg: "Question Successfully updated." })
-          history.goBack()
-        } else {
-          await post(fullQuestion)
-          await updateTopic(
-            categories.subject,
-            categories.level,
-            categories.topic
-          )
-          handleNextInsert()
-        }
+        await post(fullQuestion)
+        await updateTopic(
+          categories.subject,
+          categories.level,
+          categories.topic
+        )
+        handleNextInsert()
       }
     } catch (error) {
       setWarning({ open: true, msg: error.message })
@@ -142,10 +118,10 @@ export const AddQuestion = () => {
   const handleNextInsert = () => {
     setAnswer(1)
     setQuestion("")
-    setCategories({ ...categories, choices: [""] })
+    setChoices([""])
     setRandom(random(5))
     setLoading(false)
-    setOpenSnackBar({ open: true, msg: "Question Successfully added." })
+    setOpenSnackBar(true)
   }
 
   return (
@@ -160,14 +136,13 @@ export const AddQuestion = () => {
         <Grid item>
           <InsertQuestionForm
             key={rand}
-            question={categories.question}
             editorTitle={"Question"}
             handleEditorChange={handleEditorChange}
           />
         </Grid>
         <Grid item>
           <InsertAnswerForm
-            choices={categories.choices}
+            choices={choices}
             handleAnswer={handleAnswer}
             answer={answer}
             handleSetChoice={handleSetChoice}
@@ -178,7 +153,6 @@ export const AddQuestion = () => {
         <Grid item>
           <InsertQuestionForm
             key={rand}
-            question={categories.explain}
             editorTitle={"Explaination"}
             handleEditorChange={handleExplainChange}
           />
@@ -192,7 +166,7 @@ export const AddQuestion = () => {
               color={"primary"}
               disabled={loading}
               onClick={handleInsertQuestion}>
-              {id ? "Update" : "Insert"}
+              Insert
             </Button>
             {loading && (
               <CircularProgress size={24} className={classes.buttonProgress} />
@@ -202,8 +176,8 @@ export const AddQuestion = () => {
       </Grid>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={openSnackBar.open}
-        message={openSnackBar.msg}
+        open={openSnackBar}
+        message={"Question Successfully added."}
         onClose={handleSnackBarClose}
         autoHideDuration={3000}
       />

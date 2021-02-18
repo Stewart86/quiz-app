@@ -1,17 +1,23 @@
+import { Route, Switch } from "react-router"
+
 import { AddQuestion } from "./addQuestion/AddQuestion"
 import { ManageQuestions } from "./manageQuestions/ManageQuestions"
 import React from "react"
-import { Route } from "react-router"
 
 export const Admin = () => {
   return (
     <>
-      <Route path={"/admin/manageQuestion"}>
-        <ManageQuestions />
-      </Route>
-      <Route path={"/admin/addQuestion"}>
-        <AddQuestion />
-      </Route>
+      <Switch>
+        <Route path={"/admin/updateQuestion/:id"}>
+          <AddQuestion />
+        </Route>
+        <Route path={"/admin/addQuestion"}>
+          <AddQuestion />
+        </Route>
+        <Route path={"/"}>
+          <ManageQuestions />
+        </Route>
+      </Switch>
     </>
   )
 }

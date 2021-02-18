@@ -2,7 +2,7 @@ import _ from "lodash"
 import { db } from "../firebase"
 import { typeLookUp } from "../helper/enum"
 
-export const postNewQuestion = async (question) => {
+export const post = async (question) => {
   const questionsCollection = db.collection("questions")
   await questionsCollection.add(question)
 }
@@ -32,7 +32,7 @@ export const updateNewCategories = async (categories) => {
   await cursor.set(obj)
 }
 
-export const getQuestions = async (categories) => {
+export const getMany = async (categories) => {
   let cur = db.collection("questions")
 
   Object.keys(categories).forEach((k, i) => {
@@ -71,7 +71,7 @@ export const getQuestions = async (categories) => {
   return _.sampleSize(data, Number(categories.numOfQuestions))
 }
 
-export const deleteQuestions = async (questions) => {
+export const deleteMany = async (questions) => {
   let cur = db.collection("questions")
   let deleteActions = []
   questions.forEach((id) => {
@@ -80,4 +80,16 @@ export const deleteQuestions = async (questions) => {
 
   await Promise.all(deleteActions)
   return true
+}
+
+export const getOne = async (id) => {
+  const cur = await db.collection("questions").doc(id).get()
+  const snapshot = cur.data() 
+  console.log(snapshot)
+  return snapshot
+}
+
+export const updateOne = async (id, categories) => {
+  const cur = db.collection("questions").doc(id)
+  await cur.update(categories)
 }

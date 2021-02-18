@@ -8,7 +8,7 @@ import { QuestionsSelection } from "./QuestionsSelection"
 import { Quiz } from "./Quiz"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { questionComponents as components } from "../../helper/enum"
-import { getQuestions } from "../../firestore/questions"
+import { getMany } from "../../firestore/questions"
 import { questionKeyRename } from "../../helper/utilities"
 
 export const Questions = () => {
@@ -22,7 +22,7 @@ export const Questions = () => {
   }
 
   const tryGetQuestionsOrThrowWarning = async (selection) => {
-    const dbQuestions = await getQuestions(selection)
+    const dbQuestions = await getMany(selection)
     if (dbQuestions.length === 0) {
       setOpenSnackBar(true)
       return false
