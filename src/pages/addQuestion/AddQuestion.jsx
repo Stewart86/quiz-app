@@ -5,17 +5,19 @@ import {
   Container,
   Grid,
   Snackbar,
+  Typography,
 } from "@material-ui/core"
 import { LEVELS, SUBJECTS } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
 import { getOne, post, updateOne } from "../../firestore/questions"
+import { green, red } from "@material-ui/core/colors"
 import { useHistory, useParams } from "react-router"
 
 import { InsertAnswerForm } from "./InsertAnswerForm"
 import { InsertCategoriesForm } from "./InsertCategoriesForm"
 import { InsertQuestionForm } from "./InsertQuestionForm"
+import { Loading } from "../../components"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
-import { green } from "@material-ui/core/colors"
 import { isMultipleChoiceQuestionValid } from "../../helper/validation"
 import { makeStyles } from "@material-ui/core/styles"
 import { random } from "nanoid"
@@ -46,7 +48,9 @@ export const AddQuestion = () => {
     level: LEVELS[0],
     type: ["multipleChoice"],
     choices: [""],
+    topic: "",
   })
+  const [fullPageLoading, setFullPageLoading] = useState(true)
   const [openSnackBar, setOpenSnackBar] = useState({ open: false, msg: "" })
   const [loading, setLoading] = useState(false)
   const [warning, setWarning] = useState({ open: false, msg: "" })
@@ -55,16 +59,18 @@ export const AddQuestion = () => {
   const [rand, setRandom] = useState(random(5))
   const [explain, setExplain] = useState("")
 
+  const getQuestion = async (id) => {
+    const db = await getOne(id)
+    setCategories(db)
+    setQuestion(db.question)
+  }
+
   useEffect(() => {
-    const getQuestion = async (id) => {
-      const db = await getOne(id)
-      setCategories(db)
-      setQuestion(db.question)
-      return db
-    }
+    setFullPageLoading(true)
     if (id) {
       getQuestion(id)
     }
+    setFullPageLoading(false)
   }, [id])
 
   const handleAnswer = (answer) => {
@@ -75,6 +81,7 @@ export const AddQuestion = () => {
   const handleEditorChange = (content) => {
     setQuestion(content)
   }
+
   const handleExplainChange = (content) => {
     setExplain(content)
   }
@@ -88,23 +95,28 @@ export const AddQuestion = () => {
   const handleAddClick = (event) => {
     setCategories({
       ...categories,
-      choices: [...categories.choices, event.target.value],
+      choices: [...categories.choices, ""],
     })
   }
-  const handleSetChoice = (value, i) => {
+  const handleSetChoice = (event, i) => {
+    const value = event.target.value
     let list = [...categories.choices]
     list[i] = value
     setCategories({ ...categories, choices: list })
   }
+
   const handleChange = (newValue) => {
     setCategories((state) => ({ ...state, ...newValue }))
   }
+
   const handleSnackBarClose = () => {
     setOpenSnackBar(false)
   }
+
   const handleWarningClose = () => {
     setWarning({ open: false, msg: "" })
   }
+
   const handleInsertQuestion = async () => {
     setLoading(true)
     const type = "multipleChoice"
@@ -139,6 +151,7 @@ export const AddQuestion = () => {
       setLoading(false)
     }
   }
+
   const handleNextInsert = () => {
     setAnswer(1)
     setQuestion("")
@@ -150,70 +163,89 @@ export const AddQuestion = () => {
 
   return (
     <Container>
-      <Grid container spacing={2} direction={"column"}>
-        <Grid item>
-          <InsertCategoriesForm
-            categories={categories}
-            handleChange={handleChange}
+      {fullPageLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <Grid container spacing={2} direction={"column"}>
+            <Grid item>
+              <Typography
+                style={{
+                  color: id ? green[500] : red[500],
+                  padding: 4,
+                }}
+                variant={"h4"}>
+                {id ? "Update" : "Create New"}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <InsertCategoriesForm
+                categories={categories}
+                handleChange={handleChange}
+              />
+            </Grid>
+            <Grid item>
+              <InsertQuestionForm
+                key={rand}
+                question={categories.question}
+                editorTitle={"Question"}
+                handleEditorChange={handleEditorChange}
+              />
+            </Grid>
+            <Grid item>
+              <InsertAnswerForm
+                choices={categories.choices}
+                handleAnswer={handleAnswer}
+                answer={answer}
+                handleSetChoice={handleSetChoice}
+                handleRemoveClick={handleRemoveClick}
+                handleAddClick={handleAddClick}
+              />
+            </Grid>
+            <Grid item>
+              <InsertQuestionForm
+                key={rand}
+                question={categories.explain}
+                editorTitle={"Explaination"}
+                handleEditorChange={handleExplainChange}
+              />
+            </Grid>
+          </Grid>
+          <Grid item>
+            <CardActions>
+              <div className={classes.wrapper}>
+                <Button
+                  variant={"contained"}
+                  color={"primary"}
+                  disabled={loading}
+                  onClick={handleInsertQuestion}>
+                  {id ? "Update" : "Insert"}
+                </Button>
+                {loading && (
+                  <CircularProgress
+                    size={24}
+                    className={classes.buttonProgress}
+                  />
+                )}
+              </div>
+            </CardActions>
+          </Grid>
+          <Snackbar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={openSnackBar.open}
+            message={openSnackBar.msg}
+            onClose={handleSnackBarClose}
+            autoHideDuration={3000}
           />
-        </Grid>
-        <Grid item>
-          <InsertQuestionForm
-            key={rand}
-            question={categories.question}
-            editorTitle={"Question"}
-            handleEditorChange={handleEditorChange}
+          <WarningSnackBar
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            open={warning.open}
+            message={warning.msg}
+            onClose={handleWarningClose}
+            autoHideDuration={3000}
           />
-        </Grid>
-        <Grid item>
-          <InsertAnswerForm
-            choices={categories.choices}
-            handleAnswer={handleAnswer}
-            answer={answer}
-            handleSetChoice={handleSetChoice}
-            handleRemoveClick={handleRemoveClick}
-            handleAddClick={handleAddClick}
-          />
-        </Grid>
-        <Grid item>
-          <InsertQuestionForm
-            key={rand}
-            question={categories.explain}
-            editorTitle={"Explaination"}
-            handleEditorChange={handleExplainChange}
-          />
-        </Grid>
-      </Grid>
-      <Grid item>
-        <CardActions>
-          <div className={classes.wrapper}>
-            <Button
-              variant={"contained"}
-              color={"primary"}
-              disabled={loading}
-              onClick={handleInsertQuestion}>
-              {id ? "Update" : "Insert"}
-            </Button>
-            {loading && (
-              <CircularProgress size={24} className={classes.buttonProgress} />
-            )}
-          </div>
-        </CardActions>
-      </Grid>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={openSnackBar.open}
-        message={openSnackBar.msg}
-        onClose={handleSnackBarClose}
-        autoHideDuration={3000}
-      />
-      <WarningSnackBar
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        open={warning.open}
-        message={warning.msg}
-        onClose={handleWarningClose}
-        autoHideDuration={3000}
-      />
+        </>
+      )}
     </Container>
   )
 }

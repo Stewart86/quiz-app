@@ -61,10 +61,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 185,
   },
 }))
-export const QuestionsSelection = ({
-  handlePrintable,
-  handleGetQuestions,
-}) => {
+export const QuestionsSelection = ({ handlePrintable, handleGetQuestions }) => {
   const classes = useStyles()
 
   const [activeStep, setActiveStep] = useState(0)
@@ -178,6 +175,7 @@ export const QuestionsSelection = ({
               <ButtonGroup color={"primary"}>
                 {TYPES.map((value) => (
                   <Button
+                    key={value}
                     endIcon={
                       category.type === value ? (
                         <AssignmentTurnedInRoundedIcon />
@@ -219,6 +217,7 @@ export const QuestionsSelection = ({
               <ButtonGroup color={"primary"}>
                 {SUBJECTS.map((value) => (
                   <Button
+                    key={value}
                     endIcon={
                       category.subject === value ? (
                         <AssignmentTurnedInRoundedIcon />
@@ -258,6 +257,7 @@ export const QuestionsSelection = ({
               <ButtonGroup color={"primary"}>
                 {LEVELS.map((value) => (
                   <Button
+                    key={value}
                     endIcon={
                       category.level === value ? (
                         <AssignmentTurnedInRoundedIcon />
@@ -305,6 +305,7 @@ export const QuestionsSelection = ({
               <FormGroup style={{ maxHeight: "60vh" }}>
                 {Object.keys(topics).map((value) => (
                   <FormControlLabel
+                    key={value}
                     label={value}
                     control={
                       <Checkbox

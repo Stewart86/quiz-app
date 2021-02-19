@@ -3,6 +3,7 @@ import { db } from "../firebase"
 import { typeLookUp } from "../helper/enum"
 
 export const post = async (question) => {
+  console.log("insert")
   const questionsCollection = db.collection("questions")
   await questionsCollection.add(question)
 }

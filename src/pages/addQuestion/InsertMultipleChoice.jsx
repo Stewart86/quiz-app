@@ -1,11 +1,6 @@
-import {
-  Divider,
-  IconButton,
-  InputBase,
-  Paper,
-} from "@material-ui/core"
+import { Divider, IconButton, InputBase, Paper } from "@material-ui/core"
 
-import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
+import DeleteOutlineOutlinedIcon from "@material-ui/icons/DeleteOutlineOutlined"
 import React from "react"
 import { makeStyles } from "@material-ui/core/styles"
 
@@ -31,28 +26,36 @@ export const InsertMultipleChoice = ({
   choices,
   handleRemoveClick,
   handleSetChoice,
+  handleAddClick,
 }) => {
   const classes = useStyles()
 
   return (
     <>
-          <Paper component={"form"} className={classes.root}>
-            <InputBase
-              className={classes.input}
-              fullWidth
-              placeholder={`Choice ${index + 1}`}
-              value={choices[index]}
-              onChange={(event) => handleSetChoice(event.target.value, index)}
-            />
-            <Divider className={classes.divider} orientation={"vertical"} />
-            <IconButton
-              disabled={choices.length === 1}
-              variant='contained'
-              color={"secondary"}
-              onClick={(e) => handleRemoveClick(index)}>
-              <DeleteOutlineOutlinedIcon />
-            </IconButton>
-          </Paper>
+      <Paper component={"form"} className={classes.root}>
+        <InputBase
+          className={classes.input}
+          autoFocus
+          fullWidth
+          placeholder={`Choice ${index + 1}`}
+          value={choices[index]}
+          onChange={(event) => handleSetChoice(event, index)}
+          onKeyPress={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault()
+              handleAddClick(event)
+            }
+          }}
+        />
+        <Divider className={classes.divider} orientation={"vertical"} />
+        <IconButton
+          disabled={choices.length === 1}
+          variant='contained'
+          color={"secondary"}
+          onClick={(e) => handleRemoveClick(index)}>
+          <DeleteOutlineOutlinedIcon />
+        </IconButton>
+      </Paper>
     </>
   )
 }

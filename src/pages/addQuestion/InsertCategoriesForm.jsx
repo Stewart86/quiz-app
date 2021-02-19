@@ -4,7 +4,6 @@ import Autocomplete, {
 import {
   Card,
   CardContent,
-  CardHeader,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -63,7 +62,6 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
 
   return (
     <Card>
-      <CardHeader title={"Question Categories"} />
       <CardContent>
         <Grid container spacing={3} direction={"column"}>
           <Grid item>

@@ -41,6 +41,7 @@ export const InsertAnswerForm = ({
               choices={choices}
               handleSetChoice={handleSetChoice}
               handleRemoveClick={handleRemoveClick}
+              handleAddClick={handleAddClick}
             />
           )
         })}

@@ -5,7 +5,6 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  Slide,
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
@@ -120,7 +119,6 @@ export const Question = ({
       </Grid>
       {showExplain() && (
         <Grid item>
-          <Slide in direction={"down"}>
             <Card className={classes.answerCard}>
               <CardHeader title={"Explaination"} />
               <CardContent>
@@ -132,7 +130,6 @@ export const Question = ({
                 />
               </CardContent>
             </Card>
-          </Slide>
         </Grid>
       )}
       <Grid item>
