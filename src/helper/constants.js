@@ -1,6 +1,6 @@
-export const types = ["Multiple Choice", "Fill In The Blank", "Notes"]
-export const subjects = ["English", "Maths", "Science", "Chinese"]
-export const levels = [
+export const TYPES = ["Multiple Choice", "Fill In The Blank", "Notes"]
+export const SUBJECTS = ["English", "Maths", "Science", "Chinese"]
+export const LEVELS = [
   "Primary 1",
   "Primary 2",
   "Primary 3",
@@ -8,4 +8,3 @@ export const levels = [
   "Primary 5",
   "Primary 6",
 ]
-export const difficulties = ["Easy", "Medium", "Hard"]

@@ -82,3 +82,14 @@ export const getSelectionFromTopics = (topics) => {
 
   return output
 }
+
+export const convertQuestionObjToArr = (questions) => {
+  let arr = []
+  Object.keys(questions).forEach((key) => {
+    arr.push({
+      ...questions[key],
+      id: key,
+    })
+  })
+  return arr
+}

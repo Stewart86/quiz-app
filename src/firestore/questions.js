@@ -2,7 +2,8 @@ import _ from "lodash"
 import { db } from "../firebase"
 import { typeLookUp } from "../helper/enum"
 
-export const postNewQuestion = async (question) => {
+export const post = async (question) => {
+  console.log("insert")
   const questionsCollection = db.collection("questions")
   await questionsCollection.add(question)
 }
@@ -32,8 +33,8 @@ export const updateNewCategories = async (categories) => {
   await cursor.set(obj)
 }
 
-export const getQuestions = async (categories) => {
-  var cur = db.collection("questions")
+export const getMany = async (categories) => {
+  let cur = db.collection("questions")
 
   Object.keys(categories).forEach((k, i) => {
     if (k !== "numOfQuestions" && k !== "type") {
@@ -41,7 +42,11 @@ export const getQuestions = async (categories) => {
         if (categories[k].length > 0) {
           categories[k].forEach((item, i) => {
             if (item !== "all") {
-              cur = cur.where(k, "==", item)
+              if (k === "topics") {
+                cur = cur.where("topic", "==", item)
+              } else {
+                cur = cur.where(k, "==", item)
+              }
             }
           })
         }
@@ -61,6 +66,31 @@ export const getQuestions = async (categories) => {
   snapshot.forEach((doc) => {
     if (doc.id !== "categories") data[doc.id] = doc.data()
   })
-
+  if (categories.numOfQuestions === undefined) {
+    return data
+  }
   return _.sampleSize(data, Number(categories.numOfQuestions))
+}
+
+export const deleteMany = async (questions) => {
+  let cur = db.collection("questions")
+  let deleteActions = []
+  questions.forEach((id) => {
+    deleteActions.push(cur.doc(id).delete())
+  })
+
+  await Promise.all(deleteActions)
+  return true
+}
+
+export const getOne = async (id) => {
+  const cur = await db.collection("questions").doc(id).get()
+  const snapshot = cur.data() 
+  console.log(snapshot)
+  return snapshot
+}
+
+export const updateOne = async (id, categories) => {
+  const cur = db.collection("questions").doc(id)
+  await cur.update(categories)
 }

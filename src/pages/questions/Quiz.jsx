@@ -1,4 +1,4 @@
-import { Grid, Slide } from "@material-ui/core"
+import { Container, Grid, Slide } from "@material-ui/core"
 import React, { useEffect, useRef, useState } from "react"
 
 import { Question } from "./Question"
@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
   questionContainer: {
-    margin: theme.spacing(6),
+    margin: theme.spacing(1),
   },
 }))
 
@@ -50,6 +50,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const onHandleAnswerClick = (ans) => {
+    setSlideDirection("left")
     // when undefiend === not answered
     if (questionsState[count].result === undefined) {
       let curQues = questions[count]
@@ -114,18 +115,19 @@ export const Quiz = ({ questions, handlePrintable }) => {
         <Grid
           container
           className={classes.questionContainer}
-          direction={"row"}
+          direction={"column"}
           spacing={4}
-          item
-          xs={12}>
-          <Question
-            key={count}
-            index={count}
-            question={questionsState[count]}
-            isLastQuestion={Object.keys(questions).length === count}
-            onHandleSelection={onHandleSelection}
-            onHandleAnswerClick={onHandleAnswerClick}
-          />
+          item>
+          <Container>
+            <Question
+              key={count}
+              index={count}
+              question={questionsState[count]}
+              isLastQuestion={Object.keys(questions).length === count}
+              onHandleSelection={onHandleSelection}
+              onHandleAnswerClick={onHandleAnswerClick}
+            />
+          </Container>
         </Grid>
       </Slide>
     </>

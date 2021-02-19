@@ -14,8 +14,11 @@ import Editor from "rich-markdown-editor"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
+  answerHeader: {
+    marginTop: theme.spacing(5),
+  },
   answerCard: {
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(1),
   },
   question: { ...theme.typography.body1, fontSize: "1.4em" },
 }))
@@ -47,7 +50,7 @@ export const Question = ({
     }
   }
 
-  const printButton = () => {
+  const printButtonText = () => {
     if (question.result !== undefined) {
       if (isLastQuestion) {
         return "End"
@@ -64,11 +67,14 @@ export const Question = ({
     onHandleSelection(sel)
   }
 
+  const showExplain = () =>
+    question.result !== undefined && question.explain !== undefined
+
   const subHeader = `${question.subject} | ${question.level} | ${question.topic} | ${question.year}`
 
   return (
     <>
-      <Grid item xs={12} sm={8}>
+      <Grid item>
         <Card>
           <CardHeader title={`Question ${index}`} subheader={subHeader} />
           <CardContent>
@@ -81,13 +87,13 @@ export const Question = ({
           </CardContent>
         </Card>
       </Grid>
-      <Grid
-        className={classes.root}
-        container
-        direction={"column"}
-        item
-        xs={12}
-        sm={4}>
+      <Grid container direction={"column"} item>
+        <Typography
+          className={classes.answerHeader}
+          gutterBottom
+          variant={"h5"}>
+          Choose One
+        </Typography>
         {question.choices.map((choice, i) => {
           return (
             <Card className={classes.answerCard}>
@@ -99,19 +105,40 @@ export const Question = ({
                   style={{
                     backgroundColor: showResult(i),
                   }}>
-                  <Typography variant={"h6"}>
-                    {i + 1}. {choice}
+                  <Typography variant={"h5"}>
+                    <Typography component={"span"} variant={"subtitle2"}>
+                      {i + 1}.
+                    </Typography>{" "}
+                    {choice}
                   </Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
           )
         })}
+      </Grid>
+      {showExplain() && (
+        <Grid item>
+            <Card className={classes.answerCard}>
+              <CardHeader title={"Explaination"} />
+              <CardContent>
+                <Editor
+                  className={classes.question}
+                  readOnly
+                  defaultValue={question.explain}
+                  value={question.explain}
+                />
+              </CardContent>
+            </Card>
+        </Grid>
+      )}
+      <Grid item>
         <Button
+          style={{ float: "right" }}
           color={"primary"}
           variant={"contained"}
           onClick={() => onHandleAnswerClick(selection)}>
-          {printButton()}
+          {printButtonText()}
         </Button>
       </Grid>
     </>

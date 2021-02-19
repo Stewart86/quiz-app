@@ -20,8 +20,8 @@ import {
   Switch,
   Typography,
 } from "@material-ui/core"
+import { LEVELS, SUBJECTS, TYPES } from "../../helper/constants"
 import React, { useState } from "react"
-import { difficulties, levels, subjects, types } from "../../helper/constants"
 import {
   genNumOfQuestions,
   getSelectionFromTopics,
@@ -61,10 +61,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 185,
   },
 }))
-export const QuestionsSelection = ({
-  handlePrintable,
-  handleGetQuestions,
-}) => {
+export const QuestionsSelection = ({ handlePrintable, handleGetQuestions }) => {
   const classes = useStyles()
 
   const [activeStep, setActiveStep] = useState(0)
@@ -176,8 +173,9 @@ export const QuestionsSelection = ({
                 Please select the type of quiz to attempt or notes to study.
               </Typography>
               <ButtonGroup color={"primary"}>
-                {types.map((value) => (
+                {TYPES.map((value) => (
                   <Button
+                    key={value}
                     endIcon={
                       category.type === value ? (
                         <AssignmentTurnedInRoundedIcon />
@@ -217,8 +215,9 @@ export const QuestionsSelection = ({
                 Please select subject to revise.
               </Typography>
               <ButtonGroup color={"primary"}>
-                {subjects.map((value) => (
+                {SUBJECTS.map((value) => (
                   <Button
+                    key={value}
                     endIcon={
                       category.subject === value ? (
                         <AssignmentTurnedInRoundedIcon />
@@ -256,8 +255,9 @@ export const QuestionsSelection = ({
             <StepContent>
               <Typography>Please select the education level.</Typography>
               <ButtonGroup color={"primary"}>
-                {levels.map((value) => (
+                {LEVELS.map((value) => (
                   <Button
+                    key={value}
                     endIcon={
                       category.level === value ? (
                         <AssignmentTurnedInRoundedIcon />
@@ -305,6 +305,7 @@ export const QuestionsSelection = ({
               <FormGroup style={{ maxHeight: "60vh" }}>
                 {Object.keys(topics).map((value) => (
                   <FormControlLabel
+                    key={value}
                     label={value}
                     control={
                       <Checkbox
@@ -322,46 +323,6 @@ export const QuestionsSelection = ({
               <Button className={classes.button} onClick={handleTopicNext}>
                 Next
               </Button>
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Select difficulty</StepLabel>
-            <StepContent>
-              <Typography>
-                Choose a difficulty level or select all for randomised
-                difficulties.
-              </Typography>
-              <ButtonGroup color={"primary"}>
-                {difficulties.map((value) => (
-                  <Button
-                    key={value}
-                    endIcon={
-                      category.difficulty === value ? (
-                        <AssignmentTurnedInRoundedIcon />
-                      ) : null
-                    }
-                    onClick={() => handleForm({ difficulty: value })}>
-                    {value}
-                  </Button>
-                ))}
-              </ButtonGroup>
-              <div className={classes.actionContainer}>
-                <Button className={classes.button} onClick={handleBack}>
-                  Back
-                </Button>
-                <Button
-                  disabled={getTopicsLoader}
-                  className={classes.button}
-                  onClick={handleNext}>
-                  Next
-                  {getTopicsLoader && (
-                    <CircularProgress
-                      size={24}
-                      className={classes.buttonProgress}
-                    />
-                  )}
-                </Button>
-              </div>
             </StepContent>
           </Step>
           <Step>

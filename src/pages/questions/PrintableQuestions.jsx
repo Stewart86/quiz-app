@@ -27,7 +27,7 @@ export const PrintableQuestions = ({ count, question }) => {
       <Card>
         <CardHeader
           title={`Question ${count}`}
-          subheader={`${question.subject} | ${question.level} | ${question.topic} | ${question.difficulty}`}
+          subheader={`${question.subject} | ${question.level} | ${question.topic}`}
         />
         <CardContent>
           <Editor
