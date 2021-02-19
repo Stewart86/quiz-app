@@ -20,13 +20,13 @@ import {
   Switch,
   Typography,
 } from "@material-ui/core"
+import { LEVELS, SUBJECTS, TYPES } from "../../helper/constants"
 import React, { useState } from "react"
 import {
   genNumOfQuestions,
   getSelectionFromTopics,
   isAllSelected,
 } from "../../helper/utilities"
-import { levels, subjects, types } from "../../helper/constants"
 
 import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded"
 import PrintIcon from "@material-ui/icons/Print"
@@ -176,7 +176,7 @@ export const QuestionsSelection = ({
                 Please select the type of quiz to attempt or notes to study.
               </Typography>
               <ButtonGroup color={"primary"}>
-                {types.map((value) => (
+                {TYPES.map((value) => (
                   <Button
                     endIcon={
                       category.type === value ? (
@@ -217,7 +217,7 @@ export const QuestionsSelection = ({
                 Please select subject to revise.
               </Typography>
               <ButtonGroup color={"primary"}>
-                {subjects.map((value) => (
+                {SUBJECTS.map((value) => (
                   <Button
                     endIcon={
                       category.subject === value ? (
@@ -256,7 +256,7 @@ export const QuestionsSelection = ({
             <StepContent>
               <Typography>Please select the education level.</Typography>
               <ButtonGroup color={"primary"}>
-                {levels.map((value) => (
+                {LEVELS.map((value) => (
                   <Button
                     endIcon={
                       category.level === value ? (

@@ -7,9 +7,11 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
+  Tooltip,
 } from "@material-ui/core"
+import { LEVELS, SUBJECTS } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
-import { dataColumn, levels, subjects } from "../../helper/constants"
 import { deleteMany, getMany } from "../../firestore/questions"
 
 import { DataGrid } from "@material-ui/data-grid"
@@ -30,9 +32,35 @@ export const ManageQuestions = () => {
   const classes = useStyles()
   const history = useHistory()
 
+  const dataColumn = [
+    {
+      field: "id",
+      headerName: "Actions",
+      width: 110,
+      renderCell: () => (
+        <>
+        <Tooltip title={"Delete"}>
+          <IconButton size={"small"} onClick={handleConfirm}>
+            <DeleteForever />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title={"Edit"}>
+          <IconButton size={"small"} onClick={handleUpdate}>
+            <Edit />
+          </IconButton>
+        </Tooltip>
+        </>
+      ),
+    },
+    { field: "question", headerName: "Question", width: 300 },
+    { field: "choices", headerName: "Choices", width: 200 },
+    { field: "answer", headerName: "Answer", type: "number", width: 100 },
+    { field: "explain", headerName: "Explaination", width: 600 },
+  ]
+
   const [categories, setCategories] = useState({
-    subject: subjects[0],
-    level: levels[0],
+    subject: SUBJECTS[0],
+    level: LEVELS[0],
     type: "Multiple Choice",
     topic: "",
   })
@@ -45,6 +73,7 @@ export const ManageQuestions = () => {
     const lsOfQues = convertQuestionObjToArr(await getMany(categories))
     setQuestions(lsOfQues)
   }
+
   useEffect(() => {
     getQuestionFromDB(categories)
   }, [categories])
@@ -58,6 +87,7 @@ export const ManageQuestions = () => {
     await getQuestionFromDB(categories)
     setOpen(false)
   }
+
   const handleClose = () => {
     setOpen(false)
   }
@@ -118,13 +148,15 @@ export const ManageQuestions = () => {
           />
         </Grid>
         <Grid item>
-          <Button
-            onClick={handleConfirm}
-            variant={"contained"}
-            color={"secondary"}
-            startIcon={<DeleteForever />}>
-            Delete
-          </Button>
+          {selections.length > 1 && (
+            <Button
+              onClick={handleConfirm}
+              variant={"contained"}
+              color={"secondary"}
+              startIcon={<DeleteForever />}>
+              Multiple Delete
+            </Button>
+          )}
           <Button
             className={classes.rightBtn}
             onClick={handleCreate}
@@ -132,14 +164,6 @@ export const ManageQuestions = () => {
             color={"primary"}
             startIcon={<AddBox />}>
             Create
-          </Button>
-          <Button
-            className={classes.rightBtn}
-            onClick={handleUpdate}
-            variant={"contained"}
-            color={"primary"}
-            startIcon={<Edit />}>
-            Update
           </Button>
         </Grid>
       </Grid>

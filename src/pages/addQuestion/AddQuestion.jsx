@@ -6,9 +6,9 @@ import {
   Grid,
   Snackbar,
 } from "@material-ui/core"
+import { LEVELS, SUBJECTS } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
 import { getOne, post, updateOne } from "../../firestore/questions"
-import { levels, subjects } from "../../helper/constants"
 import { useHistory, useParams } from "react-router"
 
 import { InsertAnswerForm } from "./InsertAnswerForm"
@@ -42,8 +42,8 @@ export const AddQuestion = () => {
   const history = useHistory()
 
   const [categories, setCategories] = useState({
-    subject: subjects[0],
-    level: levels[0],
+    subject: SUBJECTS[0],
+    level: LEVELS[0],
     type: ["multipleChoice"],
     choices: [""],
   })

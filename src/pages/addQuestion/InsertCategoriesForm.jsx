@@ -13,8 +13,8 @@ import {
   RadioGroup,
   TextField,
 } from "@material-ui/core"
+import { LEVELS, SUBJECTS } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
-import { levels, subjects } from "../../helper/constants"
 
 import { getTopic } from "../../firestore/topics"
 import { makeStyles } from "@material-ui/core/styles"
@@ -30,8 +30,8 @@ const filter = createFilterOptions()
 export const InsertCategoriesForm = ({ categories, handleChange }) => {
   const classes = useStyles()
 
-  const [selSubject, setSubject] = useState(categories.subject || subjects[0])
-  const [selLevel, setLevel] = useState(categories.level || levels[0])
+  const [selSubject, setSubject] = useState(categories.subject || SUBJECTS[0])
+  const [selLevel, setLevel] = useState(categories.level || LEVELS[0])
   const [selTopic, setSelTopic] = useState({ topic: categories.topic})
   const [topicOptions, setTopicOptions] = useState([])
 
@@ -70,7 +70,7 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
             <FormControl component={"fieldset"}>
               <FormLabel component={"legend"}>Subject</FormLabel>
               <RadioGroup row value={selSubject} onChange={handleSubjectChange}>
-                {subjects.map((value) => (
+                {SUBJECTS.map((value) => (
                   <FormControlLabel
                     key={value}
                     value={value}
@@ -85,7 +85,7 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
             <FormControl component={"fieldset"}>
               <FormLabel component={"legend"}>Level</FormLabel>
               <RadioGroup row value={selLevel} onChange={handleLevelChange}>
-                {levels.map((value) => (
+                {LEVELS.map((value) => (
                   <FormControlLabel
                     key={value}
                     value={value}
