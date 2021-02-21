@@ -1,24 +1,33 @@
+import { QUESTION_TYPE } from ".././helper/enum"
 import isNumber from "lodash.isnumber"
 
 export const isMultipleChoiceQuestionValid = (question) => {
   let isValid = true
-  console.log(question)
 
-  const requiredKeys = [
-    "subject",
-    "level",
-    "topic",
-    "question",
-    "answer",
-    "choices",
-    "type",
-  ]
+  const requiredKeys = {
+    [QUESTION_TYPE.multipleChoice]: [
+      "subject",
+      "level",
+      "topic",
+      "question",
+      "answer",
+      "choices",
+      "type",
+    ],
+    [QUESTION_TYPE.fillInTheBlank]: [
+      "subject",
+      "level",
+      "topic",
+      "question",
+      "type",
+    ],
+    [QUESTION_TYPE.note]: ["subject", "level", "topic", "explain", "type"],
+  }
 
-  requiredKeys.forEach((key) => {
+  requiredKeys[question.type].forEach((key) => {
     if (key in question) {
       const vut = question[key]
 
-      console.log(`${vut}`)
       if (vut.toString().trim() === "\\") {
         throw new Error(`${key} cannot be empty`)
       }
@@ -47,6 +56,10 @@ export const isMultipleChoiceQuestionValid = (question) => {
       throw new Error(`${key} is missing`)
     }
   })
+  let result = {}
+  requiredKeys[question.type].forEach((val) => {
+    result[val] = question[val]
+  })
 
-  return isValid
+  return { isValid, result }
 }

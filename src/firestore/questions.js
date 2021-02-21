@@ -1,9 +1,7 @@
 import _ from "lodash"
 import { db } from "../firebase"
-import { typeLookUp } from "../helper/enum"
 
 export const post = async (question) => {
-  console.log("insert")
   const questionsCollection = db.collection("questions")
   await questionsCollection.add(question)
 }
@@ -56,7 +54,7 @@ export const getMany = async (categories) => {
         }
       }
     } else if (k === "type") {
-      cur = cur.where(k, "==", typeLookUp[categories[k]])
+      cur = cur.where(k, "==", categories[k])
     }
   })
 
@@ -85,8 +83,7 @@ export const deleteMany = async (questions) => {
 
 export const getOne = async (id) => {
   const cur = await db.collection("questions").doc(id).get()
-  const snapshot = cur.data() 
-  console.log(snapshot)
+  const snapshot = cur.data()
   return snapshot
 }
 

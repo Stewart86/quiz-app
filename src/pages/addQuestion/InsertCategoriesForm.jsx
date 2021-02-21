@@ -12,11 +12,12 @@ import {
   RadioGroup,
   TextField,
 } from "@material-ui/core"
-import { LEVELS, SUBJECTS } from "../../helper/constants"
+import { LEVELS, SUBJECTS, TYPES } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
 
 import { getTopic } from "../../firestore/topics"
 import { makeStyles } from "@material-ui/core/styles"
+import { typeReverseLookup } from "../../helper/enum"
 
 const useStyles = makeStyles((theme) => ({
   topicInput: {
@@ -31,22 +32,25 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
 
   const [selSubject, setSubject] = useState(categories.subject || SUBJECTS[0])
   const [selLevel, setLevel] = useState(categories.level || LEVELS[0])
-  const [selTopic, setSelTopic] = useState({ topic: categories.topic})
+  const [selType, setType] = useState(
+    typeReverseLookup[categories.type] || TYPES[0]
+  )
+  const [selTopic, setSelTopic] = useState({ topic: categories.topic })
   const [topicOptions, setTopicOptions] = useState([])
 
   useEffect(() => {
     const setOptions = async () => {
-      const topics = await getTopic(selSubject, selLevel)
+      const topics = await getTopic(selSubject, selLevel, selType)
       let arr = []
       topics.forEach((topic) => arr.push({ topic }))
       setTopicOptions(arr)
     }
     if (categories.topic) {
-      setSelTopic({topic:categories.topic || ""})
+      setSelTopic({ topic: categories.topic || "" })
     } else {
       setOptions()
     }
-  }, [selSubject, selLevel, categories.topic])
+  }, [selSubject, selLevel, selType, categories.topic])
 
   const handleSubjectChange = async (event) => {
     const subject = event.target.value
@@ -60,10 +64,31 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
     handleChange({ level })
   }
 
+  const handleTypeChange = async (event) => {
+    const type = typeReverseLookup[event.target.value]
+    setType(event.target.value)
+    handleChange({ type })
+  }
+
   return (
     <Card>
       <CardContent>
         <Grid container spacing={3} direction={"column"}>
+          <Grid item>
+            <FormControl component={"fieldset"}>
+              <FormLabel component={"legend"}>Type</FormLabel>
+              <RadioGroup row value={selType} onChange={handleTypeChange}>
+                {TYPES.map((value) => (
+                  <FormControlLabel
+                    key={value}
+                    value={value}
+                    control={<Radio />}
+                    label={value}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Grid>
           <Grid item>
             <FormControl component={"fieldset"}>
               <FormLabel component={"legend"}>Subject</FormLabel>

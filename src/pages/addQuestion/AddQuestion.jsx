@@ -7,16 +7,17 @@ import {
   Snackbar,
   Typography,
 } from "@material-ui/core"
+import { FillInTheBlank, Loading } from "../../components"
 import { LEVELS, SUBJECTS } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
 import { getOne, post, updateOne } from "../../firestore/questions"
 import { green, red } from "@material-ui/core/colors"
 import { useHistory, useParams } from "react-router"
 
-import { InsertAnswerForm } from "./InsertAnswerForm"
 import { InsertCategoriesForm } from "./InsertCategoriesForm"
 import { InsertQuestionForm } from "./InsertQuestionForm"
-import { Loading } from "../../components"
+import { MultipleChoice } from "./MultipleChoice"
+import { QUESTION_TYPE } from "../../helper/enum"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { isMultipleChoiceQuestionValid } from "../../helper/validation"
 import { makeStyles } from "@material-ui/core/styles"
@@ -36,6 +37,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  successBar: {
+    background: theme.palette.success.main,
+    color: theme.palette.success.contrastText,
+  },
 }))
 
 export const AddQuestion = () => {
@@ -44,46 +49,54 @@ export const AddQuestion = () => {
   const history = useHistory()
 
   const [categories, setCategories] = useState({
+    type: QUESTION_TYPE.multipleChoice,
     subject: SUBJECTS[0],
     level: LEVELS[0],
-    type: ["multipleChoice"],
-    choices: [""],
     topic: "",
+    choices: [""],
+    question: "",
+    answer: 1,
+    explain: "",
   })
-  const [fullPageLoading, setFullPageLoading] = useState(true)
+
   const [openSnackBar, setOpenSnackBar] = useState({ open: false, msg: "" })
-  const [loading, setLoading] = useState(false)
   const [warning, setWarning] = useState({ open: false, msg: "" })
-  const [question, setQuestion] = useState("")
-  const [answer, setAnswer] = useState(1)
+  const [loading, setLoading] = useState(false)
   const [rand, setRandom] = useState(random(5))
-  const [explain, setExplain] = useState("")
+
+  const [defaultQuestion, setDefaultQuestion] = useState(null)
+  const [defaultExplain, setDefaultExplain] = useState(null)
+
+  useEffect(() => {
+    if (id) {
+      getQuestion(id)
+    }
+  }, [id])
 
   const getQuestion = async (id) => {
     const db = await getOne(id)
     setCategories(db)
-    setQuestion(db.question)
+    setDefaultExplain(db.explain)
+    setDefaultQuestion(db.question)
   }
 
-  useEffect(() => {
-    setFullPageLoading(true)
-    if (id) {
-      getQuestion(id)
-    }
-    setFullPageLoading(false)
-  }, [id])
-
-  const handleAnswer = (answer) => {
-    const val = answer.target.value
-    setAnswer(Number(val))
+  const handleAnswer = (event) => {
+    const answer = event.target.value
+    setCategories({ ...categories, answer })
   }
 
   const handleEditorChange = (content) => {
-    setQuestion(content)
+    const question = content()
+    setCategories({ ...categories, question })
+  }
+
+  const handleFITBChange = (question) => {
+    setCategories({ ...categories, question })
   }
 
   const handleExplainChange = (content) => {
-    setExplain(content)
+    const explain = content()
+    setCategories({ ...categories, explain })
   }
 
   const handleRemoveClick = (index) => {
@@ -92,12 +105,13 @@ export const AddQuestion = () => {
     setCategories({ ...categories, choices: list })
   }
 
-  const handleAddClick = (event) => {
+  const handleAddClick = () => {
     setCategories({
       ...categories,
       choices: [...categories.choices, ""],
     })
   }
+
   const handleSetChoice = (event, i) => {
     const value = event.target.value
     let list = [...categories.choices]
@@ -116,28 +130,25 @@ export const AddQuestion = () => {
   const handleWarningClose = () => {
     setWarning({ open: false, msg: "" })
   }
+  
+  const goBack = () => {
+    history.goBack()
+  }
 
   const handleInsertQuestion = async () => {
     setLoading(true)
-    const type = "multipleChoice"
-    const fullQuestion = {
-      ...categories,
-      question,
-      choices: categories.choices,
-      answer,
-      explain,
-      type,
-    }
+
+    const fullQuestion = categories
     try {
       const validation = isMultipleChoiceQuestionValid(fullQuestion)
 
-      if (validation) {
+      if (validation.isValid) {
         if (id) {
-          await updateOne(id, fullQuestion)
+          await updateOne(id, validation.result)
           setOpenSnackBar({ open: true, msg: "Question Successfully updated." })
           history.goBack()
         } else {
-          await post(fullQuestion)
+          await post(validation.result)
           await updateTopic(
             categories.subject,
             categories.level,
@@ -153,9 +164,7 @@ export const AddQuestion = () => {
   }
 
   const handleNextInsert = () => {
-    setAnswer(1)
-    setQuestion("")
-    setCategories({ ...categories, choices: [""] })
+    setCategories({ ...categories, answer: 1, question: "", choices: [""] })
     setRandom(random(5))
     setLoading(false)
     setOpenSnackBar({ open: true, msg: "Question Successfully added." })
@@ -163,89 +172,99 @@ export const AddQuestion = () => {
 
   return (
     <Container>
-      {fullPageLoading ? (
-        <Loading />
-      ) : (
-        <>
-          <Grid container spacing={2} direction={"column"}>
-            <Grid item>
-              <Typography
-                style={{
-                  color: id ? green[500] : red[500],
-                  padding: 4,
-                }}
-                variant={"h4"}>
-                {id ? "Update" : "Create New"}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <InsertCategoriesForm
-                categories={categories}
-                handleChange={handleChange}
-              />
-            </Grid>
-            <Grid item>
-              <InsertQuestionForm
-                key={rand}
-                question={categories.question}
-                editorTitle={"Question"}
-                handleEditorChange={handleEditorChange}
-              />
-            </Grid>
-            <Grid item>
-              <InsertAnswerForm
-                choices={categories.choices}
-                handleAnswer={handleAnswer}
-                answer={answer}
-                handleSetChoice={handleSetChoice}
-                handleRemoveClick={handleRemoveClick}
-                handleAddClick={handleAddClick}
-              />
-            </Grid>
-            <Grid item>
-              <InsertQuestionForm
-                key={rand}
-                question={categories.explain}
-                editorTitle={"Explaination"}
-                handleEditorChange={handleExplainChange}
-              />
-            </Grid>
+      <>
+        <Grid container spacing={2} direction={"column"}>
+          <Grid item>
+            <Typography
+              style={{
+                color: id ? green[500] : red[500],
+                padding: 4,
+              }}
+              variant={"h4"}>
+              {id ? "Update" : "Create New"}
+            </Typography>
           </Grid>
           <Grid item>
-            <CardActions>
-              <div className={classes.wrapper}>
-                <Button
-                  variant={"contained"}
-                  color={"primary"}
-                  disabled={loading}
-                  onClick={handleInsertQuestion}>
-                  {id ? "Update" : "Insert"}
-                </Button>
-                {loading && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
-              </div>
-            </CardActions>
+            <InsertCategoriesForm
+              categories={categories}
+              handleChange={handleChange}
+            />
           </Grid>
-          <Snackbar
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            open={openSnackBar.open}
-            message={openSnackBar.msg}
-            onClose={handleSnackBarClose}
-            autoHideDuration={3000}
-          />
-          <WarningSnackBar
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-            open={warning.open}
-            message={warning.msg}
-            onClose={handleWarningClose}
-            autoHideDuration={3000}
-          />
-        </>
-      )}
+          {(() => {
+            switch (categories.type) {
+              case QUESTION_TYPE.multipleChoice:
+                return (
+                  <MultipleChoice
+                    rand={rand}
+                    categories={categories}
+                    handleEditorChange={handleEditorChange}
+                    handleAnswer={handleAnswer}
+                    handleSetChoice={handleSetChoice}
+                    handleRemoveClick={handleRemoveClick}
+                    handleAddClick={handleAddClick}
+                    editorDefault={defaultQuestion}
+                  />
+                )
+
+              case QUESTION_TYPE.fillInTheBlank:
+                return <FillInTheBlank question={categories} handleSetQuestion={handleFITBChange} />
+
+              case QUESTION_TYPE.note:
+                return
+
+              default:
+                return <Loading />
+            }
+          })()}
+          <Grid item>
+            <InsertQuestionForm
+              key={rand}
+              question={defaultExplain}
+              editorTitle={categories.type === 3 ? "Note" : "Explaination"}
+              handleEditorChange={handleExplainChange}
+            />
+          </Grid>
+        </Grid>
+        <Grid item>
+          <CardActions>
+            <Button onClick={goBack}>Back</Button>
+            <div className={classes.wrapper}>
+              <Button
+                variant={"contained"}
+                color={"primary"}
+                disabled={loading}
+                onClick={handleInsertQuestion}>
+                {id ? "Update" : "Insert"}
+              </Button>
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  className={classes.buttonProgress}
+                />
+              )}
+            </div>
+          </CardActions>
+        </Grid>
+        <Snackbar
+          ContentProps={{
+            classes: {
+              root: classes.successBar,
+            },
+          }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={openSnackBar.open}
+          message={openSnackBar.msg}
+          onClose={handleSnackBarClose}
+          autoHideDuration={3000}
+        />
+        <WarningSnackBar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={warning.open}
+          message={warning.msg}
+          onClose={handleWarningClose}
+          autoHideDuration={3000}
+        />
+      </>
     </Container>
   )
 }
