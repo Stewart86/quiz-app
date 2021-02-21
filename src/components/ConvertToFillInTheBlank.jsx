@@ -34,9 +34,8 @@ export const ConvertToFillInTheBlank = ({ rawText, submitted }) => {
       newQuestion.push(<Typography component={"span"}>{value}</Typography>)
     } else {
       if (value.includes(":")) {
-        const options = value.trim().split(":")[1].replace("}", "").split("|")
         const answer = value.trim().split(":")[0].replace("{", "")
-
+        const options = value.trim().split(":")[1].replace("}", "").split("|")
         if (options.length > 0) {
           newQuestion.push(
             <SelectionField
@@ -51,14 +50,14 @@ export const ConvertToFillInTheBlank = ({ rawText, submitted }) => {
         newQuestion.push(
           <TextField
             key={i}
-            autoComplete={"false"}
             variant={"standard"}
-            size={"small"}>
-            {value}
-          </TextField>
+            autoComplete={"false"}
+            size={"small"}
+          />
         )
       }
     }
   })
+
   return <ThemeProvider theme={theme}>{newQuestion}</ThemeProvider>
 }

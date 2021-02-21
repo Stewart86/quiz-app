@@ -1,3 +1,5 @@
+import { indexOf } from "lodash"
+
 export const getFirstArrayInObj = (data) => {
   let result = {}
   Object.keys(data).forEach((k, i) => {
@@ -92,4 +94,22 @@ export const convertQuestionObjToArr = (questions) => {
     })
   })
   return arr
+}
+
+export const prepareAnswer = (val) => {
+  const splitRe = /({.*?})/g
+  const textArr = val.split(splitRe)
+  let result = []
+  textArr.forEach((value, i) => {
+    if (value.includes("{")) {
+      if (value.includes(":")) {
+        const answer = value.trim().split(":")[0].replace("{", "")
+        const options = value.trim().split(":")[1].replace("}", "").split("|")
+        result.push(indexOf(options, answer))
+      } else {
+        result.push(value.replace("{", "").replace("}", ""))
+      }
+    }
+  })
+  return result
 }

@@ -21,6 +21,7 @@ import { QUESTION_TYPE } from "../../helper/enum"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { isMultipleChoiceQuestionValid } from "../../helper/validation"
 import { makeStyles } from "@material-ui/core/styles"
+import { prepareAnswer } from "../../helper/utilities"
 import { random } from "nanoid"
 import { updateTopic } from "../../firestore/topics"
 
@@ -91,7 +92,8 @@ export const AddQuestion = () => {
   }
 
   const handleFITBChange = (question) => {
-    setCategories({ ...categories, question })
+    const answer = prepareAnswer(question)
+    setCategories({ ...categories, question, answer })
   }
 
   const handleExplainChange = (content) => {
@@ -130,7 +132,7 @@ export const AddQuestion = () => {
   const handleWarningClose = () => {
     setWarning({ open: false, msg: "" })
   }
-  
+
   const goBack = () => {
     history.goBack()
   }
@@ -207,7 +209,12 @@ export const AddQuestion = () => {
                 )
 
               case QUESTION_TYPE.fillInTheBlank:
-                return <FillInTheBlank question={categories} handleSetQuestion={handleFITBChange} />
+                return (
+                  <FillInTheBlank
+                    question={categories}
+                    handleSetQuestion={handleFITBChange}
+                  />
+                )
 
               case QUESTION_TYPE.note:
                 return

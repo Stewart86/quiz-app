@@ -1,5 +1,6 @@
 import _ from "lodash"
 import { db } from "../firebase"
+import { typeReverseLookup } from "../helper/enum"
 
 export const post = async (question) => {
   const questionsCollection = db.collection("questions")
@@ -54,7 +55,7 @@ export const getMany = async (categories) => {
         }
       }
     } else if (k === "type") {
-      cur = cur.where(k, "==", categories[k])
+      cur = cur.where(k, "==", typeReverseLookup[categories[k]])
     }
   })
 

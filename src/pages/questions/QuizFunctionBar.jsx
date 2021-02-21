@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-end",
     backgroundColor: grey[100],
     justifyContent: "flex-end",
+    marginTop: "-40px"
   },
 }))
 

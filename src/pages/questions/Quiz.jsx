@@ -77,17 +77,17 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const goto = (i) => {
-    setSlideDirection("top")
+    setSlideDirection("down")
     setCount(() => Number(i))
   }
 
   const handleEndClick = () => {
-    setSlideDirection("top")
+    setSlideDirection("down")
     setShowResult(true)
   }
 
   const fromResultGoTo = (i) => {
-    setSlideDirection("top")
+    setSlideDirection("down")
     setCount(() => Number(i))
     setShowResult(false)
   }
@@ -119,14 +119,16 @@ export const Quiz = ({ questions, handlePrintable }) => {
           spacing={4}
           item>
           <Container>
-            <Question
-              key={count}
-              index={count}
-              question={questionsState[count]}
-              isLastQuestion={Object.keys(questions).length === count}
-              onHandleSelection={onHandleSelection}
-              onHandleAnswerClick={onHandleAnswerClick}
-            />
+            <Grid container direction={"column"} spacing={2}>
+              <Question
+                key={count}
+                index={count}
+                question={questionsState[count]}
+                isLastQuestion={Object.keys(questions).length === count}
+                onHandleSelection={onHandleSelection}
+                onHandleAnswerClick={onHandleAnswerClick}
+              />
+            </Grid>
           </Container>
         </Grid>
       </Slide>
