@@ -2,6 +2,7 @@ import { Container, Grid, Slide } from "@material-ui/core"
 import React, { useEffect, useRef, useState } from "react"
 import { isEqual, isObject } from "lodash"
 
+import { QUESTION_TYPE } from "../../helper/enum"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
 import { QuizFunctionBar } from "./QuizFunctionBar"
@@ -51,7 +52,12 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const onHandleAnswerClick = (ans) => {
+    // no need to show result directly go next
     setSlideDirection("left")
+    if (questionsState[count].type === QUESTION_TYPE.note) {
+      setCount((state) => Number(state + 1))
+      return
+    }
     // when undefiend === not answered
     if (questionsState[count].result === undefined) {
       let curQues = questions[count]

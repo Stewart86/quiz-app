@@ -12,6 +12,7 @@ import { blue, green, red } from "@material-ui/core/colors"
 
 import { ConvertToFillInTheBlank } from "../../components/ConvertToFillInTheBlank"
 import Editor from "rich-markdown-editor"
+import { QUESTION_TYPE } from "../../helper/enum"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -53,6 +54,9 @@ export const Question = ({
   }
 
   const printButtonText = () => {
+    if (question.type === QUESTION_TYPE.note) {
+      return "Next"
+    }
     if (question.result !== undefined) {
       if (isLastQuestion) {
         return "End"
@@ -74,13 +78,19 @@ export const Question = ({
 
   const subHeader = `${question.subject} | ${question.level} | ${question.topic}`
 
+  const noteOrQuestion = () =>
+    question.type === QUESTION_TYPE.note ? "Note" : "Question"
+
   return (
     <>
       <Grid item>
         <Card>
-          <CardHeader title={`Question ${index}`} subheader={subHeader} />
+          <CardHeader
+            title={`${noteOrQuestion()} ${index}`}
+            subheader={subHeader}
+          />
           <CardContent>
-            {question.type !== 1 ? (
+            {question.type === QUESTION_TYPE.fillInTheBlank ? (
               <ConvertToFillInTheBlank
                 onSelectionChange={onHandleFITBAnswer}
                 submitted={question.result !== undefined}
@@ -91,8 +101,16 @@ export const Question = ({
               <Editor
                 className={classes.question}
                 readOnly
-                defaultValue={question.question}
-                value={question.question}
+                defaultValue={
+                  question.type === QUESTION_TYPE.note
+                    ? question.explain
+                    : question.question
+                }
+                value={
+                  question.type === QUESTION_TYPE.note
+                    ? question.explain
+                    : question.question
+                }
               />
             )}
           </CardContent>
