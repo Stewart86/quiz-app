@@ -30,6 +30,7 @@ export const Question = ({
   isLastQuestion,
   onHandleSelection,
   onHandleAnswerClick,
+  onHandleFITBAnswer,
 }) => {
   const classes = useStyles()
   const [selection, setSelection] = useState(question.selection)
@@ -80,7 +81,11 @@ export const Question = ({
           <CardHeader title={`Question ${index}`} subheader={subHeader} />
           <CardContent>
             {question.type !== 1 ? (
-              <ConvertToFillInTheBlank submitted={question.result !== undefined} rawText={question.question} />
+              <ConvertToFillInTheBlank
+                onSelectionChange={onHandleFITBAnswer}
+                submitted={question.result !== undefined}
+                rawText={question.question}
+              />
             ) : (
               <Editor
                 className={classes.question}

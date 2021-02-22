@@ -18,6 +18,7 @@ export const isMultipleChoiceQuestionValid = (question) => {
       "subject",
       "level",
       "topic",
+      "answer",
       "question",
       "type",
     ],
@@ -42,7 +43,7 @@ export const isMultipleChoiceQuestionValid = (question) => {
       }
 
       // check if answer is correct value
-      if (key === "answer") {
+      if (key === "answer" && question.type === 1) {
         if (!isNumber(vut)) throw new Error(`${key} is not a number but ${vut}`)
       }
 

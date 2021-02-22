@@ -99,15 +99,15 @@ export const convertQuestionObjToArr = (questions) => {
 export const prepareAnswer = (val) => {
   const splitRe = /({.*?})/g
   const textArr = val.split(splitRe)
-  let result = []
+  let result = {}
   textArr.forEach((value, i) => {
     if (value.includes("{")) {
       if (value.includes(":")) {
         const answer = value.trim().split(":")[0].replace("{", "")
         const options = value.trim().split(":")[1].replace("}", "").split("|")
-        result.push(indexOf(options, answer))
+        result[i] = indexOf(options, answer)
       } else {
-        result.push(value.replace("{", "").replace("}", ""))
+        result[i] = value.replace("{", "").replace("}", "")
       }
     }
   })

@@ -22,7 +22,7 @@ const theme = createMuiTheme({
   },
 })
 
-export const ConvertToFillInTheBlank = ({ rawText, submitted }) => {
+export const ConvertToFillInTheBlank = ({ rawText, submitted, onSelectionChange }) => {
   const val = rawText
   const splitRe = /({.*?})/g
   const textArr = val.split(splitRe)
@@ -31,7 +31,11 @@ export const ConvertToFillInTheBlank = ({ rawText, submitted }) => {
 
   textArr.forEach((value, i) => {
     if (!value.includes("{")) {
-      newQuestion.push(<Typography component={"span"}>{value}</Typography>)
+      newQuestion.push(
+        <Typography key={i} component={"span"}>
+          {value}
+        </Typography>
+      )
     } else {
       if (value.includes(":")) {
         const answer = value.trim().split(":")[0].replace("{", "")
@@ -40,9 +44,11 @@ export const ConvertToFillInTheBlank = ({ rawText, submitted }) => {
           newQuestion.push(
             <SelectionField
               key={i}
+              index={i}
               options={options}
               answer={answer}
               submitted={submitted}
+              onSelectionChange={onSelectionChange}
             />
           )
         }

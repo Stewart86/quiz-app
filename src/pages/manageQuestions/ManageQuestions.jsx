@@ -40,22 +40,28 @@ export const ManageQuestions = () => {
       width: 110,
       renderCell: () => (
         <>
-        <Tooltip title={"Delete"}>
-          <IconButton size={"small"} onClick={handleConfirm}>
-            <DeleteForever />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={"Edit"}>
-          <IconButton size={"small"} onClick={handleUpdate}>
-            <Edit />
-          </IconButton>
-        </Tooltip>
+          <Tooltip title={"Delete"}>
+            <IconButton size={"small"} onClick={handleConfirm}>
+              <DeleteForever />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={"Edit"}>
+            <IconButton size={"small"} onClick={handleUpdate}>
+              <Edit />
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },
     { field: "question", headerName: "Question", width: 300 },
     { field: "choices", headerName: "Choices", width: 200 },
-    { field: "answer", headerName: "Answer", type: "number", width: 100 },
+    {
+      field: "answer",
+      headerName: "Answer",
+      type: "number",
+      width: 100,
+      renderCell: (CellParams) => <>{JSON.stringify(CellParams.value)}</>,
+    },
     { field: "explain", headerName: "Explaination", width: 600 },
   ]
 

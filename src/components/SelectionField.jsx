@@ -1,8 +1,14 @@
 import { MenuItem, TextField } from "@material-ui/core"
 import React, { useState } from "react"
 
-export const SelectionField = ({ options, answer, submitted }) => {
-  const [value, setValue] = useState(" ")
+export const SelectionField = ({
+  index,
+  options,
+  answer,
+  submitted,
+  onSelectionChange,
+}) => {
+  const [value, setValue] = useState("")
 
   const handleSetValue = (event) => {
     if (submitted) {
@@ -11,6 +17,7 @@ export const SelectionField = ({ options, answer, submitted }) => {
       }
     }
     setValue(event.target.value)
+    onSelectionChange(index, Number(event.target.value))
   }
 
   return (
@@ -20,9 +27,11 @@ export const SelectionField = ({ options, answer, submitted }) => {
       onChange={handleSetValue}
       variant={"standard"}
       size={"small"}>
-      <MenuItem value=' '> </MenuItem>
-      {options.map((val) => (
-        <MenuItem value={val}>{val}</MenuItem>
+      <MenuItem selected value={-1}></MenuItem>
+      {options.map((val, i) => (
+        <MenuItem key={val} value={i}>
+          {val}
+        </MenuItem>
       ))}
     </TextField>
   )

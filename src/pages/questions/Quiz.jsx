@@ -1,5 +1,6 @@
 import { Container, Grid, Slide } from "@material-ui/core"
 import React, { useEffect, useRef, useState } from "react"
+import { isEqual, isObject } from "lodash"
 
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
@@ -54,8 +55,14 @@ export const Quiz = ({ questions, handlePrintable }) => {
     // when undefiend === not answered
     if (questionsState[count].result === undefined) {
       let curQues = questions[count]
-      curQues["result"] = Number(curQues.answer) === ans + 1
-      curQues["selectedAnswer"] = ans
+
+      // if curQues.answer is object, use FITB logic, else MCQ logic to set result
+      if (isObject(curQues.answer)) {
+        curQues["result"] = isEqual(curQues.answer, curQues.selectedAnswer)
+      } else {
+        curQues["result"] = Number(curQues.answer) === ans + 1
+        curQues["selectedAnswer"] = ans
+      }
       setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
     } else if (Object.keys(questionsState).length === count) {
       // else if last question show result
@@ -69,6 +76,15 @@ export const Quiz = ({ questions, handlePrintable }) => {
   const onHandleSelection = (selection) => {
     let curQues = questions[count]
     curQues["selectedAnswer"] = selection
+    setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
+  }
+
+  const onHandleFITBAnswer = (index, answer) => {
+    let curQues = questions[count]
+    curQues["selectedAnswer"] = {
+      ...curQues.selectedAnswer,
+      ...{ [index]: answer },
+    }
     setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
   }
 
@@ -127,6 +143,7 @@ export const Quiz = ({ questions, handlePrintable }) => {
                 isLastQuestion={Object.keys(questions).length === count}
                 onHandleSelection={onHandleSelection}
                 onHandleAnswerClick={onHandleAnswerClick}
+                onHandleFITBAnswer={onHandleFITBAnswer}
               />
             </Grid>
           </Container>

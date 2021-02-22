@@ -1,4 +1,5 @@
-import _ from "lodash"
+import { isArray, isNumber, mergeWith, sampleSize, uniq } from "lodash"
+
 import { db } from "../firebase"
 import { typeReverseLookup } from "../helper/enum"
 
@@ -18,12 +19,12 @@ export const updateNewCategories = async (categories) => {
   const cursor = db.collection("questions").doc("categories")
   const doc = await cursor.get()
 
-  const obj = _.mergeWith(categories, doc.data(), (obj, src) => {
-    if (_.isArray(obj)) {
-      return _.uniq(obj.concat(src))
-    } else if (!_.isArray(obj)) {
+  const obj = mergeWith(categories, doc.data(), (obj, src) => {
+    if (isArray(obj)) {
+      return uniq(obj.concat(src))
+    } else if (!isArray(obj)) {
       obj = [obj]
-      return _.uniq(obj.concat(src))
+      return uniq(obj.concat(src))
     } else {
       return ""
     }
@@ -55,7 +56,11 @@ export const getMany = async (categories) => {
         }
       }
     } else if (k === "type") {
-      cur = cur.where(k, "==", typeReverseLookup[categories[k]])
+      if (isNumber(categories[k])) {
+        cur = cur.where(k, "==", categories[k])
+      } else {
+        cur = cur.where(k, "==", typeReverseLookup[categories[k]])
+      }
     }
   })
 
@@ -68,7 +73,7 @@ export const getMany = async (categories) => {
   if (categories.numOfQuestions === undefined) {
     return data
   }
-  return _.sampleSize(data, Number(categories.numOfQuestions))
+  return sampleSize(data, Number(categories.numOfQuestions))
 }
 
 export const deleteMany = async (questions) => {
