@@ -22,7 +22,11 @@ const theme = createMuiTheme({
   },
 })
 
-export const ConvertToFillInTheBlank = ({ rawText, submitted, onSelectionChange }) => {
+export const ConvertToFillInTheBlank = ({
+  rawText,
+  submitted,
+  onSelectionChange,
+}) => {
   const val = rawText
   const splitRe = /({.*?})/g
   const textArr = val.split(splitRe)
@@ -59,6 +63,7 @@ export const ConvertToFillInTheBlank = ({ rawText, submitted, onSelectionChange 
             variant={"standard"}
             autoComplete={"false"}
             size={"small"}
+            onChange={(event) => onSelectionChange(i, event.target.value)}
           />
         )
       }
