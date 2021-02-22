@@ -85,6 +85,7 @@ export const Question = ({
                 onSelectionChange={onHandleFITBAnswer}
                 submitted={question.result !== undefined}
                 rawText={question.question}
+                selectedAnswer={question.selectedAnswer}
               />
             ) : (
               <Editor

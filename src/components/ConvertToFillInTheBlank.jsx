@@ -22,10 +22,21 @@ const theme = createMuiTheme({
   },
 })
 
+const setSelectedFieldValue = (sel, i) => {
+  if (sel === undefined) {
+    return ""
+  } else {
+    if (sel[i] === undefined) {
+      return ""
+    }
+  }
+  return sel[i]
+}
 export const ConvertToFillInTheBlank = ({
   rawText,
   submitted,
   onSelectionChange,
+  selectedAnswer,
 }) => {
   const val = rawText
   const splitRe = /({.*?})/g
@@ -53,6 +64,7 @@ export const ConvertToFillInTheBlank = ({
               answer={answer}
               submitted={submitted}
               onSelectionChange={onSelectionChange}
+              selectedAnswer={setSelectedFieldValue(selectedAnswer, i)}
             />
           )
         }
@@ -64,6 +76,7 @@ export const ConvertToFillInTheBlank = ({
             autoComplete={"false"}
             size={"small"}
             onChange={(event) => onSelectionChange(i, event.target.value)}
+            value={setSelectedFieldValue(selectedAnswer, i)}
           />
         )
       }

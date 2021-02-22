@@ -7,8 +7,9 @@ export const SelectionField = ({
   answer,
   submitted,
   onSelectionChange,
+  selectedAnswer,
 }) => {
-  const [value, setValue] = useState("")
+  const [value, setValue] = useState(selectedAnswer)
 
   const handleSetValue = (event) => {
     if (submitted) {
