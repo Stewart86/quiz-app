@@ -1,6 +1,18 @@
-import { MenuItem, TextField } from "@material-ui/core"
+import { Chip, MenuItem, TextField } from "@material-ui/core"
 import React, { useState } from "react"
 
+import { makeStyles } from "@material-ui/core"
+
+const useStyles = makeStyles((theme) => ({
+  error: {
+    background: theme.palette.error.main,
+    color: theme.palette.error.contrastText,
+  },
+  success: {
+    background: theme.palette.success.main,
+    color: theme.palette.success.contrastText,
+  },
+}))
 export const SelectionField = ({
   index,
   options,
@@ -9,6 +21,7 @@ export const SelectionField = ({
   onSelectionChange,
   selectedAnswer,
 }) => {
+  const classes = useStyles()
   const [value, setValue] = useState(selectedAnswer)
 
   const handleSetValue = (event) => {
@@ -22,18 +35,30 @@ export const SelectionField = ({
   }
 
   return (
-    <TextField
-      select
-      value={value}
-      onChange={handleSetValue}
-      variant={"standard"}
-      size={"small"}>
-      <MenuItem selected value={-1}></MenuItem>
-      {options.map((val, i) => (
-        <MenuItem key={val} value={i}>
-          {val}
-        </MenuItem>
-      ))}
-    </TextField>
+    <>
+      <TextField
+        select
+        disabled={submitted}
+        value={value}
+        onChange={handleSetValue}
+        variant={"standard"}
+        size={"small"}>
+        <MenuItem selected value={-1}></MenuItem>
+        {options.map((val, i) => (
+          <MenuItem key={val} value={i}>
+            {val}
+          </MenuItem>
+        ))}
+      </TextField>{" "}
+      {submitted && (
+        <Chip
+          className={
+            options[selectedAnswer] === answer ? classes.success : classes.error
+          }
+          size={"small"}
+          label={answer}
+        />
+      )}
+    </>
   )
 }

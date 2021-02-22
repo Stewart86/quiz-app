@@ -1,9 +1,20 @@
-import { TextField, Typography } from "@material-ui/core"
+import { Chip, TextField, Typography } from "@material-ui/core"
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles"
 
 import React from "react"
 import { SelectionField } from "./SelectionField"
+import { makeStyles } from "@material-ui/core"
 
+const useStyles = makeStyles((theme) => ({
+  error: {
+    background: theme.palette.error.main,
+    color: theme.palette.error.contrastText,
+  },
+  success: {
+    background: theme.palette.success.main,
+    color: theme.palette.success.contrastText,
+  },
+}))
 const theme = createMuiTheme({
   overrides: {
     MuiTextField: {
@@ -38,6 +49,7 @@ export const ConvertToFillInTheBlank = ({
   onSelectionChange,
   selectedAnswer,
 }) => {
+  const classes = useStyles()
   const val = rawText
   const splitRe = /({.*?})/g
   const textArr = val.split(splitRe)
@@ -69,15 +81,28 @@ export const ConvertToFillInTheBlank = ({
           )
         }
       } else {
+        const answer = value.replace("{", "").replace("}", "")
         newQuestion.push(
-          <TextField
-            key={i}
-            variant={"standard"}
-            autoComplete={"false"}
-            size={"small"}
-            onChange={(event) => onSelectionChange(i, event.target.value)}
-            value={setSelectedFieldValue(selectedAnswer, i)}
-          />
+          <>
+            <TextField
+              disabled={submitted}
+              key={i}
+              variant={"standard"}
+              autoComplete={"false"}
+              size={"small"}
+              onChange={(event) => onSelectionChange(i, event.target.value)}
+              value={setSelectedFieldValue(selectedAnswer, i)}
+            />
+            {submitted && (
+              <Chip
+                className={
+                  selectedAnswer === answer ? classes.success : classes.error
+                }
+                size={"small"}
+                label={answer}
+              />
+            )}
+          </>
         )
       }
     }
