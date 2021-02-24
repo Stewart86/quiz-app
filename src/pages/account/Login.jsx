@@ -18,6 +18,9 @@ export const Login = () => {
     // check for auth here
     history.push("/question")
   }
+  const handleSignUp = () => {
+    history.push("/account/signup")
+  }
   return (
     <Card elevation={5}>
       <CardHeader
@@ -45,7 +48,7 @@ export const Login = () => {
       </CardContent>
       <CardActions>
         <Grid container justify={"space-around"}>
-          <Button variant={"outlined"}>Sign Up</Button>
+          <Button onClick={handleSignUp} variant={"outlined"}>Sign Up</Button>
           <Button onClick={handleLogin}>Login</Button>
         </Grid>
       </CardActions>

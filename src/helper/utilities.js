@@ -113,3 +113,16 @@ export const prepareAnswer = (val) => {
   })
   return result
 }
+
+export const isSevenDaysOver = (epochSeconds) => {
+  const serverTime = new Date(epochSeconds * 1000)
+  const sevenDaysEpoch = serverTime.setDate(serverTime.getDate() + 7)
+  return Date.now() > sevenDaysEpoch
+}
+
+export const is30DaysOver = (epochSeconds) => {
+  // TODO: to get every day of the month when user renew
+  const serverTime = new Date(epochSeconds * 1000)
+  const sevenDaysEpoch = serverTime.setDate(serverTime.getDate() + 30)
+  return Date.now() > sevenDaysEpoch
+}

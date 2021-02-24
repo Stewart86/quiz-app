@@ -1,9 +1,5 @@
-import { AccountSettings, Admin, Error, Login } from "./pages"
-import {
-  CenterContentRoute,
-  FullScreenContentRoute,
-  LoginPageRoute,
-} from "./layouts"
+import { Admin, Error } from "./pages"
+import { CenterContentRoute, FullScreenContentRoute } from "./layouts"
 import {
   Redirect,
   Route,
@@ -11,6 +7,7 @@ import {
   Switch,
 } from "react-router-dom"
 
+import { Account } from "./pages/account/Account"
 import { CssBaseline } from "@material-ui/core"
 import { FillInTheBlank } from "./components"
 import { Questions } from "./pages/questions/Questions"
@@ -26,14 +23,10 @@ export default function App() {
             <FillInTheBlank />
           </Route>
           <FullScreenContentRoute path='/question' component={Questions} />
-          <CenterContentRoute
-            path='/accountsettings'
-            component={AccountSettings}
-          />
+          <CenterContentRoute path='/account' component={Account} />
           <CenterContentRoute path='/admin' component={Admin} />
-          <LoginPageRoute path='/login' component={Login} />
           <Route exact path='/'>
-            <Redirect to='/question' />
+            <Redirect to='/account/signup' />
           </Route>
           <Route path='*'>
             <Error />

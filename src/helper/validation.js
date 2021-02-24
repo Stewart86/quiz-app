@@ -1,5 +1,5 @@
 import { QUESTION_TYPE } from ".././helper/enum"
-import isNumber from "lodash.isnumber"
+import { isNumber } from "lodash"
 
 export const isMultipleChoiceQuestionValid = (question) => {
   let isValid = true
