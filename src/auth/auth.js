@@ -8,7 +8,13 @@ export const signup = async (name, email, phone, password) => {
 }
 
 export const signin = (email, password) => {
-  return auth.signInWithEmailAndPassword(email, password)
+  let user = null
+  try {
+    user = auth.signInWithEmailAndPassword(email, password)
+  } catch (error) {
+    return error.message
+  }
+  return user
 }
 
 export const signout = async () => {

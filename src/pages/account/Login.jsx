@@ -7,19 +7,31 @@ import {
   Grid,
   TextField,
 } from "@material-ui/core"
+import React, { useState } from "react"
 
-import React from "react"
+import { isString } from "lodash"
+import { signin } from "../../auth/auth"
 import { useHistory } from "react-router-dom"
 
 export const Login = () => {
   const history = useHistory()
+  const [cred, setCred] = useState()
 
   const handleLogin = () => {
     // check for auth here
-    history.push("/question")
+    const result = signin(cred.email, cred.password)
+    console.log(result)
+    if (isString(result)) {
+      console.log("in correct")
+    } else {
+      history.push("/question")
+    }
   }
   const handleSignUp = () => {
     history.push("/account/signup")
+  }
+  const handleChange = (obj) => {
+    setCred((state) => ({ ...state, ...obj }))
   }
   return (
     <Card elevation={5}>
@@ -31,7 +43,8 @@ export const Login = () => {
         <Grid item xs={12}>
           <TextField
             fullWidth
-            label={"User ID"}
+            onChange={(event) => handleChange({ email: event.target.value })}
+            label={"Email"}
             variant={"outlined"}
             margin={"dense"}
           />
@@ -39,6 +52,7 @@ export const Login = () => {
         <Grid item xs={12}>
           <TextField
             fullWidth
+            onChange={(event) => handleChange({ password: event.target.value })}
             type={"password"}
             label={"Password"}
             variant={"outlined"}
@@ -48,7 +62,9 @@ export const Login = () => {
       </CardContent>
       <CardActions>
         <Grid container justify={"space-around"}>
-          <Button onClick={handleSignUp} variant={"outlined"}>Sign Up</Button>
+          <Button onClick={handleSignUp} variant={"outlined"}>
+            Sign Up
+          </Button>
           <Button onClick={handleLogin}>Login</Button>
         </Grid>
       </CardActions>

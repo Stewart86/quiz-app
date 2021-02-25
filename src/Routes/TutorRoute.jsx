@@ -1,25 +1,25 @@
 import { Redirect, Route } from "react-router"
 
-import { CenterContentLayout } from "../layouts/CenterContentRoute"
 import React from "react"
 
-export const PublicRoute = ({
+export const TutorRoute = ({
   component: Component,
-  auth,
+  authenticated,
+  roles,
   ...rest
 }) => {
   return (
-    <CenterContentLayout>
+    <div>
       <Route
         {...rest}
         render={(props) =>
-          auth === false ? (
+          authenticated === true && roles.tutor ? (
             <Component {...props} />
           ) : (
             <Redirect to={"/question"} />
           )
         }
       />
-    </CenterContentLayout>
+    </div>
   )
 }

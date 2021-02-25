@@ -68,3 +68,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## To Do
+- student should not have access to admin pages and manage users page
+- student should not have access to admin db and question write access
+- student once login in should redirect to question
+- admin once login should redirect to manage question
+- once any user with user logged in should show logout(name) with logout function

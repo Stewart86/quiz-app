@@ -1,26 +1,26 @@
 import { Redirect, Route } from "react-router"
 
-import { CenterContentLayout } from "../layouts/CenterContentRoute"
+import { FullScreenContentLayout } from "../layouts/FullScreenContentRoute"
 import React from "react"
 
-export const AdminRoute = ({
+export const StudentRoute = ({
   component: Component,
   authenticated,
   roles,
   ...rest
 }) => {
   return (
-    <CenterContentLayout>
+    <FullScreenContentLayout>
       <Route
         {...rest}
         render={(props) =>
-          authenticated === true && roles.admin ? (
+          authenticated === true && roles.student ? (
             <Component {...props} />
           ) : (
-            <Redirect to={"/admin"} />
+            <Redirect to={"/"} />
           )
         }
       />
-    </CenterContentLayout>
+    </FullScreenContentLayout>
   )
 }
