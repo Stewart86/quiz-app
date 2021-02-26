@@ -7,10 +7,10 @@ export const signup = async (name, email, phone, password) => {
   return await post({ id, name, email, phone })
 }
 
-export const signin = (email, password) => {
+export const signin = async (email, password) => {
   let user = null
   try {
-    user = auth.signInWithEmailAndPassword(email, password)
+    user = await auth.signInWithEmailAndPassword(email, password)
   } catch (error) {
     return error.message
   }

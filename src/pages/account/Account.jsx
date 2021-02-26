@@ -6,43 +6,17 @@ import React from "react"
 import { Renew } from "./Renew"
 import { Reset } from "./Reset"
 import { SignUp } from "./SignUp"
+import { StudentRoute } from "../../Routes/StudentRoute"
 import { Switch } from "react-router"
 
-export const Account = ({ authenticated, roles }) => (
+export const Account = () => (
   <>
     <Switch>
-      <PublicRoute
-        path={"/account/signup"}
-        auth={authenticated}
-        component={SignUp}
-      />
-      <PublicRoute
-        path={"/account/reset"}
-        auth={authenticated}
-        component={Reset}
-      />
-      {roles === null && (
-        <>
-          <AdminRoute
-            path={"/account/renew/:id"}
-            authenticated={authenticated}
-            roles={roles}
-            component={Renew}
-          />
-          <AdminRoute
-            path={"/account/manage"}
-            authenticated={authenticated}
-            roles={roles}
-            component={Manage}
-          />
-          <AdminRoute
-            path={"/account/settings"}
-            authenticated={authenticated}
-            roles={roles}
-            component={AccountSettings}
-          />
-        </>
-      )}
+      <PublicRoute path={"/account/signup"} component={SignUp} />
+      <PublicRoute path={"/account/reset"} component={Reset} />
+      <AdminRoute path={"/account/renew"} component={Renew} />
+      <AdminRoute path={"/account/manage"} component={Manage} />
+      <StudentRoute path={"/account/settings"} component={AccountSettings} />
     </Switch>
   </>
 )

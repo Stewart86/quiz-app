@@ -6,23 +6,27 @@ import {
   CardHeader,
   Grid,
   TextField,
+  Typography,
 } from "@material-ui/core"
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 
+import { AuthContext } from "../../components/AuthProvider"
+import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { isString } from "lodash"
 import { signin } from "../../auth/auth"
 import { useHistory } from "react-router-dom"
 
 export const Login = () => {
   const history = useHistory()
-  const [cred, setCred] = useState()
+  const {currentUser} = useContext(AuthContext)
+  const [cred, setCred] = useState({ email: "", password: "" })
+  const [warning, setWarning] = useState({ open: false, msg: "" })
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     // check for auth here
-    const result = signin(cred.email, cred.password)
-    console.log(result)
+    const result = await signin(cred.email, cred.password)
     if (isString(result)) {
-      console.log("in correct")
+      setWarning({ open: true, msg: "Invalid email or password." })
     } else {
       history.push("/question")
     }
@@ -32,6 +36,17 @@ export const Login = () => {
   }
   const handleChange = (obj) => {
     setCred((state) => ({ ...state, ...obj }))
+  }
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleLogin()
+    }
+  }
+  const handleWarningClose = () => {
+    setWarning({ open: false, msg: "" })
+  }
+  if (currentUser) {
+    history.push("/question")
   }
   return (
     <Card elevation={5}>
@@ -43,6 +58,8 @@ export const Login = () => {
         <Grid item xs={12}>
           <TextField
             fullWidth
+            required
+            type={"email"}
             onChange={(event) => handleChange({ email: event.target.value })}
             label={"Email"}
             variant={"outlined"}
@@ -53,12 +70,15 @@ export const Login = () => {
           <TextField
             fullWidth
             onChange={(event) => handleChange({ password: event.target.value })}
+            required
             type={"password"}
             label={"Password"}
             variant={"outlined"}
             margin={"dense"}
+            onKeyPress={handleKeyPress}
           />
         </Grid>
+        <Typography>todo: forget password</Typography>
       </CardContent>
       <CardActions>
         <Grid container justify={"space-around"}>
@@ -68,8 +88,13 @@ export const Login = () => {
           <Button onClick={handleLogin}>Login</Button>
         </Grid>
       </CardActions>
-      {/* } Note: after login check if admin redirect to admin page else question page
-        login*/}
+      <WarningSnackBar
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        open={warning.open}
+        message={warning.msg}
+        onClose={handleWarningClose}
+        autoHideDuration={3000}
+      />
     </Card>
   )
 }

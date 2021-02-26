@@ -1,21 +1,23 @@
+import React, { useContext } from "react"
 import { Redirect, Route } from "react-router"
 
+import { AuthContext } from "../components/AuthProvider"
 import { FullScreenContentLayout } from "../layouts/FullScreenContentRoute"
-import React from "react"
+import { Loading } from "../components"
 
-export const StudentRoute = ({
-  component: Component,
-  authenticated,
-  roles,
-  ...rest
-}) => {
+export const StudentRoute = ({ component: Component, ...rest }) => {
+  const { currentUser, roles } = useContext(AuthContext)
   return (
     <FullScreenContentLayout>
       <Route
         {...rest}
         render={(props) =>
-          authenticated === true && roles.student ? (
-            <Component {...props} />
+          currentUser ? (
+            roles.student ? (
+              <Component {...props} />
+            ) : (
+              <Loading />
+            )
           ) : (
             <Redirect to={"/"} />
           )

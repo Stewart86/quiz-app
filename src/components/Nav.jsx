@@ -5,9 +5,10 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
 import { AccountCircleOutlined } from "@material-ui/icons"
+import { AuthContext } from "./AuthProvider"
 import { auth } from "../firebase"
 import { getUser } from "../firestore/users"
 import { makeStyles } from "@material-ui/core/styles"
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  greeting: {
+    flexGrow: 0,
+  },
   btn: {
     margin: theme.spacing(2),
   },
@@ -28,18 +32,24 @@ const useStyles = makeStyles((theme) => ({
 
 export const Nav = () => {
   const classes = useStyles()
-  const [userName, setUserName] = useState()
+  const [userName, setUserName] = useState(null)
+  const { currentUser, roles } = useContext(AuthContext)
 
   useEffect(() => {
-    const user = auth.currentUser
-    const getUserFromDb = async (uid) => {
-      const DbUser = await getUser(uid)
-      setUserName(DbUser.name)
+    let mounted = true
+    const getUserNameFromDb = async (user) => {
+      if (user) {
+        const dbUser = await getUser(user.uid)
+        if (mounted) {
+          setUserName(dbUser.name)
+        }
+      }
     }
-    if (user) {
-      getUserFromDb(user.uid)
+    getUserNameFromDb(currentUser)
+    return () => {
+      mounted = false
     }
-  }, [userName])
+  }, [currentUser])
 
   const handleLogout = () => {
     signout()
@@ -52,20 +62,42 @@ export const Nav = () => {
           <Typography className={classes.title} variant='h6'>
             Quiz App
           </Typography>
-          <Button className={classes.btn} href='/admin' color='inherit'>
-            Admin
-          </Button>
-          <Button className={classes.btn} href='/question' color='inherit'>
-            Question
-          </Button>
+          {roles.admin && (
+            <>
+              <Button
+                className={classes.btn}
+                href='/account/manage/tutor'
+                color='inherit'>
+                Tutors
+              </Button>
+              <Button
+                className={classes.btn}
+                href='/account/manage/student'
+                color='inherit'>
+                Students
+              </Button>
+            </>
+          )}
+          {roles.tutor && (
+            <Button className={classes.btn} href='/admin' color='inherit'>
+              Admin
+            </Button>
+          )}
+          {roles.tutor && (
+            <Button className={classes.btn} href='/question' color='inherit'>
+              Question
+            </Button>
+          )}
           {userName ? (
             <>
               <Button
                 className={classes.btn}
-                onClick={handleLogout} 
+                onClick={handleLogout}
                 color='inherit'>
                 {"Logout"}
               </Button>
+              <Typography
+                className={classes.greeting}>{`Hi ${userName}`}</Typography>
               <IconButton
                 href={"/account/settings"}
                 variant={"outlined"}

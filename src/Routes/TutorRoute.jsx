@@ -1,25 +1,27 @@
+import React, { useContext } from "react"
 import { Redirect, Route } from "react-router"
 
-import React from "react"
+import { AuthContext } from "../components/AuthProvider"
+import { Loading } from "../components"
 
-export const TutorRoute = ({
-  component: Component,
-  authenticated,
-  roles,
-  ...rest
-}) => {
+export const TutorRoute = ({ component: Component, ...rest }) => {
+  const { currentUser, roles } = useContext(AuthContext)
   return (
-    <div>
+    <>
       <Route
         {...rest}
         render={(props) =>
-          authenticated === true && roles.tutor ? (
-            <Component {...props} />
+          currentUser ? (
+            roles.tutor ? (
+              <Component {...props} />
+            ) : (
+              <Loading />
+            )
           ) : (
             <Redirect to={"/question"} />
           )
         }
       />
-    </div>
+    </>
   )
 }

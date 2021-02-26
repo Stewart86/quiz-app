@@ -120,9 +120,8 @@ export const isSevenDaysOver = (epochSeconds) => {
   return Date.now() > sevenDaysEpoch
 }
 
-export const is30DaysOver = (epochSeconds) => {
-  // TODO: to get every day of the month when user renew
+export const isDueForRenewal = (epochSeconds) => {
   const serverTime = new Date(epochSeconds * 1000)
-  const sevenDaysEpoch = serverTime.setDate(serverTime.getDate() + 30)
-  return Date.now() > sevenDaysEpoch
+  const nextRenewal = serverTime.setMonth(serverTime.getMonth() + 1)
+  return Date.now() > nextRenewal
 }

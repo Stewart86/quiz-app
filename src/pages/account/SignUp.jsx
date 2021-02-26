@@ -216,6 +216,7 @@ export const SignUp = () => {
                 variant={"outlined"}>
                 {"Confirm Passward"}
               </TextField>
+              <Typography>todo: t&c</Typography>
             </Grid>
           </Grid>
         </CardContent>

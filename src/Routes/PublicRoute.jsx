@@ -1,19 +1,17 @@
+import React, { useContext } from "react"
 import { Redirect, Route } from "react-router"
 
+import { AuthContext } from "../components/AuthProvider"
 import { CenterContentLayout } from "../layouts/CenterContentRoute"
-import React from "react"
 
-export const PublicRoute = ({
-  component: Component,
-  auth,
-  ...rest
-}) => {
+export const PublicRoute = ({ component: Component, ...rest }) => {
+  const { currentUser } = useContext(AuthContext)
   return (
     <CenterContentLayout>
       <Route
         {...rest}
         render={(props) =>
-          auth === false ? (
+          currentUser === null ? (
             <Component {...props} />
           ) : (
             <Redirect to={"/question"} />
