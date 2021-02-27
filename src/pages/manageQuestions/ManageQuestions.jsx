@@ -18,7 +18,7 @@ import { DataGrid } from "@material-ui/data-grid"
 import { InsertCategoriesForm } from "../addQuestion/InsertCategoriesForm"
 import { QUESTION_TYPE } from "../../helper/enum"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
-import { convertQuestionObjToArr } from "../../helper/utilities"
+import { convertObjToArr } from "../../helper/utilities"
 import { makeStyles } from "@material-ui/core/styles"
 import { useHistory } from "react-router"
 
@@ -77,7 +77,7 @@ export const ManageQuestions = () => {
   const [warning, setWarning] = useState({ open: false, msg: "" })
 
   const getQuestionFromDB = async (categories) => {
-    const lsOfQues = convertQuestionObjToArr(await getMany(categories))
+    const lsOfQues = convertObjToArr(await getMany(categories))
     setQuestions(lsOfQues)
   }
 

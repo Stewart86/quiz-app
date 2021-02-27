@@ -4,7 +4,10 @@ import { post } from "../firestore/users"
 export const signup = async (name, email, phone, password) => {
   const user = await auth.createUserWithEmailAndPassword(email, password)
   const id = user.user.uid
-  return await post({ id, name, email, phone })
+  
+  const postResult = await post({ id, name, email, phone })
+  console.log(postResult)
+  return 
 }
 
 export const signin = async (email, password) => {

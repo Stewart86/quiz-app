@@ -69,9 +69,44 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
+## Testing
+- add function trial to tutor
+- add function trial to student
+- student list 
+- student to tutor
+- tutor list
+- convert admin page to tutor page
+- convert manage page to admin page
+
 ## To Do
-- student should not have access to admin pages and manage users page
-- student should not have access to admin db and question write access
-- student once login in should redirect to question
-- admin once login should redirect to manage question
-- once any user with user logged in should show logout(name) with logout function
+- renewal
+- subscription
+- email varification
+- reset password
+- forget password
+- delete /disable account
+- add createMUI theme
+- change question selection
+- add reminder at question sections
+- redirect to renew / subscribe after due date
+
+## bugs
+- admin page nav bar missing
+- admin table actions column unable to click
+- multiple selection not triggering multiple delete
+- topic once selected unable to change
+
+## enhancement
+- admin page create  button convert to fab
+
+## RBCA flow
+- signup -> auto trial
+- make payment -> trial to student | admin -> trial to tutor / admin
+- trial 7 days
+- subscription 30 days
+- if role == trial -> check days left
+- if role == student -> check days left
+- if day left 7 show remind on questions (trial or renew)
+- when subscribe -> subscribe page -> stripe payment -> subscribe function 
+    1. update expireStart field 
+    2. update role == student

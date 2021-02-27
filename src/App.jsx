@@ -10,6 +10,7 @@ import { Account } from "./pages/account/Account"
 import { AuthProvider } from "./components/AuthProvider"
 import { CenterContentLayout } from "./layouts/CenterContentRoute"
 import { CssBaseline } from "@material-ui/core"
+import { FullScreenContentLayout } from "./layouts/FullScreenContentRoute"
 import { Login } from "./pages/account/Login"
 import { Questions } from "./pages/questions/Questions"
 import React from "react"
@@ -23,10 +24,12 @@ export default function App() {
         <Switch>
           <StudentRoute path='/question' component={Questions} />
           <Route path={"/Account"}>
-            <Account />
+              <Account />
           </Route>
           <Route path={"/admin"}>
-            <Admin />
+            <FullScreenContentLayout>
+              <Admin />
+            </FullScreenContentLayout>
           </Route>
           <Route path='/login'>
             <CenterContentLayout>

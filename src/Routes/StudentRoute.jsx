@@ -13,7 +13,7 @@ export const StudentRoute = ({ component: Component, ...rest }) => {
         {...rest}
         render={(props) =>
           currentUser ? (
-            roles.student ? (
+            roles.student || roles.trial || roles.tutor || roles.admin ? (
               <Component {...props} />
             ) : (
               <Loading />

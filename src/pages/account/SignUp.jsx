@@ -136,6 +136,7 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ name: event.target.value })
                 }
+                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
                 onBlur={nameValidation}
                 error={nameHelper.error}
                 helper={nameHelper.msg}
@@ -152,6 +153,7 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ phone: event.target.value })
                 }
+                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
                 onBlur={phoneValidation}
                 error={phoneHelper.error}
                 helperText={phoneHelper.msg}
@@ -171,6 +173,7 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ email: event.target.value })
                 }
+                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
                 onBlur={emailValidation}
                 error={emailHelper.error}
                 helperText={emailHelper.msg}
@@ -188,6 +191,7 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ password1: event.target.value })
                 }
+                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
                 onBlur={passwordValidation}
                 error={passwordHelper.error}
                 helperText={passwordHelper.msg}
@@ -205,6 +209,7 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ password2: event.target.value })
                 }
+                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
                 onBlur={passwordConfirmCheck}
                 error={confirmPasswordHelper.error}
                 helperText={confirmPasswordHelper.msg}

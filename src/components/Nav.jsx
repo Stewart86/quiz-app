@@ -66,21 +66,15 @@ export const Nav = () => {
             <>
               <Button
                 className={classes.btn}
-                href='/account/manage/tutor'
+                href='/account/manage'
                 color='inherit'>
-                Tutors
-              </Button>
-              <Button
-                className={classes.btn}
-                href='/account/manage/student'
-                color='inherit'>
-                Students
+                Admin
               </Button>
             </>
           )}
           {roles.tutor && (
             <Button className={classes.btn} href='/admin' color='inherit'>
-              Admin
+              Manage
             </Button>
           )}
           {roles.tutor && (

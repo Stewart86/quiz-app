@@ -19,7 +19,6 @@ import { AuthContext } from "../../components/AuthProvider"
 import { CenterContentLayout } from "../../layouts/CenterContentRoute"
 import { Loading } from "../../components"
 import { getUser } from "../../firestore/users"
-import { isSevenDaysOver } from "../../helper/utilities"
 import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +43,6 @@ export const AccountSettings = () => {
       }
     }
     getDbUser(currentUser)
-    console.log("ac effect")
     return () => {
       mounted = false
     }
@@ -102,15 +100,17 @@ export const AccountSettings = () => {
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        {user.isTrial && "Trial"}
-                        {user.isPaid && "Paid"}
+                        {roles.admin && "Admin "}
+                        {roles.tutor && "Tutor "}
+                        {roles.student && "Paid "}
+                        {roles.trial && "Trial "}
                       </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
             </Grid>
-            {roles.student && (
+            {(roles.student || roles.trial) && (
               <>
                 <Grid item>
                   <Divider />
@@ -118,7 +118,7 @@ export const AccountSettings = () => {
                 <Grid item>
                   <Typography variant={"h6"}>Days Remaining</Typography>
                 </Grid>
-                {user.isTrial && (
+                {roles.trial && (
                   <Grid item>
                     <Typography
                       variant={"subtitle1"}
@@ -127,7 +127,7 @@ export const AccountSettings = () => {
                     </Typography>
                   </Grid>
                 )}
-                {user.isPaid && (
+                {roles.student && (
                   <>
                     <Grid item>
                       <Typography
