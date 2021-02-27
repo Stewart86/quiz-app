@@ -39,16 +39,27 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
   const [topicOptions, setTopicOptions] = useState([])
 
   useEffect(() => {
+    let mounted = true
     const setOptions = async () => {
       const topics = await getTopic(selSubject, selLevel, selType)
       let arr = []
       topics.forEach((topic) => arr.push({ topic }))
-      setTopicOptions(arr)
+      if (mounted) {
+        setTopicOptions(arr)
+      }
     }
     if (categories.topic) {
-      setSelTopic({ topic: categories.topic || "" })
+      if (mounted) {
+        setSelTopic({ topic: categories.topic })
+        setOptions()
+      }
     } else {
-      setOptions()
+      if (mounted) {
+        setOptions()
+      }
+    }
+    return () => {
+      mounted = false
     }
   }, [selSubject, selLevel, selType, categories.topic])
 

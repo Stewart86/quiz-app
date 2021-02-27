@@ -77,6 +77,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - tutor list
 - convert admin page to tutor page
 - convert manage page to admin page
+- admin page nav bar missing
+- admin table actions column unable to click
+- multiple selection not triggering multiple delete
+- topic once selected unable to change
+- admin should redirect to admin
+- tutor should redirect to manage
 
 ## To Do
 - renewal
@@ -91,13 +97,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 - redirect to renew / subscribe after due date
 
 ## bugs
-- admin page nav bar missing
-- admin table actions column unable to click
-- multiple selection not triggering multiple delete
-- topic once selected unable to change
 
 ## enhancement
 - admin page create  button convert to fab
+- page transition is smooth
 
 ## RBCA flow
 - signup -> auto trial

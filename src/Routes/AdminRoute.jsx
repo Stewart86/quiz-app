@@ -22,7 +22,7 @@ export const AdminRoute = ({ component: Component, ...rest }) => {
             <Redirect to={"/admin"} />
           )
         }
-      />{" "}
+      />
     </CenterContentLayout>
   )
 }

@@ -31,11 +31,10 @@ export const AuthProvider = ({ children }) => {
       }
     }
     getRolesFromDb()
-    console.log("effect")
   }, [currentUser])
 
   if (loading) {
-    return <Loading />
+    return <Loading/>
   }
   return (
     <AuthContext.Provider value={{ currentUser, roles }}>

@@ -39,6 +39,9 @@ export default function App() {
           <Route exact path='/'>
             <Redirect to='/login' />
           </Route>
+          <Route path='/error'>
+            <Error />
+          </Route>
           <Route path='*'>
             <Error />
           </Route>

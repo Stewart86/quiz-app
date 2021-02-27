@@ -28,7 +28,7 @@ export const Login = () => {
     if (isString(result)) {
       setWarning({ open: true, msg: "Invalid email or password." })
     } else {
-      history.push("/question")
+    history.push("/admin")
     }
   }
   const handleSignUp = () => {
@@ -46,7 +46,7 @@ export const Login = () => {
     setWarning({ open: false, msg: "" })
   }
   if (currentUser) {
-    history.push("/question")
+    history.push("/account/manage")
   }
   return (
     <Card elevation={5}>

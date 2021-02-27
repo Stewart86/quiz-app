@@ -1,4 +1,4 @@
-import { AddBox, DeleteForever, Edit } from "@material-ui/icons"
+import { Add, AddBox, DeleteForever, Edit } from "@material-ui/icons"
 import {
   Button,
   Container,
@@ -6,6 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Fab,
   Grid,
   IconButton,
   Tooltip,
@@ -26,7 +27,11 @@ const useStyles = makeStyles((theme) => ({
   dataTable: {
     height: "60vh",
   },
-  rightBtn: { marginLeft: "1em", float: "right" },
+  rightBtn: {
+    position: "fixed",
+    bottom: theme.spacing(10),
+    right: theme.spacing(2),
+  },
 }))
 
 export const ManageQuestions = () => {
@@ -38,15 +43,17 @@ export const ManageQuestions = () => {
       field: "id",
       headerName: "Actions",
       width: 110,
-      renderCell: () => (
+      renderCell: (cell) => (
         <>
           <Tooltip title={"Delete"}>
-            <IconButton size={"small"} onClick={handleConfirm}>
+            <IconButton
+              size={"small"}
+              onClick={() => handleConfirm(cell.value)}>
               <DeleteForever />
             </IconButton>
           </Tooltip>
           <Tooltip title={"Edit"}>
-            <IconButton size={"small"} onClick={handleUpdate}>
+            <IconButton size={"small"} onClick={() => handleUpdate(cell.value)}>
               <Edit />
             </IconButton>
           </Tooltip>
@@ -99,31 +106,13 @@ export const ManageQuestions = () => {
     setOpen(false)
   }
 
-  const handleConfirm = () => {
-    if (selections.length === 0) {
-      setWarning({
-        open: true,
-        msg: "Select at least one question to delete.",
-      })
-    } else {
-      setOpen(true)
-    }
+  const handleConfirm = (qid) => {
+    setSelections([qid])
+    setOpen(true)
   }
 
-  const handleUpdate = () => {
-    if (selections.length === 0) {
-      setWarning({
-        open: true,
-        msg: "Select one question to update.",
-      })
-    } else if (selections.length > 1) {
-      setWarning({
-        open: true,
-        msg: "Only one selection can be updated at a time.",
-      })
-    } else {
-      history.push(`/admin/updatequestion/${selections[0]}`)
-    }
+  const handleUpdate = (qid) => {
+    history.push(`/admin/updatequestion/${qid}`)
   }
 
   const handleWarningClose = () => {
@@ -147,12 +136,7 @@ export const ManageQuestions = () => {
           />
         </Grid>
         <Grid item className={classes.dataTable}>
-          <DataGrid
-            rows={questions}
-            columns={dataColumn}
-            checkboxSelection
-            onSelectionChange={(newSel) => setSelections(newSel.rowIds)}
-          />
+          <DataGrid rows={questions} columns={dataColumn} />
         </Grid>
         <Grid item>
           {selections.length > 1 && (
@@ -164,14 +148,12 @@ export const ManageQuestions = () => {
               Multiple Delete
             </Button>
           )}
-          <Button
+          <Fab
             className={classes.rightBtn}
             onClick={handleCreate}
-            variant={"contained"}
-            color={"primary"}
-            startIcon={<AddBox />}>
-            Create
-          </Button>
+            color={"primary"}>
+            <Add />
+          </Fab>
         </Grid>
       </Grid>
       <Dialog open={open} onClose={handleClose}>

@@ -18,20 +18,22 @@ export const Manage = () => {
   const classes = useStyles()
   const [users, setUsers] = useState([])
 
+  const getUsersFromDB = async () => {
+    const Users = convertObjToArr(await getAllStudents())
+    setUsers(Users)
+  }
   useEffect(() => {
-    const getUsersFromDB = async () => {
-      const Users = convertObjToArr(await getAllStudents())
-      setUsers(Users)
-    }
     getUsersFromDB()
   }, [])
 
   const handleToAdmin = (uid) => {
     upgradeRole(uid, "admin")
+    getUsersFromDB()
   }
 
   const handleToTutor = (uid) => {
     upgradeRole(uid, "tutor")
+    getUsersFromDB()
   }
   const handleEnable = (uid) => {
     console.log(uid)

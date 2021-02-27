@@ -77,7 +77,7 @@ export const Nav = () => {
               Manage
             </Button>
           )}
-          {roles.tutor && (
+          {(roles.tutor || roles.student || roles.trial) && (
             <Button className={classes.btn} href='/question' color='inherit'>
               Question
             </Button>
