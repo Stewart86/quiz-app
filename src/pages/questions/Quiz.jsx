@@ -1,6 +1,8 @@
 import { Container, Grid, Slide } from "@material-ui/core"
 import React, { useEffect, useRef, useState } from "react"
+import { isEqual, isObject } from "lodash"
 
+import { QUESTION_TYPE } from "../../helper/enum"
 import { Question } from "./Question"
 import { QuestionsDrawer } from "./QuestionsDrawer"
 import { QuizFunctionBar } from "./QuizFunctionBar"
@@ -50,12 +52,23 @@ export const Quiz = ({ questions, handlePrintable }) => {
   }
 
   const onHandleAnswerClick = (ans) => {
+    // no need to show result directly go next
     setSlideDirection("left")
+    if (questionsState[count].type === QUESTION_TYPE.note) {
+      setCount((state) => Number(state + 1))
+      return
+    }
     // when undefiend === not answered
     if (questionsState[count].result === undefined) {
       let curQues = questions[count]
-      curQues["result"] = Number(curQues.answer) === ans + 1
-      curQues["selectedAnswer"] = ans
+
+      // if curQues.answer is object, use FITB logic, else MCQ logic to set result
+      if (isObject(curQues.answer)) {
+        curQues["result"] = isEqual(curQues.answer, curQues.selectedAnswer)
+      } else {
+        curQues["result"] = Number(curQues.answer) === ans + 1
+        curQues["selectedAnswer"] = ans
+      }
       setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
     } else if (Object.keys(questionsState).length === count) {
       // else if last question show result
@@ -72,22 +85,31 @@ export const Quiz = ({ questions, handlePrintable }) => {
     setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
   }
 
+  const onHandleFITBAnswer = (index, answer) => {
+    let curQues = questions[count]
+    curQues["selectedAnswer"] = {
+      ...curQues.selectedAnswer,
+      ...{ [index]: answer },
+    }
+    setQuestionsState((state) => ({ ...state, ...{ [count]: curQues } }))
+  }
+
   const onHandleDrawer = (toggle) => {
     setDrawerOpen(toggle)
   }
 
   const goto = (i) => {
-    setSlideDirection("top")
+    setSlideDirection("down")
     setCount(() => Number(i))
   }
 
   const handleEndClick = () => {
-    setSlideDirection("top")
+    setSlideDirection("down")
     setShowResult(true)
   }
 
   const fromResultGoTo = (i) => {
-    setSlideDirection("top")
+    setSlideDirection("down")
     setCount(() => Number(i))
     setShowResult(false)
   }
@@ -119,14 +141,17 @@ export const Quiz = ({ questions, handlePrintable }) => {
           spacing={4}
           item>
           <Container>
-            <Question
-              key={count}
-              index={count}
-              question={questionsState[count]}
-              isLastQuestion={Object.keys(questions).length === count}
-              onHandleSelection={onHandleSelection}
-              onHandleAnswerClick={onHandleAnswerClick}
-            />
+            <Grid container direction={"column"} spacing={2}>
+              <Question
+                key={count}
+                index={count}
+                question={questionsState[count]}
+                isLastQuestion={Object.keys(questions).length === count}
+                onHandleSelection={onHandleSelection}
+                onHandleAnswerClick={onHandleAnswerClick}
+                onHandleFITBAnswer={onHandleFITBAnswer}
+              />
+            </Grid>
           </Container>
         </Grid>
       </Slide>

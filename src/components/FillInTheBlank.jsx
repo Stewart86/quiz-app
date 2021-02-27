@@ -1,59 +1,81 @@
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
-  FormControl,
-  FormLabel,
   Grid,
+  IconButton,
   TextareaAutosize,
 } from "@material-ui/core"
 import React, { useState } from "react"
 
-export const FillInTheBlank = () => {
-  const [text, setText] = useState("")
-  const [wordList, setWordList] = useState([])
+import { ConvertToFillInTheBlank } from "./ConvertToFillInTheBlank"
+import { FillInTheBlankGuideModal } from "./FillInTheBlankGuideModal"
+import { Help } from "@material-ui/icons"
+import { makeStyles } from "@material-ui/core/styles"
 
-  const handleChange = (e) => {
-    setText(e.target.value)
-    setWordList(SplitTextIntoButton())
+const useStyles = makeStyles((theme) => ({
+  editor: {
+    width: "100%",
+    padding: theme.spacing(1),
+    fontSize: theme.typography.fontSize,
+    lineHeight: 2,
+  },
+  input: {
+    textAlign: "center",
+    width: "7.5em",
+  },
+}))
+
+export const FillInTheBlank = ({ question, handleSetQuestion }) => {
+  const classes = useStyles()
+  const [rawText, setRawText] = useState(question.question || "")
+  const [openGuide, setOpenGuide] = useState(false)
+
+  const convertToBlank = (event) => {
+    setRawText(event.target.value)
+    handleSetQuestion(event.target.value)
   }
-  const SplitTextIntoButton = () => {
-    var getWordRe = /\w+/g
 
-    const wordOnly = text.match(getWordRe)
-    console.log(wordOnly)
-    //   wordOnly.map((item) => (
-    //         <Typography>{item}</Typography>
-    //     ))
-    return wordOnly
+  const handleGuideClose = () => {
+    setOpenGuide(false)
   }
 
   return (
-    <Grid item container justify={"space-evenly"}>
-      <Grid item xs={12}>
+    <>
+      <Grid item>
         <Card>
-          <CardHeader title={"Fill In The Blank"} />
+          <CardHeader
+            title={"Fill in The Blank - Builder"}
+            action={
+              <IconButton onClick={() => setOpenGuide(true)} size={"small"}>
+                <Help />
+              </IconButton>
+            }
+          />
           <CardContent>
-            <form>
-              <FormControl>
-                <FormLabel component={"legend"}>Enter sentences</FormLabel>
-                <TextareaAutosize
-                  onKeyDown={handleChange}
-                  style={{ flex: 1, width: "40vw", marginTop: 10 }}
-                  rowsMin={10}
-                />
-              </FormControl>
-            </form>
+            <TextareaAutosize
+              value={rawText}
+              rowsMin={8}
+              onChange={(event) => convertToBlank(event)}
+              className={classes.editor}
+              placeholder={"Type your sentence here..."}
+              spellCheck={false}
+            />
           </CardContent>
         </Card>
       </Grid>
-      {wordList &&
-        wordList.map((word, i) => (
-          <Grid item xs={4}>
-            <Button key={i.toString()}>{word}</Button>
-          </Grid>
-        ))}
-    </Grid>
+      <Grid item>
+        <Card>
+          <CardHeader title={"Preview"} />
+          <CardContent>
+            <ConvertToFillInTheBlank rawText={rawText} />
+          </CardContent>
+        </Card>
+      </Grid>
+      <FillInTheBlankGuideModal
+        open={openGuide}
+        handleClose={handleGuideClose}
+      />
+    </>
   )
 }

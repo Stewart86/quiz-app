@@ -69,7 +69,7 @@ export const QuestionsSelection = ({ handlePrintable, handleGetQuestions }) => {
   const [topics, setTopics] = useState({})
   const [getTopicsLoader, setGetTopicsLoader] = useState(false)
   const [selectAll, setSelectAll] = useState(true)
-  const [numOfQuestions, setNumOfQuestions] = useState([])
+  const [numOfQuestions, setNumOfQuestions] = useState(5)
 
   const handleNext = () => {
     setActiveStep((state) => state + 1)

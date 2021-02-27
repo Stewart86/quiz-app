@@ -1,11 +1,11 @@
-import { Snackbar } from "@material-ui/core"
 import React from "react"
+import { Snackbar } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core"
-import { red } from "@material-ui/core/colors"
 
 const useStyles = makeStyles((theme) => ({
   warning: {
-    background: red[600],
+    background: theme.palette.error.main,
+    color: theme.palette.error.contrastText,
   },
 }))
 

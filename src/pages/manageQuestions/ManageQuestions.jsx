@@ -16,6 +16,7 @@ import { deleteMany, getMany } from "../../firestore/questions"
 
 import { DataGrid } from "@material-ui/data-grid"
 import { InsertCategoriesForm } from "../addQuestion/InsertCategoriesForm"
+import { QUESTION_TYPE } from "../../helper/enum"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { convertQuestionObjToArr } from "../../helper/utilities"
 import { makeStyles } from "@material-ui/core/styles"
@@ -39,29 +40,35 @@ export const ManageQuestions = () => {
       width: 110,
       renderCell: () => (
         <>
-        <Tooltip title={"Delete"}>
-          <IconButton size={"small"} onClick={handleConfirm}>
-            <DeleteForever />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title={"Edit"}>
-          <IconButton size={"small"} onClick={handleUpdate}>
-            <Edit />
-          </IconButton>
-        </Tooltip>
+          <Tooltip title={"Delete"}>
+            <IconButton size={"small"} onClick={handleConfirm}>
+              <DeleteForever />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={"Edit"}>
+            <IconButton size={"small"} onClick={handleUpdate}>
+              <Edit />
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },
     { field: "question", headerName: "Question", width: 300 },
     { field: "choices", headerName: "Choices", width: 200 },
-    { field: "answer", headerName: "Answer", type: "number", width: 100 },
+    {
+      field: "answer",
+      headerName: "Answer",
+      type: "number",
+      width: 100,
+      renderCell: (CellParams) => <>{JSON.stringify(CellParams.value)}</>,
+    },
     { field: "explain", headerName: "Explaination", width: 600 },
   ]
 
   const [categories, setCategories] = useState({
     subject: SUBJECTS[0],
     level: LEVELS[0],
-    type: "Multiple Choice",
+    type: QUESTION_TYPE.multipleChoice,
     topic: "",
   })
   const [questions, setQuestions] = useState([])

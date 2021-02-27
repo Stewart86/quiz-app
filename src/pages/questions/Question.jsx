@@ -10,7 +10,9 @@ import {
 import React, { useState } from "react"
 import { blue, green, red } from "@material-ui/core/colors"
 
+import { ConvertToFillInTheBlank } from "../../components/ConvertToFillInTheBlank"
 import Editor from "rich-markdown-editor"
+import { QUESTION_TYPE } from "../../helper/enum"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +31,7 @@ export const Question = ({
   isLastQuestion,
   onHandleSelection,
   onHandleAnswerClick,
+  onHandleFITBAnswer,
 }) => {
   const classes = useStyles()
   const [selection, setSelection] = useState(question.selection)
@@ -51,6 +54,9 @@ export const Question = ({
   }
 
   const printButtonText = () => {
+    if (question.type === QUESTION_TYPE.note) {
+      return "Next"
+    }
     if (question.result !== undefined) {
       if (isLastQuestion) {
         return "End"
@@ -70,66 +76,91 @@ export const Question = ({
   const showExplain = () =>
     question.result !== undefined && question.explain !== undefined
 
-  const subHeader = `${question.subject} | ${question.level} | ${question.topic} | ${question.year}`
+  const subHeader = `${question.subject} | ${question.level} | ${question.topic}`
+
+  const noteOrQuestion = () =>
+    question.type === QUESTION_TYPE.note ? "Note" : "Question"
 
   return (
     <>
       <Grid item>
         <Card>
-          <CardHeader title={`Question ${index}`} subheader={subHeader} />
+          <CardHeader
+            title={`${noteOrQuestion()} ${index}`}
+            subheader={subHeader}
+          />
           <CardContent>
-            <Editor
-              className={classes.question}
-              readOnly
-              defaultValue={question.question}
-              value={question.question}
-            />
+            {question.type === QUESTION_TYPE.fillInTheBlank ? (
+              <ConvertToFillInTheBlank
+                onSelectionChange={onHandleFITBAnswer}
+                submitted={question.result !== undefined}
+                rawText={question.question}
+                selectedAnswer={question.selectedAnswer}
+              />
+            ) : (
+              <Editor
+                className={classes.question}
+                readOnly
+                defaultValue={
+                  question.type === QUESTION_TYPE.note
+                    ? question.explain
+                    : question.question
+                }
+                value={
+                  question.type === QUESTION_TYPE.note
+                    ? question.explain
+                    : question.question
+                }
+              />
+            )}
           </CardContent>
         </Card>
       </Grid>
-      <Grid container direction={"column"} item>
-        <Typography
-          className={classes.answerHeader}
-          gutterBottom
-          variant={"h5"}>
-          Choose One
-        </Typography>
-        {question.choices.map((choice, i) => {
-          return (
-            <Card className={classes.answerCard}>
-              <CardActionArea
-                disabled={question.result !== undefined}
-                key={i}
-                onClick={() => handleSelection(i)}>
-                <CardContent
-                  style={{
-                    backgroundColor: showResult(i),
-                  }}>
-                  <Typography variant={"h5"}>
-                    <Typography component={"span"} variant={"subtitle2"}>
-                      {i + 1}.
-                    </Typography>{" "}
-                    {choice}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          )
-        })}
-      </Grid>
+      {question.type === 1 && (
+        <Grid container direction={"column"} item>
+          <Typography
+            className={classes.answerHeader}
+            gutterBottom
+            variant={"h5"}>
+            Choose One
+          </Typography>
+          {question.choices.map((choice, i) => {
+            return (
+              <Card className={classes.answerCard}>
+                <CardActionArea
+                  disabled={question.result !== undefined}
+                  key={i}
+                  onClick={() => handleSelection(i)}>
+                  <CardContent
+                    style={{
+                      backgroundColor: showResult(i),
+                    }}>
+                    <Typography variant={"h5"}>
+                      <Typography component={"span"} variant={"subtitle2"}>
+                        {i + 1}.
+                      </Typography>{" "}
+                      {choice}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            )
+          })}
+        </Grid>
+      )}
       {showExplain() && (
         <Grid item>
-            <Card className={classes.answerCard}>
-              <CardHeader title={"Explaination"} />
-              <CardContent>
-                <Editor
-                  className={classes.question}
-                  readOnly
-                  defaultValue={question.explain}
-                  value={question.explain}
-                />
-              </CardContent>
-            </Card>
+          <Card className={classes.answerCard}>
+            <CardHeader title={"Explaination"} />
+            <CardContent>
+              <Editor
+                className={classes.question}
+                readOnly
+                defaultValue={question.explain}
+                value={question.explain}
+              />
+            </CardContent>
+          </Card>
         </Grid>
       )}
       <Grid item>

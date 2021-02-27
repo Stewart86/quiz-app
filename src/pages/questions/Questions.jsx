@@ -1,5 +1,3 @@
-//import { Loading, Printable, QuestionsSelection, Quiz } from "../../components"
-
 import React, { useState } from "react"
 
 import { Loading } from "../../components"
