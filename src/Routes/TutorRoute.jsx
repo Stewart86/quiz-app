@@ -7,24 +7,26 @@ import { Loading } from "../components"
 export const TutorRoute = ({ component: Component, ...rest }) => {
   const { currentUser, roles } = useContext(AuthContext)
 
-  const RedirectTo = ({roles}) => {
+  const RedirectTo = ({ roles }) => {
     if (roles.student || roles.trial) {
-      return <Redirect to={"/question"}/>
-    } else {
-      return <Redirect to={"/account/settings"}/> 
-    } 
+      return <Redirect to={"/question"} />
+    } else if (!roles.tutor || !roles.admin) {
+      return <Redirect to={"/account/settings"} />
+    }
   }
+  console.log(roles)
 
   if (roles === undefined) {
     return <Loading />
   }
+
   return (
     <>
       <Route
         {...rest}
         render={(props) =>
           currentUser ? (
-            roles.tutor ? (
+            (roles.admin && roles.tutor) || roles.tutor ? (
               <Component {...props} />
             ) : (
               <RedirectTo roles={roles} />

@@ -9,12 +9,7 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState(null)
-  const [roles, setRoles] = useState({
-    trial: false,
-    student: false,
-    tutor: false,
-    admin: false,
-  })
+  const [roles, setRoles] = useState(undefined)
 
   useEffect(() => {
     const listener = auth.onAuthStateChanged((user) => {
@@ -34,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   }, [currentUser])
 
   if (loading) {
-    return <Loading/>
+    return <Loading />
   }
   return (
     <AuthContext.Provider value={{ currentUser, roles }}>
