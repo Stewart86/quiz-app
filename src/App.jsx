@@ -1,9 +1,4 @@
-import { AccountSettings, Admin, Error, Login } from "./pages"
-import {
-  CenterContentRoute,
-  FullScreenContentRoute,
-  LoginPageRoute,
-} from "./layouts"
+import { Admin, Error } from "./pages"
 import {
   Redirect,
   Route,
@@ -11,35 +6,47 @@ import {
   Switch,
 } from "react-router-dom"
 
+import { Account } from "./pages/account/Account"
+import { AuthProvider } from "./components/AuthProvider"
+import { CenterContentLayout } from "./layouts/CenterContentRoute"
 import { CssBaseline } from "@material-ui/core"
-import { FillInTheBlank } from "./components"
+import { FullScreenContentLayout } from "./layouts/FullScreenContentRoute"
+import { Login } from "./pages/account/Login"
 import { Questions } from "./pages/questions/Questions"
 import React from "react"
+import { StudentRoute } from "./Routes/StudentRoute"
 
 export default function App() {
   return (
-    <>
+    <AuthProvider>
       <CssBaseline />
       <Router>
         <Switch>
-          <Route path='/fillintheblank'>
-            <FillInTheBlank />
+          <StudentRoute path='/question' component={Questions} />
+          <Route path={"/Account"}>
+              <Account />
           </Route>
-          <FullScreenContentRoute path='/question' component={Questions} />
-          <CenterContentRoute
-            path='/accountsettings'
-            component={AccountSettings}
-          />
-          <CenterContentRoute path='/admin' component={Admin} />
-          <LoginPageRoute path='/login' component={Login} />
+          <Route path={"/admin"}>
+            <FullScreenContentLayout>
+              <Admin />
+            </FullScreenContentLayout>
+          </Route>
+          <Route path='/login'>
+            <CenterContentLayout>
+              <Login />
+            </CenterContentLayout>
+          </Route>
           <Route exact path='/'>
-            <Redirect to='/question' />
+            <Redirect to='/login' />
+          </Route>
+          <Route path='/error'>
+            <Error />
           </Route>
           <Route path='*'>
             <Error />
           </Route>
         </Switch>
       </Router>
-    </>
+    </AuthProvider>
   )
 }

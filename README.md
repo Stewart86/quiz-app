@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# Quiz App Guide
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## User Management
 
-In the project directory, you can run:
+1. Admin and Tutor role can exist in a single account together
+2. Being as a Admin or Tutor role will remove student and trial role
+3. a user can only be either trial or student not both
+4. upgrading to admin and / or tutor will remove student / trial role
+5. disabling an account will automatically default user to trial role and disable
+6. re-enabling user will start from trial role
+7. IMPORTANT! you can disable yourself as an admin (a backup admin account will prevent accidental lock out)
+8. a reminder will show below the page when due date is lesser than 7 days
 
-### `npm start`
+## RBCA flow
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- signup -> auto trial
+- make payment -> trial to student | admin -> trial to tutor / admin
+- trial 7 days
+- subscription 30 days
+- if role == trial -> check days left
+- if role == student -> check days left
+- if day left 7 show remind on questions (trial or renew)
+- when subscribe -> subscribe page -> stripe payment -> subscribe function
+  1. update expireStart field
+  2. update role == student
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Testing
 
-### `npm test`
+- add function trial to tutor
+- add function trial to student
+- student list
+- student to tutor
+- tutor list
+- convert admin page to tutor page
+- convert manage page to admin page
+- admin page nav bar missing
+- admin table actions column unable to click
+- multiple selection not triggering multiple delete
+- topic once selected unable to change
+- admin should redirect to admin
+- tutor should redirect to manage
+- disabled user not doing anything
+- delete /disable account
+- admin page create button convert to fab
+- renewal
+- subscription
+- add reminder at question sections
+- redirect to renew / subscribe after due date
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## To Do
+- email varification
+- reset password
+- forget password
 
-### `npm run build`
+- change question selection
+- stripe payment
+- add createMUI theme
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## bugs
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## enhancement
+- page transition is smooth

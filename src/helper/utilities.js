@@ -85,7 +85,7 @@ export const getSelectionFromTopics = (topics) => {
   return output
 }
 
-export const convertQuestionObjToArr = (questions) => {
+export const convertObjToArr = (questions) => {
   let arr = []
   Object.keys(questions).forEach((key) => {
     arr.push({
@@ -112,4 +112,37 @@ export const prepareAnswer = (val) => {
     }
   })
   return result
+}
+
+export const isSevenDaysOver = (epochSeconds) => {
+  const serverTime = new Date(epochSeconds * 1000)
+  const sevenDaysEpoch = serverTime.setDate(serverTime.getDate() + 7)
+  return Date.now() > sevenDaysEpoch
+}
+
+export const isDueForRenewal = (epochSeconds) => {
+  const serverTime = new Date(epochSeconds * 1000)
+  const nextRenewal = serverTime.setMonth(serverTime.getMonth() + 1)
+  return Date.now() > nextRenewal
+}
+
+export const dayToTrialEnd = (expireStart) => {
+  const serverTime = new Date(expireStart * 1000)
+  const sevenDaysEpoch = serverTime.setDate(serverTime.getDate() + 7)
+  const secLeft = sevenDaysEpoch - Date.now()
+  return Math.floor(secLeft / 1000 / 60 / 60 / 24) + 1
+}
+
+export const daysToRenew = (expireStart) => {
+  const serverTime = new Date(expireStart * 1000)
+  const nextRenewal = serverTime.setMonth(serverTime.getMonth() + 1)
+  const secLeft = nextRenewal - Date.now()
+  return Math.floor(secLeft / 1000 / 60 / 60 / 24) + 1
+}
+
+export const addOneMonth = (expireStart) => {
+  const serverTime = new Date(0)
+  serverTime.setUTCSeconds(expireStart)
+  const nextRenewal = serverTime.setMonth(serverTime.getMonth() + 1)
+  return nextRenewal
 }

@@ -29,6 +29,7 @@ import {
 } from "../../helper/utilities"
 
 import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded"
+import { DueDateReminder } from "../../components/DueDateReminder"
 import PrintIcon from "@material-ui/icons/Print"
 import { getTopic } from "../../firestore/topics"
 import { makeStyles } from "@material-ui/core"
@@ -364,6 +365,7 @@ export const QuestionsSelection = ({ handlePrintable, handleGetQuestions }) => {
           </Step>
         </Stepper>
       </Card>
+      <DueDateReminder/>
     </Grid>
   )
 }

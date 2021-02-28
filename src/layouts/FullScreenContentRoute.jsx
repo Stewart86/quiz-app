@@ -3,7 +3,7 @@ import { Nav } from "../components"
 import React from "react"
 import { Route } from "react-router-dom"
 
-const FullScreenContentLayout = ({ children }) => (
+export const FullScreenContentLayout = ({ children }) => (
   <>
     <Nav />
     <Grid container>{children}</Grid>
