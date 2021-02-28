@@ -130,12 +130,19 @@ export const dayToTrialEnd = (expireStart) => {
   const serverTime = new Date(expireStart * 1000)
   const sevenDaysEpoch = serverTime.setDate(serverTime.getDate() + 7)
   const secLeft = sevenDaysEpoch - Date.now()
-  return Math.floor(secLeft / 1000 / 60 / 60 / 24)
+  return Math.floor(secLeft / 1000 / 60 / 60 / 24) + 1
 }
 
-export const dayToRenew = (expireStart) => {
+export const daysToRenew = (expireStart) => {
   const serverTime = new Date(expireStart * 1000)
   const nextRenewal = serverTime.setMonth(serverTime.getMonth() + 1)
   const secLeft = nextRenewal - Date.now()
-  return Math.floor(secLeft / 1000 / 60 / 60 / 24)
+  return Math.floor(secLeft / 1000 / 60 / 60 / 24) + 1
+}
+
+export const addOneMonth = (expireStart) => {
+  const serverTime = new Date(0)
+  serverTime.setUTCSeconds(expireStart)
+  const nextRenewal = serverTime.setMonth(serverTime.getMonth() + 1)
+  return nextRenewal
 }

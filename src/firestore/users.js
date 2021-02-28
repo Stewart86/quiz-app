@@ -1,11 +1,11 @@
-import { dayToRenew, dayToTrialEnd } from "../helper/utilities"
+import { dayToTrialEnd, daysToRenew } from "../helper/utilities"
 import firebase, { db } from "../firebase"
 
 export const post = async (user) => {
   const id = user.id
   user.createdOn = firebase.firestore.FieldValue.serverTimestamp()
   user.expireStart = firebase.firestore.FieldValue.serverTimestamp()
-  user.updateOn = firebase.firestore.FieldValue.serverTimestamp()
+  user.updatedOn = firebase.firestore.FieldValue.serverTimestamp()
 
   user.isEnabled = true
 
@@ -22,7 +22,7 @@ export const upgradeRole = async (uid, role) => {
   await userRef.update({
     expireStart: firebase.firestore.FieldValue.delete(),
     createdOn: firebase.firestore.FieldValue.serverTimestamp(),
-    updateOn: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
   })
 
   const roleCollection = db.collection("roles").doc(uid)
@@ -41,23 +41,35 @@ export const upgradeRole = async (uid, role) => {
   }
 }
 
-export const updateOne = async (user) => {
-  const id = user.id
-
-  user.updateOn = firebase.firestore.FieldValue.serverTimestamp()
-
-  const userCollection = db.collection("users").doc(id)
-  return await userCollection.update(user)
+export const renewOne = async (uid, date) => {
+  const userCollection = db.collection("users").doc(uid)
+  console.log(date)
+  return await userCollection.update({
+    expireStart: firebase.firestore.Timestamp.fromMillis(date),
+    updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+    isExpired: firebase.firestore.FieldValue.delete(),
+    isEnabled: true,
+  })
 }
 
-export const renewOne = async (user) => {
-  const id = user.id
-
-  user.updateOn = firebase.firestore.FieldValue.serverTimestamp()
-  user.expireStart = firebase.firestore.FieldValue.serverTimestamp()
-
-  const userCollection = db.collection("users").doc(id)
-  return await userCollection.update(user)
+export const convertToStudent = async (uid) => {
+  const roleCollection = db.collection("roles").doc(uid)
+  try {
+    await roleCollection.update({
+      trial: firebase.firestore.FieldValue.delete(),
+      student: true,
+    })
+  } catch (error) {
+    console.log(uid)
+    console.log(error)
+  }
+  const userCollection = db.collection("users").doc(uid)
+  return await userCollection.update({
+    expireStart: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+    isExpired: firebase.firestore.FieldValue.delete(),
+    isEnabled: true,
+  })
 }
 
 export const getUser = async (uid) => {
@@ -109,7 +121,7 @@ export const getAllStudents = async () => {
         result[key].expireStart.seconds
       )} days`
     } else if (result[key].student) {
-      result[key].dueIn = `${dayToRenew(result[key].expireStart.seconds)} days`
+      result[key].dueIn = `${daysToRenew(result[key].expireStart.seconds)} days`
     } else {
       result[key].dueIn = "N/A"
     }
@@ -125,13 +137,30 @@ export const getAllStudents = async () => {
   return result
 }
 
+export const expireUser = async (uid) => {
+  const userCollection = db.collection("users").doc(uid)
+  await userCollection.update({
+    updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
+    isEnabled: false,
+    isExpired: true,
+  })
+
+  const roleCollection = db.collection("roles").doc(uid)
+  return await roleCollection.update({
+    admin: firebase.firestore.FieldValue.delete(),
+    tutor: firebase.firestore.FieldValue.delete(),
+    trial: firebase.firestore.FieldValue.delete(),
+    student: firebase.firestore.FieldValue.delete(),
+  })
+}
+
 export const disableUser = async (uid) => {
   const userCollection = db.collection("users").doc(uid)
   await userCollection.update({
-    expireStart: firebase.firestore.FieldValue.serverTimestamp(),
-    updateOn: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
     isEnabled: false,
   })
+
   const roleCollection = db.collection("roles").doc(uid)
   return await roleCollection.update({
     admin: firebase.firestore.FieldValue.delete(),
@@ -145,7 +174,7 @@ export const enableUser = async (uid) => {
   const userCollection = db.collection("users").doc(uid)
   await userCollection.update({
     expireStart: firebase.firestore.FieldValue.serverTimestamp(),
-    updateOn: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
     isEnabled: true,
   })
   const roleCollection = db.collection("roles").doc(uid)

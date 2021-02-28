@@ -16,8 +16,9 @@ import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
   dataTable: {
-    height: "60vh",
-    width: "100%",
+    height: "90vh",
+    width: "100vw",
+    padding: theme.spacing(2),
   },
   check: {
     color: theme.palette.success.main,
@@ -81,6 +82,7 @@ export const Manage = () => {
       field: "createdOn",
       headerName: "Created Date",
       width: 210,
+      type: "dateTime",
       valueFormatter: (CellParams) =>
         new Date(CellParams.value.seconds * 1000).toLocaleString(),
     },
@@ -88,6 +90,7 @@ export const Manage = () => {
       field: "updatedOn",
       headerName: "Updated Date",
       width: 210,
+      type: "dateTime",
       valueFormatter: (CellParams) =>
         new Date(CellParams.value.seconds * 1000).toLocaleString(),
     },
@@ -99,7 +102,7 @@ export const Manage = () => {
     {
       field: "admin",
       headerName: "Admin",
-      width: 100,
+      width: 105,
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -110,7 +113,7 @@ export const Manage = () => {
     {
       field: "tutor",
       headerName: "Tutor",
-      width: 100,
+      width: 105,
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -121,7 +124,7 @@ export const Manage = () => {
     {
       field: "student",
       headerName: "Student",
-      width: 130,
+      width: 105,
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -132,7 +135,7 @@ export const Manage = () => {
     {
       field: "trial",
       headerName: "Trial",
-      width: 100,
+      width: 105,
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -143,7 +146,7 @@ export const Manage = () => {
     {
       field: "isEnabled",
       headerName: "Enabled",
-      width: 110,
+      width: 105,
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -158,7 +161,7 @@ export const Manage = () => {
       renderCell: (cell) => (
         <>
           <Button
-            disabled={cell.value.isAdmin}
+            disabled={cell.value.isAdmin || !cell.value.isEnabled}
             style={{ marginRight: 5 }}
             size={"small"}
             color={"primary"}
@@ -167,7 +170,7 @@ export const Manage = () => {
             Admin
           </Button>
           <Button
-            disabled={cell.value.isTutor}
+            disabled={cell.value.isTutor || !cell.value.isEnabled}
             style={{ marginRight: 5 }}
             size={"small"}
             color={"primary"}
@@ -199,13 +202,11 @@ export const Manage = () => {
   ]
   return (
     <FullScreenContentLayout>
-      <Container>
-        <Grid container>
-          <Grid item className={classes.dataTable}>
-            <DataGrid loading={loading} rows={users} columns={dataColumn} />
-          </Grid>
+      <Grid container>
+        <Grid item className={classes.dataTable}>
+          <DataGrid loading={loading} rows={users} columns={dataColumn} />
         </Grid>
-      </Container>
+      </Grid>
     </FullScreenContentLayout>
   )
 }

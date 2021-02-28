@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 
+import { DueDateReminder } from "../../components/DueDateReminder"
 import { Loading } from "../../components"
 import { Printable } from "./Printable"
 import { QuestionsSelection } from "./QuestionsSelection"
@@ -83,6 +84,7 @@ export const Questions = () => {
         onClose={() => setOpenSnackBar(false)}
         autoHideDuration={3000}
       />
+      <DueDateReminder />
     </>
   )
 }

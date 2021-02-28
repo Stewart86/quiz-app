@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState(null)
   const [roles, setRoles] = useState({
-    trail: false,
+    trial: false,
     student: false,
     tutor: false,
     admin: false,

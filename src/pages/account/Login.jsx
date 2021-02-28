@@ -46,7 +46,7 @@ export const Login = () => {
     setWarning({ open: false, msg: "" })
   }
   if (currentUser) {
-    history.push("/account/manage")
+    history.push("/admin")
   }
   return (
     <Card elevation={5}>

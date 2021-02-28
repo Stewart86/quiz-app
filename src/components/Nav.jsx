@@ -9,6 +9,7 @@ import React, { useContext, useEffect, useState } from "react"
 
 import { AccountCircleOutlined } from "@material-ui/icons"
 import { AuthContext } from "./AuthProvider"
+import { Loading } from "./Loading"
 import { getUser } from "../firestore/users"
 import { makeStyles } from "@material-ui/core/styles"
 import { signout } from "../auth/auth"
@@ -53,7 +54,6 @@ export const Nav = () => {
   const handleLogout = () => {
     signout()
   }
-
   return (
     <div className={classes.root}>
       <AppBar position='fixed'>
@@ -61,7 +61,7 @@ export const Nav = () => {
           <Typography className={classes.title} variant='h6'>
             Quiz App
           </Typography>
-          {roles.admin && (
+          {roles && roles.admin && (
             <>
               <Button
                 className={classes.btn}
@@ -71,14 +71,14 @@ export const Nav = () => {
               </Button>
             </>
           )}
-          {roles.tutor && (
+          {roles && roles.tutor && (
             <Button className={classes.btn} href='/admin' color='inherit'>
               Manage
             </Button>
           )}
-          {(roles.tutor || roles.student || roles.trial) && (
+          {roles && (roles.tutor || roles.student || roles.trial) && (
             <Button className={classes.btn} href='/question' color='inherit'>
-              Question
+              Quiz
             </Button>
           )}
           {userName ? (
