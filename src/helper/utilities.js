@@ -125,3 +125,17 @@ export const isDueForRenewal = (epochSeconds) => {
   const nextRenewal = serverTime.setMonth(serverTime.getMonth() + 1)
   return Date.now() > nextRenewal
 }
+
+export const dayToTrialEnd = (expireStart) => {
+  const serverTime = new Date(expireStart * 1000)
+  const sevenDaysEpoch = serverTime.setDate(serverTime.getDate() + 7)
+  const secLeft = sevenDaysEpoch - Date.now()
+  return Math.floor(secLeft / 1000 / 60 / 60 / 24)
+}
+
+export const dayToRenew = (expireStart) => {
+  const serverTime = new Date(expireStart * 1000)
+  const nextRenewal = serverTime.setMonth(serverTime.getMonth() + 1)
+  const secLeft = nextRenewal - Date.now()
+  return Math.floor(secLeft / 1000 / 60 / 60 / 24)
+}

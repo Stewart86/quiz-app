@@ -9,7 +9,6 @@ import React, { useContext, useEffect, useState } from "react"
 
 import { AccountCircleOutlined } from "@material-ui/icons"
 import { AuthContext } from "./AuthProvider"
-import { auth } from "../firebase"
 import { getUser } from "../firestore/users"
 import { makeStyles } from "@material-ui/core/styles"
 import { signout } from "../auth/auth"
