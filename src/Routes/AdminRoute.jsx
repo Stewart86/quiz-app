@@ -7,6 +7,9 @@ import { Loading } from "../components"
 
 export const AdminRoute = ({ component: Component, ...rest }) => {
   const { currentUser, roles } = useContext(AuthContext)
+  if (roles === undefined) {
+    return <Loading />
+  }
   return (
     <CenterContentLayout>
       <Route
