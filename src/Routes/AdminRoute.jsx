@@ -7,17 +7,18 @@ import { Loading } from "../components"
 
 export const AdminRoute = ({ component: Component, ...rest }) => {
   const { currentUser, roles } = useContext(AuthContext)
+
+  if (roles === undefined) {
+    return <Loading />
+  }
+
   return (
     <CenterContentLayout>
       <Route
         {...rest}
         render={(props) =>
-          currentUser ? (
-            roles.admin ? (
-              <Component {...props} />
-            ) : (
-              <Loading />
-            )
+          currentUser && roles.admin ? (
+            <Component {...props} />
           ) : (
             <Redirect to={"/admin"} />
           )

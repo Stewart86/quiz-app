@@ -10,22 +10,10 @@ export const Admin = ({ authenticated, roles }) => {
       <Switch>
         <TutorRoute
           path={"/admin/updateQuestion/:id"}
-          authenticated={authenticated}
-          roles={roles}
           component={AddQuestion}
         />
-        <TutorRoute
-          path={"/admin/addQuestion"}
-          authenticated={authenticated}
-          roles={roles}
-          component={AddQuestion}
-        />
-        <TutorRoute
-          path={"/"}
-          authenticated={authenticated}
-          roles={roles}
-          component={ManageQuestions}
-        />
+        <TutorRoute path={"/admin/addQuestion"} component={AddQuestion} />
+        <TutorRoute path={"/"} component={ManageQuestions} />
       </Switch>
     </>
   )

@@ -6,6 +6,9 @@ import { FullScreenContentLayout } from "../layouts/FullScreenContentRoute"
 import { Loading } from "../components"
 
 const noRoles = (roles) => {
+  if (roles === undefined) {
+    return true
+  }
   if (!roles.student || !roles.trial || !roles.tutor || !roles.admin) {
     return true
   }
@@ -13,10 +16,6 @@ const noRoles = (roles) => {
 }
 export const StudentRoute = ({ component: Component, ...rest }) => {
   const { currentUser, roles } = useContext(AuthContext)
-
-  if (roles === undefined) {
-    return <Loading />
-  }
 
   return (
     <FullScreenContentLayout>
