@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const DueDateReminder = () => {
-const history = useHistory()
+  const history = useHistory()
   const { currentUser, roles } = useContext(AuthContext)
   const [daysLeft, setDaysLeft] = useState(null)
 
@@ -28,12 +28,16 @@ const history = useHistory()
         const dbUser = await getUser(user.uid)
         if (dbUser && dbUser.expireStart) {
           if (mounted) {
-            if (roles.trial) {
-              setDaysLeft(dayToTrialEnd(dbUser.expireStart.seconds))
-            } else if (roles.student) {
-              setDaysLeft(daysToRenew(dbUser.expireStart.seconds))
-            } else {
+            if (!roles) {
               setDaysLeft(null)
+            } else {
+              if (roles.trial) {
+                setDaysLeft(dayToTrialEnd(dbUser.expireStart.seconds))
+              } else if (roles.student) {
+                setDaysLeft(daysToRenew(dbUser.expireStart.seconds))
+              } else {
+                setDaysLeft(null)
+              }
             }
           }
         }
@@ -43,7 +47,7 @@ const history = useHistory()
     return () => {
       mounted = false
     }
-  }, [currentUser, roles.student, roles.trial])
+  }, [currentUser, roles])
 
   const classes = useStyles()
 

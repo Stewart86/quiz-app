@@ -14,7 +14,6 @@ export const TutorRoute = ({ component: Component, ...rest }) => {
       return <Redirect to={"/account/settings"} />
     }
   }
-  console.log(roles)
 
   if (roles === undefined) {
     return <Loading />
