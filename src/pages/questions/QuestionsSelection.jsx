@@ -1,26 +1,15 @@
 import {
   Button,
   ButtonGroup,
-  Card,
-  Checkbox,
-  CircularProgress,
-  Divider,
   FormControl,
-  FormControlLabel,
-  FormGroup,
   Grid,
   IconButton,
   InputLabel,
   MenuItem,
   Select,
-  Step,
-  StepContent,
-  StepLabel,
-  Stepper,
-  Switch,
   Typography,
 } from "@material-ui/core"
-import { LEVELS, SUBJECTS, TYPES } from "../../helper/constants"
+import { LEVELS, SUBJECTS } from "../../helper/constants"
 import React, { useState } from "react"
 import {
   genNumOfQuestions,
@@ -28,18 +17,16 @@ import {
   isAllSelected,
 } from "../../helper/utilities"
 
-import AssignmentTurnedInRoundedIcon from "@material-ui/icons/AssignmentTurnedInRounded"
 import { DueDateReminder } from "../../components/DueDateReminder"
 import PrintIcon from "@material-ui/icons/Print"
 import { getTopic } from "../../firestore/topics"
+import { levelLookup } from "../../helper/enum"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
   centerContent: {
     minHeight: "94vh",
-  },
-  actionContainer: {
-    marginBottom: theme.spacing(2),
+    width: "100%"
   },
   subjectArea: {
     display: "flex",
@@ -61,32 +48,50 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 185,
   },
+  dropdown: {
+    width: 190,
+  },
+  levelBtn: {
+    borderRadius: 33,
+    height: 43,
+    minWidth: 43,
+    padding: 6,
+  },
+  subjectBtn: {
+    width: 100,
+  },
 }))
-export const QuestionsSelection = ({ handlePrintable, handleGetQuestions }) => {
+export const QuestionsSelection = ({
+  type,
+  handlePrintable,
+  handleGetQuestions,
+}) => {
   const classes = useStyles()
 
-  const [activeStep, setActiveStep] = useState(0)
-  const [category, setCategory] = useState({})
+  const [category, setCategory] = useState(type)
   const [topics, setTopics] = useState({})
   const [getTopicsLoader, setGetTopicsLoader] = useState(false)
   const [selectAll, setSelectAll] = useState(true)
   const [numOfQuestions, setNumOfQuestions] = useState(5)
 
-  const handleNext = () => {
-    setActiveStep((state) => state + 1)
-  }
-  const handleBack = () => {
-    setActiveStep((state) => state - 1)
-  }
-
   const handleForm = (incomingCategory) => {
     const key = Object.keys(incomingCategory)[0]
 
     setCategory((state) => {
-      const obj = {
-        ...state,
-        [key]: incomingCategory[key],
+      let obj = null
+      if (key === "level") {
+        obj = {
+          ...state,
+          [key]: levelLookup[incomingCategory[key]],
+        }
+      } else {
+        obj = {
+          ...state,
+          [key]: incomingCategory[key],
+        }
       }
+
+      // dynamically update topic selector
       if (key === "level" || key === "subject") {
         if (obj.subject && obj.level) {
           handleGetTopics(obj.subject, obj.level)
@@ -155,8 +160,6 @@ export const QuestionsSelection = ({ handlePrintable, handleGetQuestions }) => {
     } else {
       handleForm({ topics: getSelectionFromTopics(topics) })
     }
-
-    handleNext()
   }
 
   return (
@@ -164,208 +167,93 @@ export const QuestionsSelection = ({ handlePrintable, handleGetQuestions }) => {
       className={classes.centerContent}
       alignContent={"center"}
       justify={"center"}
+      direction={"column"}
+      spacing={10}
       container>
-      <Card style={{ minWidth: 760 }}>
-        <Stepper activeStep={activeStep} orientation={"vertical"}>
-          <Step>
-            <StepLabel>Type of Quiz</StepLabel>
-            <StepContent>
-              <Typography gutterBottom>
-                Please select the type of quiz to attempt or notes to study.
-              </Typography>
-              <ButtonGroup color={"primary"}>
-                {TYPES.map((value) => (
-                  <Button
-                    key={value}
-                    endIcon={
-                      category.type === value ? (
-                        <AssignmentTurnedInRoundedIcon />
-                      ) : null
-                    }
-                    onClick={() => handleForm({ type: value })}>
-                    {value}
-                  </Button>
-                ))}
-              </ButtonGroup>
-              <div className={classes.actionContainer}>
-                <Button
-                  className={classes.button}
-                  disabled={activeStep === 0}
-                  onClick={handleBack}>
-                  Back
-                </Button>
-                <Button
-                  disabled={getTopicsLoader}
-                  className={classes.button}
-                  onClick={handleNext}>
-                  Next
-                  {getTopicsLoader && (
-                    <CircularProgress
-                      size={24}
-                      className={classes.buttonProgress}
-                    />
-                  )}
-                </Button>
-              </div>
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Subject</StepLabel>
-            <StepContent>
-              <Typography gutterBottom>
-                Please select subject to revise.
-              </Typography>
-              <ButtonGroup color={"primary"}>
-                {SUBJECTS.map((value) => (
-                  <Button
-                    key={value}
-                    endIcon={
-                      category.subject === value ? (
-                        <AssignmentTurnedInRoundedIcon />
-                      ) : null
-                    }
-                    onClick={() => handleForm({ subject: value })}>
-                    {value}
-                  </Button>
-                ))}
-              </ButtonGroup>
-              <div className={classes.actionContainer}>
-                <Button
-                  className={classes.button}
-                  disabled={activeStep === 0}
-                  onClick={handleBack}>
-                  Back
-                </Button>
-                <Button
-                  disabled={getTopicsLoader}
-                  className={classes.button}
-                  onClick={handleNext}>
-                  Next
-                  {getTopicsLoader && (
-                    <CircularProgress
-                      size={24}
-                      className={classes.buttonProgress}
-                    />
-                  )}
-                </Button>
-              </div>
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Level</StepLabel>
-            <StepContent>
-              <Typography>Please select the education level.</Typography>
-              <ButtonGroup color={"primary"}>
-                {LEVELS.map((value) => (
-                  <Button
-                    key={value}
-                    endIcon={
-                      category.level === value ? (
-                        <AssignmentTurnedInRoundedIcon />
-                      ) : null
-                    }
-                    onClick={() => handleForm({ level: value })}>
-                    {value}
-                  </Button>
-                ))}
-              </ButtonGroup>
-              <div className={classes.actionContainer}>
-                <Button className={classes.button} onClick={handleBack}>
-                  Back
-                </Button>
-                <Button
-                  disabled={getTopicsLoader}
-                  className={classes.button}
-                  onClick={handleNext}>
-                  Next
-                  {getTopicsLoader && (
-                    <CircularProgress
-                      size={24}
-                      className={classes.buttonProgress}
-                    />
-                  )}
-                </Button>
-              </div>
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Topic</StepLabel>
-            <StepContent>
-              <Typography>
-                Pick a topic for the subject you selected above.
-              </Typography>
-              <FormGroup row>
-                <FormControlLabel
-                  label={"Select All"}
-                  control={
-                    <Switch checked={selectAll} onChange={handleSelectAll} />
-                  }
-                />
-              </FormGroup>
-              <Divider />
-              <FormGroup style={{ maxHeight: "60vh" }}>
-                {Object.keys(topics).map((value) => (
-                  <FormControlLabel
-                    key={value}
-                    label={value}
-                    control={
-                      <Checkbox
-                        name={value}
-                        checked={topics[value]}
-                        onChange={(event) => handleCheckBox(event)}
-                      />
-                    }
-                  />
-                ))}
-              </FormGroup>
-              <Button className={classes.button} onClick={handleBack}>
-                Back
-              </Button>
-              <Button className={classes.button} onClick={handleTopicNext}>
-                Next
-              </Button>
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Number of Questions</StepLabel>
-            <StepContent>
-              <Typography>
-                Select the number off questions to attempt.
-              </Typography>
-              <FormControl className={classes.numOfQuestionsForm}>
-                <InputLabel>Number of Questions</InputLabel>
-                <Select
-                  value={numOfQuestions}
-                  onChange={(event) =>
-                    handleForm({ numOfQuestions: event.target.value })
-                  }>
-                  {genNumOfQuestions().map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <div className={classes.actionContainer}>
-                <Button className={classes.button} onClick={handleBack}>
-                  Back
-                </Button>
-                <Button
-                  className={classes.button}
-                  onClick={() => handleGetQuestions(category)}>
-                  Start Quiz
-                </Button>
-                <IconButton
-                  className={classes.button}
-                  onClick={() => handlePrintable(category)}>
-                  <PrintIcon />
-                </IconButton>
-              </div>
-            </StepContent>
-          </Step>
-        </Stepper>
-      </Card>
-      <DueDateReminder/>
+      <Grid container justify={"center"} spacing={5} item>
+        <Typography variant={"h4"}>Choose Your Quiz</Typography>
+      </Grid>
+      <Grid container justify={"center"} spacing={5} item>
+        <ButtonGroup color={"primary"}>
+          {SUBJECTS.map((value) => (
+            <Button
+              className={classes.subjectBtn}
+              key={value}
+              color={"primary"}
+              variant={category.subject === value ? "contained" : "outlined"}
+              onClick={() => handleForm({ subject: value })}>
+              {value}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </Grid>
+      <Grid container justify={"center"} spacing={5} item>
+        {LEVELS.map((value) => (
+          <Grid item>
+            <Button
+              className={classes.levelBtn}
+              color={"primary"}
+              variant={
+                category.level === levelLookup[value] ? "contained" : "outlined"
+              }
+              key={value}
+              onClick={() => handleForm({ level: value })}>
+              {value}
+            </Button>
+          </Grid>
+        ))}
+      </Grid>
+      <Grid container justify={"center"} spacing={5} item>
+        <Grid item>
+          <FormControl>
+            <InputLabel>Topic</InputLabel>
+          <Select className={classes.dropdown} label={"Topic"} >
+            {Object.keys(topics).map((value) => (
+              <MenuItem key={value} value={value}>
+                {value}
+              </MenuItem>
+            ))}
+          </Select>
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <FormControl>
+            <InputLabel>Number of Questions</InputLabel>
+          <Select
+          label={"Number of Questions"}
+            className={classes.dropdown}
+            value={numOfQuestions}
+            onChange={(event) =>
+              handleForm({ numOfQuestions: event.target.value })
+            }>
+            {genNumOfQuestions().map((value) => (
+              <MenuItem key={value} value={value}>
+                {value}
+              </MenuItem>
+            ))}
+          </Select>
+          </FormControl>
+        </Grid>
+      </Grid>
+      <Grid container direction={"row"} justify={"center"} spacing={5} item>
+        <Grid item>
+          <Button
+            className={classes.button}
+            variant={"contained"}
+            color={"primary"}
+            onClick={() => handleGetQuestions(category)}>
+            Begin
+          </Button>
+        </Grid>
+        <Grid item>
+          <IconButton
+            className={classes.button}
+            onClick={() => handlePrintable(category)}>
+            <PrintIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
+      <DueDateReminder />
     </Grid>
   )
 }

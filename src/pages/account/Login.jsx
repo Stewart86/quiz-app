@@ -18,17 +18,16 @@ import { useHistory } from "react-router-dom"
 
 export const Login = () => {
   const history = useHistory()
-  const {currentUser} = useContext(AuthContext)
+  const { currentUser } = useContext(AuthContext)
   const [cred, setCred] = useState({ email: "", password: "" })
   const [warning, setWarning] = useState({ open: false, msg: "" })
 
   const handleLogin = async () => {
-    // check for auth here
     const result = await signin(cred.email, cred.password)
     if (isString(result)) {
       setWarning({ open: true, msg: "Invalid email or password." })
     } else {
-    history.push("/admin")
+      history.push("/admin")
     }
   }
   const handleSignUp = () => {
@@ -47,6 +46,7 @@ export const Login = () => {
   }
   if (currentUser) {
     history.push("/admin")
+    return null
   }
   return (
     <Card elevation={5}>
@@ -59,6 +59,7 @@ export const Login = () => {
           <TextField
             fullWidth
             required
+            autoFocus
             type={"email"}
             onChange={(event) => handleChange({ email: event.target.value })}
             label={"Email"}

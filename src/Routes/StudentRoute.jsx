@@ -3,7 +3,6 @@ import { Redirect, Route } from "react-router"
 
 import { AuthContext } from "../components/AuthProvider"
 import { FullScreenContentLayout } from "../layouts/FullScreenContentRoute"
-import { Loading } from "../components"
 
 const noRoles = (roles) => {
   if (roles === undefined) {
