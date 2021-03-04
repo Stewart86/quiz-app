@@ -9,6 +9,7 @@ import { TypeSelection } from "./TypeSelection"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { questionComponents as components } from "../../helper/enum"
 import { getMany } from "../../firestore/questions"
+import { isEmpty } from "lodash"
 import { questionKeyRename } from "../../helper/utilities"
 
 export const Questions = () => {
@@ -18,7 +19,7 @@ export const Questions = () => {
   const [openSnackBar, setOpenSnackBar] = useState(false)
 
   const handleSetCategory = (type) => {
-    setCategory({ type })
+    setCategory(type)
     setShowComponent(components.questionsSelection)
   }
 
@@ -29,7 +30,7 @@ export const Questions = () => {
 
   const tryGetQuestionsOrThrowWarning = async (selection) => {
     const dbQuestions = await getMany(selection)
-    if (dbQuestions.length === 0) {
+    if (dbQuestions.length === 0 || isEmpty(dbQuestions)) {
       setOpenSnackBar(true)
       return false
     } else {

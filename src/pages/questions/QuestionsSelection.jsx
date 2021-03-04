@@ -1,21 +1,20 @@
 import {
   Button,
   ButtonGroup,
+  Checkbox,
   FormControl,
   Grid,
   IconButton,
+  Input,
   InputLabel,
+  ListItemText,
   MenuItem,
   Select,
   Typography,
 } from "@material-ui/core"
 import { LEVELS, SUBJECTS } from "../../helper/constants"
-import React, { useState } from "react"
-import {
-  genNumOfQuestions,
-  getSelectionFromTopics,
-  isAllSelected,
-} from "../../helper/utilities"
+import React, { useEffect, useState } from "react"
+import { genNumOfQuestions, isAllSelected } from "../../helper/utilities"
 
 import { DueDateReminder } from "../../components/DueDateReminder"
 import PrintIcon from "@material-ui/icons/Print"
@@ -26,7 +25,7 @@ import { makeStyles } from "@material-ui/core"
 const useStyles = makeStyles((theme) => ({
   centerContent: {
     minHeight: "94vh",
-    width: "100%"
+    width: "100%",
   },
   subjectArea: {
     display: "flex",
@@ -68,11 +67,20 @@ export const QuestionsSelection = ({
 }) => {
   const classes = useStyles()
 
-  const [category, setCategory] = useState(type)
-  const [topics, setTopics] = useState({})
+  const [category, setCategory] = useState({ ...type, numOfQuestions: 5 })
+  const [topics, setTopics] = useState([])
+  const [selectedTopics, setSelectedTopics] = useState([])
   const [getTopicsLoader, setGetTopicsLoader] = useState(false)
-  const [selectAll, setSelectAll] = useState(true)
   const [numOfQuestions, setNumOfQuestions] = useState(5)
+
+  useEffect(() => {
+    if (category.subject && category.level) {
+      handleGetTopics(category.subject, category.level)
+      setSelectedTopics([])
+    } else {
+      handleGetTopics(SUBJECTS[0], LEVELS[0])
+    }
+  }, [category.subject, category.level])
 
   const handleForm = (incomingCategory) => {
     const key = Object.keys(incomingCategory)[0]
@@ -91,12 +99,7 @@ export const QuestionsSelection = ({
         }
       }
 
-      // dynamically update topic selector
-      if (key === "level" || key === "subject") {
-        if (obj.subject && obj.level) {
-          handleGetTopics(obj.subject, obj.level)
-        }
-      } else if (key === "numOfQuestions") {
+      if (key === "numOfQuestions") {
         setNumOfQuestions(obj.numOfQuestions)
       }
       return obj
@@ -107,59 +110,17 @@ export const QuestionsSelection = ({
     setGetTopicsLoader(true)
 
     const dbTopics = await getTopic(subject, level)
-    let topics = {}
-    dbTopics.forEach((value) => {
-      topics[value] = true
-    })
-    setTopics(topics)
+    setTopics(dbTopics)
 
     setGetTopicsLoader(false)
   }
 
-  const handleSelectAll = () => {
-    setSelectAll((state) => {
-      const obj = topics
-
-      if (state) {
-        Object.keys(obj).forEach((key) => {
-          obj[key] = false
-        })
-        setTopics(obj)
-      } else {
-        Object.keys(obj).forEach((key) => {
-          obj[key] = true
-        })
-        setTopics(obj)
-      }
-
-      return !state
+  const handleTopicChange = (event) => {
+    setSelectedTopics(() => {
+      const topics = event.target.value
+      handleForm({ topics })
+      return topics
     })
-  }
-
-  const handleCheckBox = (event) => {
-    const checked = event.target.checked
-    let obj
-    if (checked) {
-      obj = { [event.target.name]: true }
-    } else {
-      obj = { [event.target.name]: false }
-    }
-    setTopics((state) => {
-      if (isAllSelected(state, checked)) {
-        setSelectAll(true)
-      } else {
-        setSelectAll(false)
-      }
-      return { ...state, ...obj }
-    })
-  }
-
-  const handleTopicNext = () => {
-    if (selectAll) {
-      handleForm({ topics: ["all"] })
-    } else {
-      handleForm({ topics: getSelectionFromTopics(topics) })
-    }
   }
 
   return (
@@ -207,31 +168,39 @@ export const QuestionsSelection = ({
         <Grid item>
           <FormControl>
             <InputLabel>Topic</InputLabel>
-          <Select className={classes.dropdown} label={"Topic"} >
-            {Object.keys(topics).map((value) => (
-              <MenuItem key={value} value={value}>
-                {value}
-              </MenuItem>
-            ))}
-          </Select>
+            <Select
+              className={classes.dropdown}
+              multiple
+              label={"Topic"}
+              value={selectedTopics}
+              onChange={handleTopicChange}
+              input={<Input />}
+              renderValue={(selected) => selected.join(", ")}>
+              {topics.map((value) => (
+                <MenuItem key={value} value={value}>
+                  <Checkbox checked={selectedTopics.indexOf(value) > -1} />
+                  <ListItemText primary={value} />
+                </MenuItem>
+              ))}
+            </Select>
           </FormControl>
         </Grid>
         <Grid item>
           <FormControl>
             <InputLabel>Number of Questions</InputLabel>
-          <Select
-          label={"Number of Questions"}
-            className={classes.dropdown}
-            value={numOfQuestions}
-            onChange={(event) =>
-              handleForm({ numOfQuestions: event.target.value })
-            }>
-            {genNumOfQuestions().map((value) => (
-              <MenuItem key={value} value={value}>
-                {value}
-              </MenuItem>
-            ))}
-          </Select>
+            <Select
+              label={"Number of Questions"}
+              className={classes.dropdown}
+              value={numOfQuestions}
+              onChange={(event) =>
+                handleForm({ numOfQuestions: event.target.value })
+              }>
+              {genNumOfQuestions().map((value) => (
+                <MenuItem key={value} value={value}>
+                  {value}
+                </MenuItem>
+              ))}
+            </Select>
           </FormControl>
         </Grid>
       </Grid>
