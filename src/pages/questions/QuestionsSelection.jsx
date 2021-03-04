@@ -14,10 +14,10 @@ import {
 } from "@material-ui/core"
 import { LEVELS, SUBJECTS } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
-import { genNumOfQuestions, isAllSelected } from "../../helper/utilities"
 
 import { DueDateReminder } from "../../components/DueDateReminder"
 import PrintIcon from "@material-ui/icons/Print"
+import { genNumOfQuestions } from "../../helper/utilities"
 import { getTopic } from "../../firestore/topics"
 import { levelLookup } from "../../helper/enum"
 import { makeStyles } from "@material-ui/core"
@@ -70,13 +70,15 @@ export const QuestionsSelection = ({
   const [category, setCategory] = useState({ ...type, numOfQuestions: 5 })
   const [topics, setTopics] = useState([])
   const [selectedTopics, setSelectedTopics] = useState([])
-  const [getTopicsLoader, setGetTopicsLoader] = useState(false)
   const [numOfQuestions, setNumOfQuestions] = useState(5)
+  const [isBeginDisabled, setIsBeginDisabled] = useState(true)
 
   useEffect(() => {
     if (category.subject && category.level) {
       handleGetTopics(category.subject, category.level)
       setSelectedTopics([])
+      setCategory((state) => ({ ...state, topics: [] }))
+      setIsBeginDisabled(true)
     } else {
       handleGetTopics(SUBJECTS[0], LEVELS[0])
     }
@@ -102,17 +104,20 @@ export const QuestionsSelection = ({
       if (key === "numOfQuestions") {
         setNumOfQuestions(obj.numOfQuestions)
       }
+      if (obj.subject && obj.level && obj.topics) {
+        if (obj.topics.length === 0) {
+          setIsBeginDisabled(true)
+        } else {
+          setIsBeginDisabled(false)
+        }
+      }
       return obj
     })
   }
 
   const handleGetTopics = async (subject, level) => {
-    setGetTopicsLoader(true)
-
     const dbTopics = await getTopic(subject, level)
     setTopics(dbTopics)
-
-    setGetTopicsLoader(false)
   }
 
   const handleTopicChange = (event) => {
@@ -210,12 +215,15 @@ export const QuestionsSelection = ({
             className={classes.button}
             variant={"contained"}
             color={"primary"}
+            disabled={isBeginDisabled}
             onClick={() => handleGetQuestions(category)}>
             Begin
           </Button>
         </Grid>
         <Grid item>
           <IconButton
+            disabled={isBeginDisabled}
+            color={"secondary"}
             className={classes.button}
             onClick={() => handlePrintable(category)}>
             <PrintIcon />
