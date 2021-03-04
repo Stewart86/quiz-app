@@ -150,7 +150,7 @@ export const QuestionsSelection = ({
       </Grid>
       <Grid container justify={"center"} spacing={5} item>
         {LEVELS.map((value) => (
-          <Grid item>
+          <Grid key={value} item>
             <Button
               className={classes.levelBtn}
               color={"primary"}

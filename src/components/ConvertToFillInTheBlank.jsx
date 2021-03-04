@@ -56,6 +56,7 @@ export const ConvertToFillInTheBlank = ({
 
   let newQuestion = []
 
+  console.log(selectedAnswer)
   textArr.forEach((value, i) => {
     if (!value.includes("{")) {
       newQuestion.push(
@@ -96,7 +97,11 @@ export const ConvertToFillInTheBlank = ({
             {submitted && (
               <Chip
                 className={
-                  selectedAnswer === answer ? classes.success : classes.error
+                  selectedAnswer === undefined
+                    ? classes.error
+                    : selectedAnswer[i] === answer
+                    ? classes.success
+                    : classes.error
                 }
                 size={"small"}
                 label={answer}

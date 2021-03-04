@@ -60,11 +60,8 @@ export const getMany = async (categories) => {
     const snapshot = await cur.get()
     snapshot.forEach((doc) => {
       data[doc.id] = doc.data()
-
-      console.log(doc.data())
     })
   }
-  console.log(data)
 
   // if num of question specified return with the amount using sampleSize
   // else return everything
