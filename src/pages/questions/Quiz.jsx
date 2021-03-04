@@ -55,7 +55,12 @@ export const Quiz = ({ questions, handlePrintable }) => {
     // no need to show result directly go next
     setSlideDirection("left")
     if (questionsState[count].type === QUESTION_TYPE.note) {
-      setCount((state) => Number(state + 1))
+      if (Object.keys(questionsState).length === count) {
+        // else if last question show result
+        setShowResult(true)
+      } else {
+        setCount((state) => Number(state + 1))
+      }
       return
     }
     // when undefiend === not answered

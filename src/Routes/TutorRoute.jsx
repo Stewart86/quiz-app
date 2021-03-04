@@ -10,7 +10,7 @@ export const TutorRoute = ({ component: Component, ...rest }) => {
   const RedirectTo = ({ roles }) => {
     if (roles.student || roles.trial) {
       return <Redirect to={"/question"} />
-    } else if (!roles.tutor || !roles.admin) {
+    } else {
       return <Redirect to={"/account/settings"} />
     }
   }
@@ -25,14 +25,10 @@ export const TutorRoute = ({ component: Component, ...rest }) => {
       <Route
         {...rest}
         render={(props) =>
-          currentUser ? (
-            (roles.admin && roles.tutor) || roles.tutor ? (
-              <Component {...props} />
-            ) : (
-              <RedirectTo roles={roles} />
-            )
+          currentUser && (roles.tutor || roles.admin) ? (
+            <Component {...props} />
           ) : (
-            <Redirect to={"/"} />
+            <RedirectTo roles={roles} />
           )
         }
       />

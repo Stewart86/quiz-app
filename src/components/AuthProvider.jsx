@@ -9,7 +9,7 @@ export const AuthContext = createContext()
 export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [currentUser, setCurrentUser] = useState(null)
-  const [roles, setRoles] = useState(undefined)
+  const [roles, setRoles] = useState()
 
   useEffect(() => {
     const listener = auth.onAuthStateChanged((user) => {

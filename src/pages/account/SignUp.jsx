@@ -117,7 +117,7 @@ export const SignUp = () => {
         accountDetails.phone,
         accountDetails.password2
       )
-      history.push("/")
+      history.push("/account/settings")
     }
   }
 

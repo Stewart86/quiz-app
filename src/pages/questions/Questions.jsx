@@ -5,15 +5,23 @@ import { Loading } from "../../components"
 import { Printable } from "./Printable"
 import { QuestionsSelection } from "./QuestionsSelection"
 import { Quiz } from "./Quiz"
+import { TypeSelection } from "./TypeSelection"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { questionComponents as components } from "../../helper/enum"
 import { getMany } from "../../firestore/questions"
+import { isEmpty } from "lodash"
 import { questionKeyRename } from "../../helper/utilities"
 
 export const Questions = () => {
   const [questions, setQuestions] = useState({})
-  const [show, setShowComponent] = useState(components.questionsSelection)
+  const [category, setCategory] = useState({})
+  const [show, setShowComponent] = useState(components.typeSelection)
   const [openSnackBar, setOpenSnackBar] = useState(false)
+
+  const handleSetCategory = (type) => {
+    setCategory(type)
+    setShowComponent(components.questionsSelection)
+  }
 
   const handlePrintable = () => {
     setShowComponent(components.loading)
@@ -22,7 +30,7 @@ export const Questions = () => {
 
   const tryGetQuestionsOrThrowWarning = async (selection) => {
     const dbQuestions = await getMany(selection)
-    if (dbQuestions.length === 0) {
+    if (dbQuestions.length === 0 || isEmpty(dbQuestions)) {
       setOpenSnackBar(true)
       return false
     } else {
@@ -41,6 +49,7 @@ export const Questions = () => {
   }
 
   const handleGetQuestions = async (selection) => {
+    // merge selection and type here
     setShowComponent(components.loading)
     if (await tryGetQuestionsOrThrowWarning(selection)) {
       setShowComponent(components.startQuiz)
@@ -56,12 +65,16 @@ export const Questions = () => {
           case components.loading:
             return <Loading />
 
+          case components.typeSelection:
+            return <TypeSelection handleSetType={handleSetCategory} />
+
           case components.printable:
             return <Printable questions={questions} />
 
           case components.questionsSelection:
             return (
               <QuestionsSelection
+                type={category}
                 handlePrintable={handleDirectPrint}
                 handleGetQuestions={handleGetQuestions}
               />

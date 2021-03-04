@@ -1,4 +1,4 @@
-import { isArray, isNumber, mergeWith, sampleSize, uniq } from "lodash"
+import { chunk, isArray, isNumber, mergeWith, sampleSize, uniq } from "lodash"
 
 import { db } from "../firebase"
 import { typeReverseLookup } from "../helper/enum"
@@ -34,46 +34,41 @@ export const updateNewCategories = async (categories) => {
 }
 
 export const getMany = async (categories) => {
-  let cur = db.collection("questions")
+  // assign into local var
+  const setCount = Number(categories.numOfQuestions)
+  const chunkTopics = chunk(categories.topics, 10)
 
-  Object.keys(categories).forEach((k, i) => {
-    if (k !== "numOfQuestions" && k !== "type") {
-      if (Array.isArray(categories[k])) {
-        if (categories[k].length > 0) {
-          categories[k].forEach((item, i) => {
-            if (item !== "all") {
-              if (k === "topics") {
-                cur = cur.where("topic", "==", item)
-              } else {
-                cur = cur.where(k, "==", item)
-              }
-            }
-          })
-        }
-      } else {
-        if (categories[k] !== "") {
-          cur = cur.where(k, "==", categories[k])
-        }
-      }
-    } else if (k === "type") {
-      if (isNumber(categories[k])) {
-        cur = cur.where(k, "==", categories[k])
-      } else {
-        cur = cur.where(k, "==", typeReverseLookup[categories[k]])
-      }
-    }
-  })
-
-  const snapshot = await cur.get()
+  // delete after assignment
+  delete categories.topics
+  delete categories.numOfQuestions
 
   let data = {}
-  snapshot.forEach((doc) => {
-    if (doc.id !== "categories") data[doc.id] = doc.data()
-  })
+  for (let i = 0; i < chunkTopics.length; i++) {
+    let cur = db.collection("questions")
+
+    cur = cur.where("subject", "==", categories.subject)
+    cur = cur.where("level", "==", categories.level)
+    cur = cur.where("topic", "in", chunkTopics[i])
+
+    if (isNumber(categories.type)) {
+      cur = cur.where("type", "==", categories.type)
+    } else {
+      cur = cur.where("type", "==", typeReverseLookup[categories.type])
+    }
+
+    // console.log(cur.d_.C_.filters)
+    const snapshot = await cur.get()
+    snapshot.forEach((doc) => {
+      data[doc.id] = doc.data()
+    })
+  }
+
+  // if num of question specified return with the amount using sampleSize
+  // else return everything
   if (categories.numOfQuestions === undefined) {
     return data
   }
-  return sampleSize(data, Number(categories.numOfQuestions))
+  return sampleSize(data, setCount)
 }
 
 export const deleteMany = async (questions) => {

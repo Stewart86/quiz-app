@@ -75,16 +75,6 @@ export const isAllSelected = (obj, checked) => {
   return Object.keys(obj).length === selectedCount
 }
 
-export const getSelectionFromTopics = (topics) => {
-  let output = []
-
-  Object.keys(topics).forEach((key) => {
-    if (topics[key] === true) output.push(key)
-  })
-
-  return output
-}
-
 export const convertObjToArr = (questions) => {
   let arr = []
   Object.keys(questions).forEach((key) => {

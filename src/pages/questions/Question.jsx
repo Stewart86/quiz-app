@@ -55,6 +55,9 @@ export const Question = ({
 
   const printButtonText = () => {
     if (question.type === QUESTION_TYPE.note) {
+      if (isLastQuestion) {
+        return "End"
+      }
       return "Next"
     }
     if (question.result !== undefined) {
