@@ -37,11 +37,9 @@ export const Printable = ({ questions }) => {
           {(() => {
             switch (questions[1].type) {
               case QUESTION_TYPE.multipleChoice:
-                console.log("switch MCQ")
                 return <PrintableMCQAnswer questions={questions} />
 
               case QUESTION_TYPE.fillInTheBlank:
-                console.log("switch FITB")
                 return <PrintableFITBAnswer questions={questions} />
 
               default:

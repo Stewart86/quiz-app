@@ -18,8 +18,6 @@ const useStyles = makeStyles((theme) => ({
 export const TypeCircle = ({ type, handleClick }) => {
   const classes = useStyles()
 
-  console.log(placeholder)
-
   return (
     <Grid
       container

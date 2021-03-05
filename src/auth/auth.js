@@ -5,9 +5,7 @@ export const signup = async (name, email, phone, password) => {
   const user = await auth.createUserWithEmailAndPassword(email, password)
   const id = user.user.uid
   
-  const postResult = await post({ id, name, email, phone })
-  console.log(postResult)
-  return 
+  return await post({ id, name, email, phone })
 }
 
 export const signin = async (email, password) => {

@@ -23,7 +23,6 @@ export const PrintableFITBAnswer = ({ questions }) => {
     })
     return newQuestion
   }
-  console.log(questions)
   return (
     <Grid container direction={"column"}>
       {Object.keys(questions).map((key, i) => (
