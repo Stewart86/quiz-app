@@ -1,11 +1,19 @@
 import { db } from "../firebase"
+import { levelLookup } from "../helper/enum"
 
 export const getTopic = async (subject, level) => {
-  const topics = db
-    .collection("topics")
-    .where("subject", "==", subject)
-    .where("level", "==", level)
-
+  let topics = null
+  if (String(level).includes("Primary")) {
+    topics = db
+      .collection("topics")
+      .where("subject", "==", subject)
+      .where("level", "==", level)
+  } else {
+    topics = db
+      .collection("topics")
+      .where("subject", "==", subject)
+      .where("level", "==", levelLookup[level])
+  }
   const snapshot = await topics.get()
 
   let output = []
@@ -18,14 +26,22 @@ export const getTopic = async (subject, level) => {
 
 export const updateTopic = async (subject, level, topic) => {
   const topics = db.collection("topics")
-  const query = topics
-    .where("subject", "==", subject)
-    .where("level", "==", level)
-    .where("topic", "==", topic)
+  let query = null
+  if (String(level).includes("Primary")) {
+    query = topics
+      .where("subject", "==", subject)
+      .where("level", "==", level)
+      .where("topic", "==", topic)
+  } else {
+    query = topics
+      .where("subject", "==", subject)
+      .where("level", "==", levelLookup[level])
+      .where("topic", "==", topic)
+  }
 
   const snapshot = await query.get()
 
   if (snapshot.empty) {
-    topics.add({ subject, level, topic })
+    topics.add({ subject, level: levelLookup[level], topic })
   }
 }

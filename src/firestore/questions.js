@@ -1,7 +1,7 @@
 import { chunk, isArray, isNumber, mergeWith, sampleSize, uniq } from "lodash"
+import { levelLookup, typeReverseLookup } from "../helper/enum"
 
 import { db } from "../firebase"
-import { typeReverseLookup } from "../helper/enum"
 
 export const post = async (question) => {
   const questionsCollection = db.collection("questions")
@@ -35,32 +35,45 @@ export const updateNewCategories = async (categories) => {
 
 export const getMany = async (categories) => {
   // assign into local var
-  const setCount = Number(categories.numOfQuestions)
-  const chunkTopics = chunk(categories.topics, 10)
-
-  // delete after assignment
-  delete categories.topics
-  delete categories.numOfQuestions
-
   let data = {}
-  for (let i = 0; i < chunkTopics.length; i++) {
+  const setCount = Number(categories.numOfQuestions)
+  const level = levelLookup[categories.level]
+  const type = isNumber(categories.type)
+    ? categories.type
+    : typeReverseLookup[categories.type]
+
+  if (categories.topic || categories.topic === "") {
     let cur = db.collection("questions")
-
     cur = cur.where("subject", "==", categories.subject)
-    cur = cur.where("level", "==", categories.level)
-    cur = cur.where("topic", "in", chunkTopics[i])
+    cur = cur.where("level", "==", level)
+    cur = cur.where("type", "==", type)
 
-    if (isNumber(categories.type)) {
-      cur = cur.where("type", "==", categories.type)
-    } else {
-      cur = cur.where("type", "==", typeReverseLookup[categories.type])
+    if (categories.topic !== "") {
+      cur = cur.where("topic", "==", categories.topic)
     }
 
-    // console.log(cur.d_.C_.filters)
     const snapshot = await cur.get()
     snapshot.forEach((doc) => {
       data[doc.id] = doc.data()
     })
+  } else {
+    const chunkTopics = chunk(categories.topics, 10)
+    for (let i = 0; i < chunkTopics.length; i++) {
+      let cur = db.collection("questions")
+
+      cur = cur.where("subject", "==", categories.subject)
+      cur = cur.where("level", "==", level)
+      cur = cur.where("type", "==", type)
+
+      if (chunkTopics[i] > 0) {
+        cur = cur.where("topic", "in", chunkTopics[i])
+      }
+
+      const snapshot = await cur.get()
+      snapshot.forEach((doc) => {
+        data[doc.id] = doc.data()
+      })
+    }
   }
 
   // if num of question specified return with the amount using sampleSize

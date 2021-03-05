@@ -19,7 +19,6 @@ import { DueDateReminder } from "../../components/DueDateReminder"
 import PrintIcon from "@material-ui/icons/Print"
 import { genNumOfQuestions } from "../../helper/utilities"
 import { getTopic } from "../../firestore/topics"
-import { levelLookup } from "../../helper/enum"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -89,16 +88,9 @@ export const QuestionsSelection = ({
 
     setCategory((state) => {
       let obj = null
-      if (key === "level") {
-        obj = {
-          ...state,
-          [key]: levelLookup[incomingCategory[key]],
-        }
-      } else {
-        obj = {
-          ...state,
-          [key]: incomingCategory[key],
-        }
+      obj = {
+        ...state,
+        [key]: incomingCategory[key],
       }
 
       if (key === "numOfQuestions") {
@@ -160,7 +152,7 @@ export const QuestionsSelection = ({
               className={classes.levelBtn}
               color={"primary"}
               variant={
-                category.level === levelLookup[value] ? "contained" : "outlined"
+                category.level === value ? "contained" : "outlined"
               }
               key={value}
               onClick={() => handleForm({ level: value })}>
