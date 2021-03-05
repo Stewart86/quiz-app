@@ -1,7 +1,7 @@
 import { Chip, TextField, Typography } from "@material-ui/core"
+import React, { Fragment } from "react"
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles"
 
-import React from "react"
 import { SelectionField } from "./SelectionField"
 import { makeStyles } from "@material-ui/core"
 
@@ -56,7 +56,6 @@ export const ConvertToFillInTheBlank = ({
 
   let newQuestion = []
 
-  console.log(selectedAnswer)
   textArr.forEach((value, i) => {
     if (!value.includes("{")) {
       newQuestion.push(
@@ -84,10 +83,9 @@ export const ConvertToFillInTheBlank = ({
       } else {
         const answer = value.replace("{", "").replace("}", "")
         newQuestion.push(
-          <>
+          <Fragment key={i}>
             <TextField
               disabled={submitted}
-              key={i}
               variant={"standard"}
               autoComplete={"false"}
               size={"small"}
@@ -96,6 +94,7 @@ export const ConvertToFillInTheBlank = ({
             />
             {submitted && (
               <Chip
+                key={i}
                 className={
                   selectedAnswer === undefined
                     ? classes.error
@@ -107,7 +106,7 @@ export const ConvertToFillInTheBlank = ({
                 label={answer}
               />
             )}
-          </>
+          </Fragment>
         )
       }
     }
