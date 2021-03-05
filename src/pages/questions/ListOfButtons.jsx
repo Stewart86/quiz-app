@@ -1,7 +1,7 @@
 import { Button, Grid } from "@material-ui/core"
-import { blue, green, red } from "@material-ui/core/colors"
 
 import React from "react"
+import { createMuiTheme } from "@material-ui/core/styles"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -11,6 +11,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const ListOfButtons = ({ questions, handleFromResult }) => {
+  const theme = createMuiTheme()
+
   const classes = useStyles()
   return (
     <Grid container direction={"row"} justify={"flex-start"}>
@@ -24,12 +26,12 @@ export const ListOfButtons = ({ questions, handleFromResult }) => {
               style={{
                 width: 150,
                 color: value.result
-                  ? green[500]
+                  ? theme.palette.success.main
                   : value.selectedAnswer !== undefined
                   ? value.result === false
-                    ? red[500]
-                    : blue[500]
-                  : red[500],
+                    ? theme.palette.error.main
+                    : theme.palette.info.main
+                  : theme.palette.error.main,
               }}>
               Question {value.index}
             </Button>

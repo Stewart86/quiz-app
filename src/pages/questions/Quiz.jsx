@@ -1,5 +1,5 @@
 import { Container, Grid, Slide } from "@material-ui/core"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useState } from "react"
 import { isEqual, isObject } from "lodash"
 
 import { QUESTION_TYPE } from "../../helper/enum"
@@ -8,7 +8,6 @@ import { QuestionsDrawer } from "./QuestionsDrawer"
 import { QuizFunctionBar } from "./QuizFunctionBar"
 import { Result } from "./Result"
 import { makeStyles } from "@material-ui/core"
-import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
   questionContainer: {
@@ -18,24 +17,12 @@ const useStyles = makeStyles((theme) => ({
 
 export const Quiz = ({ questions, handlePrintable }) => {
   const classes = useStyles()
-  const history = useHistory()
-  const unblockHandle = useRef()
 
   const [questionsState, setQuestionsState] = useState(questions)
   const [showResult, setShowResult] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [count, setCount] = useState(1)
   const [slideDirection, setSlideDirection] = useState("left")
-
-  useEffect(() => {
-    unblockHandle.current = history.block(() => {
-      setShowResult(true)
-      return false
-    })
-    return () => {
-      unblockHandle.current.current && unblockHandle.current.current()
-    }
-  })
 
   const handleNextClick = () => {
     if (count < Object.keys(questions).length + 1) {

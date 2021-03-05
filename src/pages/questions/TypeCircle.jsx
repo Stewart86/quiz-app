@@ -8,14 +8,13 @@ import {
 
 import React from "react"
 import { makeStyles } from "@material-ui/core"
-import placeholder from "../../images/placeholder.png"
 
 const useStyles = makeStyles((theme) => ({
   card: { height: 300, width: 300, borderRadius: 250 },
   media: { height: 300 },
 }))
 
-export const TypeCircle = ({ type, handleClick }) => {
+export const TypeCircle = ({ type, handleClick, image }) => {
   const classes = useStyles()
 
   return (
@@ -30,7 +29,7 @@ export const TypeCircle = ({ type, handleClick }) => {
           <CardActionArea onClick={handleClick}>
             <CardMedia
               className={classes.media}
-              image={placeholder}
+              image={image}
               title={type}
             />
           </CardActionArea>

@@ -11,7 +11,6 @@ import { FillInTheBlank, Loading } from "../../components"
 import { LEVELS, SUBJECTS } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
 import { getOne, post, updateOne } from "../../firestore/questions"
-import { green, red } from "@material-ui/core/colors"
 import { useHistory, useParams } from "react-router"
 
 import { InsertCategoriesForm } from "./InsertCategoriesForm"
@@ -19,6 +18,7 @@ import { InsertQuestionForm } from "./InsertQuestionForm"
 import { MultipleChoice } from "./MultipleChoice"
 import { QUESTION_TYPE } from "../../helper/enum"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
+import { createMuiTheme } from "@material-ui/core/styles"
 import { isMultipleChoiceQuestionValid } from "../../helper/validation"
 import { makeStyles } from "@material-ui/core/styles"
 import { prepareAnswer } from "../../helper/utilities"
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
   },
   buttonProgress: {
-    color: green[500],
+    color: theme.palette.success.main,
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -48,6 +48,7 @@ export const AddQuestion = () => {
   const classes = useStyles()
   const { id } = useParams()
   const history = useHistory()
+  const theme = createMuiTheme()
 
   const [categories, setCategories] = useState({
     type: QUESTION_TYPE.multipleChoice,
@@ -179,7 +180,9 @@ export const AddQuestion = () => {
           <Grid item>
             <Typography
               style={{
-                color: id ? green[500] : red[500],
+                color: id
+                  ? theme.palette.success.main
+                  : theme.palette.error.main,
                 padding: 4,
               }}
               variant={"h4"}>

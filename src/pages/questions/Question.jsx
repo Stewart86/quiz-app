@@ -8,11 +8,11 @@ import {
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
-import { blue, green, red } from "@material-ui/core/colors"
 
 import { ConvertToFillInTheBlank } from "../../components/ConvertToFillInTheBlank"
 import Editor from "rich-markdown-editor"
 import { QUESTION_TYPE } from "../../helper/enum"
+import { createMuiTheme } from "@material-ui/core/styles"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -35,20 +35,21 @@ export const Question = ({
 }) => {
   const classes = useStyles()
   const [selection, setSelection] = useState(question.selection)
+  const theme = createMuiTheme()
 
   const showResult = (currentChoice) => {
     if (question.result !== undefined) {
       if (currentChoice === Number(question.answer) - 1) {
-        return green[300]
+        return theme.palette.success.main
       } else if (currentChoice !== question.selectedAnswer) {
-        return "#fff"
+        return theme.palette.common.white
       } else {
-        return red[300]
+        return theme.palette.error.main
       }
     }
     if (question.selection !== undefined || question.selection !== null) {
       if (currentChoice === question.selectedAnswer) {
-        return blue[300]
+        return theme.palette.info.main
       }
     }
   }

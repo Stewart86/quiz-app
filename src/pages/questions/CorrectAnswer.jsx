@@ -1,9 +1,9 @@
-import { green, red } from "@material-ui/core/colors"
-
 import React from "react"
 import { Typography } from "@material-ui/core"
+import { createMuiTheme } from "@material-ui/core/styles"
 
 export const CorrectAnswer = ({ questions }) => {
+  const theme = createMuiTheme()
   let correctAnsCount = 0
 
   Object.keys(questions).forEach((key, i) => {
@@ -16,7 +16,12 @@ export const CorrectAnswer = ({ questions }) => {
 
   return (
     <Typography
-      style={{ color: correctAnsCount > length / 2 ? green[700] : red[700] }}
+      style={{
+        color:
+          correctAnsCount > length / 2
+            ? theme.palette.success.main
+            : theme.palette.error.main,
+      }}
       paragraph
       variant={"h4"}>{`${correctAnsCount} / ${length} `}</Typography>
   )
