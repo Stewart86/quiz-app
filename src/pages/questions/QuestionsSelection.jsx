@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
   centerContent: {
     minHeight: "94vh",
     width: "100%",
+    paddingLeft: "80px",
   },
   subjectArea: {
     display: "flex",
@@ -123,13 +124,12 @@ export const QuestionsSelection = ({
   return (
     <Grid
       className={classes.centerContent}
-      alignContent={"center"}
       justify={"center"}
-      direction={"column"}
       spacing={10}
+      direction={"column"}
       container>
       <Grid container justify={"center"} spacing={5} item>
-        <Typography variant={"h4"}>Choose Your Quiz</Typography>
+        <Typography variant={"h3"}>Choose Your Quiz</Typography>
       </Grid>
       <Grid container justify={"center"} spacing={5} item>
         <ButtonGroup color={"primary"}>

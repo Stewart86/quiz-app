@@ -33,12 +33,12 @@ export const Result = ({ questions, fromResultGoTo }) => {
       alignContent={"center"}
       justify={"center"}
       container>
-      <Grid item xs={5}>
+      <Grid item>
         <Card>
           <CardHeader title={"Result"} />
           <CardContent>
             <CorrectAnswer questions={questions} />
-            <Typography variant={"h6"} gutterBottom>
+            <Typography variant={"h5"} gutterBottom>
               Questions Attempted
             </Typography>
             <Divider orientation={"horizontal"} />
@@ -48,7 +48,7 @@ export const Result = ({ questions, fromResultGoTo }) => {
             />
           </CardContent>
           <CardContent>
-            <Typography variant={"h6"} gutterBottom>
+            <Typography variant={"h5"} gutterBottom>
               Questions Not Attempted
             </Typography>
             <Divider orientation={"horizontal"} />
