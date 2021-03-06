@@ -1,4 +1,4 @@
-import { Button, Grid } from "@material-ui/core"
+import { Button, Grid, Typography } from "@material-ui/core"
 import { CancelOutlined, CheckCircleOutline } from "@material-ui/icons"
 import React, { useContext, useEffect, useState } from "react"
 import {
@@ -11,12 +11,17 @@ import {
 import { AuthContext } from "../../../components/AuthProvider"
 import { DataGrid } from "@material-ui/data-grid"
 import { FullScreenContentLayout } from "../../../layouts/FullScreenContentRoute"
+import { capitalize } from "lodash"
 import { convertObjToArr } from "../../../helper/utilities"
 import { makeStyles } from "@material-ui/core/styles"
+import { useParams } from "react-router"
 
 const useStyles = makeStyles((theme) => ({
+  header: {
+    margin: theme.spacing(2),
+  },
   dataTable: {
-    height: "90vh",
+    height: "88vh",
     width: "100vw",
     padding: theme.spacing(2),
   },
@@ -30,13 +35,16 @@ const useStyles = makeStyles((theme) => ({
 
 export const Manage = () => {
   const classes = useStyles()
+
+  let { type } = useParams()
+
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
 
   const { currentUser } = useContext(AuthContext)
 
   const getUsersFromDB = async () => {
-    const Users = convertObjToArr(await getAllUsers())
+    const Users = convertObjToArr(await getAllUsers(type))
     setUsers(Users)
     setLoading(false)
   }
@@ -103,6 +111,7 @@ export const Manage = () => {
       field: "admin",
       headerName: "Admin",
       width: 105,
+      hide: type === "users",
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -114,6 +123,7 @@ export const Manage = () => {
       field: "tutor",
       headerName: "Tutor",
       width: 105,
+      hide: type === "users",
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -125,6 +135,7 @@ export const Manage = () => {
       field: "student",
       headerName: "Student",
       width: 105,
+      hide: type === "staff",
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -136,6 +147,7 @@ export const Manage = () => {
       field: "trial",
       headerName: "Trial",
       width: 105,
+      hide: type === "staff",
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -203,6 +215,9 @@ export const Manage = () => {
   return (
     <FullScreenContentLayout>
       <Grid container>
+        <Grid className={classes.header} item>
+          <Typography variant={"h3"}>{capitalize(type)}</Typography>
+        </Grid>
         <Grid item className={classes.dataTable}>
           <DataGrid loading={loading} rows={users} columns={dataColumn} />
         </Grid>

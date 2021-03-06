@@ -6,7 +6,6 @@ import {
 import { cyan, deepOrange } from "@material-ui/core/colors"
 
 import React from "react"
-import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 export const ThemeProvider = ({ children }) => {
 
