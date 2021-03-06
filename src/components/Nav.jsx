@@ -42,7 +42,9 @@ export const Nav = () => {
       if (user) {
         const dbUser = await getUser(user.uid)
         if (mounted) {
-          setUserName(dbUser.name)
+          if (dbUser) {
+            setUserName(dbUser.name)
+          }
         }
       }
     }

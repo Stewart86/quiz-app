@@ -6,14 +6,13 @@ export const post = async (user) => {
   user.createdOn = firebase.firestore.FieldValue.serverTimestamp()
   user.expireStart = firebase.firestore.FieldValue.serverTimestamp()
   user.updatedOn = firebase.firestore.FieldValue.serverTimestamp()
-
   user.isEnabled = true
 
   const userCollection = db.collection("users").doc(id)
   await userCollection.set(user)
 
   const roleCollection = db.collection("roles").doc(id)
-  return await roleCollection.set({ trial: true })
+  await roleCollection.set({ trial: true })
 }
 
 export const upgradeRole = async (uid, role) => {
@@ -74,8 +73,7 @@ export const getUser = async (uid) => {
   const userCollection = db.collection("users").doc(uid)
   try {
     const user = await userCollection.get()
-    const data = user.data()
-    return data
+    return user.data()
   } catch (error) {
     console.error(error)
   }

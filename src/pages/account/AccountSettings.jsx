@@ -37,6 +37,7 @@ export const AccountSettings = () => {
   const [openStripe, setOpenStripe] = useState(false)
   const [openInfo, setOpenInfo] = useState(false)
   const [mode, setMode] = useState(null)
+  const [resend, setResend] = useState(false)
 
   const { currentUser, roles } = useContext(AuthContext)
 
@@ -54,7 +55,7 @@ export const AccountSettings = () => {
     return () => {
       mounted = false
     }
-  }, [currentUser])
+  }, [currentUser, roles])
 
   const getDbUser = async (uid) => {
     const dbUser = await getUser(uid)
@@ -83,6 +84,7 @@ export const AccountSettings = () => {
 
   const handleVerify = async () => {
     await sendVerificationEmail(currentUser)
+    setResend(true)
   }
 
   if (!user) {
@@ -116,20 +118,22 @@ export const AccountSettings = () => {
                       </TableCell>
                       <TableCell>{user.email}</TableCell>
                     </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Typography variant={"button"}>
-                          {"Registration Status"}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        {roles.admin && "Admin "}
-                        {roles.tutor && "Tutor "}
-                        {roles.student && "Paid "}
-                        {roles.trial && "Trial "}
-                        {!user.isEnabled && "Account Disabled"}
-                      </TableCell>
-                    </TableRow>
+                    {roles && (
+                      <TableRow>
+                        <TableCell>
+                          <Typography variant={"button"}>
+                            {"Registration Status"}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          {roles.admin && "Admin "}
+                          {roles.tutor && "Tutor "}
+                          {roles.student && "Paid "}
+                          {roles.trial && "Trial "}
+                          {!user.isEnabled && "Account Disabled"}
+                        </TableCell>
+                      </TableRow>
+                    )}
                     <TableRow>
                       <TableCell>
                         <Typography variant={"button"}>Verified</Typography>
@@ -147,7 +151,7 @@ export const AccountSettings = () => {
                               color={"primary"}
                               variant={"contained"}
                               onClick={handleVerify}>
-                              Verify
+                              {resend ? "resend" : "verify"}
                             </Button>
                           </>
                         )}
@@ -157,7 +161,7 @@ export const AccountSettings = () => {
                 </Table>
               </TableContainer>
             </Grid>
-            {(roles.student || roles.trial) && (
+            {roles && (roles.student || roles.trial) && (
               <>
                 <Grid item>
                   <Divider />
@@ -192,7 +196,7 @@ export const AccountSettings = () => {
                     </Grid>
                   </>
                 )}
-                {roles.student && (
+                {roles && roles.student && (
                   <>
                     <Grid item>
                       <Typography

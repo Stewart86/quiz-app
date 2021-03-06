@@ -1,15 +1,18 @@
+import { CONFIRMATION_EMAIL_REDIRECT } from "../helper/constants"
 import { auth } from "../firebase"
 import { post } from "../firestore/users"
 
 export const signup = async (name, email, phone, password) => {
   const user = await auth.createUserWithEmailAndPassword(email, password)
-  const id = user.user.uid
-
-  await user.user.sendEmailVerification({
-    url: window.location.origin + "/account/settings",
-  })
-
-  return await post({ id, name, email, phone })
+  if (user) {
+    const id = user.user.uid
+    await user.user.updateProfile({ displayName: name })
+    await post({ id, name, email, phone })
+    await auth.currentUser.sendEmailVerification({
+      url: CONFIRMATION_EMAIL_REDIRECT,
+    })
+  }
+  return user.user.uid
 }
 
 export const signin = async (email, password) => {
@@ -35,5 +38,11 @@ export const confirmPasswordReset = async (code, email) => {
 }
 
 export const sendVerificationEmail = async (user) => {
-  await user.sendEmailVerification()
+  try {
+    await user.sendEmailVerification({
+      url: CONFIRMATION_EMAIL_REDIRECT,
+    })
+  } catch (e) {
+    console.error(e.message)
+  }
 }
