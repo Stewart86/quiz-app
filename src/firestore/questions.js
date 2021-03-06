@@ -1,36 +1,14 @@
-import { chunk, isArray, isNumber, mergeWith, sampleSize, uniq } from "lodash"
+import { chunk, isNumber, sampleSize } from "lodash"
 import { levelLookup, typeReverseLookup } from "../helper/enum"
 
 import { db } from "../firebase"
 
 export const post = async (question) => {
+  // convert P1 to Primary 1
+  const level = levelLookup[question.level]
+  question.level = level
   const questionsCollection = db.collection("questions")
   await questionsCollection.add(question)
-}
-
-export const updateNewCategories = async (categories) => {
-  let preparedCat = {}
-  Object.keys(categories).forEach((k) => {
-    if (!Array.isArray(categories[k])) {
-      preparedCat[k] = [categories[k]]
-    }
-  })
-
-  const cursor = db.collection("questions").doc("categories")
-  const doc = await cursor.get()
-
-  const obj = mergeWith(categories, doc.data(), (obj, src) => {
-    if (isArray(obj)) {
-      return uniq(obj.concat(src))
-    } else if (!isArray(obj)) {
-      obj = [obj]
-      return uniq(obj.concat(src))
-    } else {
-      return ""
-    }
-  })
-
-  await cursor.set(obj)
 }
 
 export const getMany = async (categories) => {
@@ -101,7 +79,10 @@ export const getOne = async (id) => {
   return snapshot
 }
 
-export const updateOne = async (id, categories) => {
+export const updateOne = async (id, question) => {
+  // convert P1 to Primary 1
+  const level = levelLookup[question.level]
+  question.level = level
   const cur = db.collection("questions").doc(id)
-  await cur.update(categories)
+  await cur.update(question)
 }
