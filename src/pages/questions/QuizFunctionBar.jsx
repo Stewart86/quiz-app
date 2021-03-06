@@ -13,7 +13,6 @@ import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"
 import PrintIcon from "@material-ui/icons/Print"
 import React from "react"
-import { grey } from "@material-ui/core/colors"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -22,9 +21,8 @@ const useStyles = makeStyles((theme) => ({
   },
   featureBar: {
     alignItems: "flex-end",
-    backgroundColor: grey[100],
+    backgroundColor: theme.palette.primary.light,
     justifyContent: "flex-end",
-    marginTop: "-40px"
   },
 }))
 

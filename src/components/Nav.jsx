@@ -16,7 +16,6 @@ import { signout } from "../auth/auth"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    marginBottom: "48px",
     height: "48px"
   },
   title: {

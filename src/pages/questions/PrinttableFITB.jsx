@@ -6,12 +6,15 @@ import React from "react"
 export const PrinttableFITB = ({ question, count }) => {
   return (
     <Card>
-        <CardHeader
-          title={`Question ${count}`}
-          subheader={`${question.subject} | ${question.level} | ${question.topic}`}
-        />
+      <CardHeader
+        title={`Question ${count}`}
+        subheader={`${question.subject} | ${question.level} | ${question.topic}`}
+      />
       <CardContent>
-        <ConvertToFillInTheBlank rawText={question.question} />
+        <ConvertToFillInTheBlank
+          onSelectionChange={(i, v) => {}}
+          rawText={question.question}
+        />
       </CardContent>
     </Card>
   )

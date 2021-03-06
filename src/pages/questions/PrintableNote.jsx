@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
   question: {
     ...theme.typography.body1,
     fontSize: "1.4em",
+    backgroundColor: theme.palette.background.paper,
     marginBottom: theme.spacing(5),
   },
 }))
@@ -31,6 +32,7 @@ export const PrintableNote = ({ question, count }) => {
           <Editor
             id={count}
             className={classes.question}
+            theme={{ background: classes.question.backgroundColor }}
             readOnly
             defaultValue={question && question.question}
           />

@@ -32,6 +32,12 @@ const useStyles = makeStyles((theme) => ({
     bottom: theme.spacing(10),
     right: theme.spacing(2),
   },
+  deleteIcon: {
+    color: theme.palette.error.main,
+  },
+  editIcon: {
+    color: theme.palette.info.main,
+  },
 }))
 
 export const ManageQuestions = () => {
@@ -47,13 +53,17 @@ export const ManageQuestions = () => {
         <>
           <Tooltip title={"Delete"}>
             <IconButton
+              className={classes.deleteIcon}
               size={"small"}
               onClick={() => handleConfirm(cell.value)}>
               <DeleteForever />
             </IconButton>
           </Tooltip>
           <Tooltip title={"Edit"}>
-            <IconButton size={"small"} onClick={() => handleUpdate(cell.value)}>
+            <IconButton
+              className={classes.editIcon}
+              size={"small"}
+              onClick={() => handleUpdate(cell.value)}>
               <Edit />
             </IconButton>
           </Tooltip>

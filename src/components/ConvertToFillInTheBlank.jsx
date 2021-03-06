@@ -1,6 +1,5 @@
 import { Chip, TextField, Typography } from "@material-ui/core"
 import React, { Fragment } from "react"
-import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles"
 
 import { SelectionField } from "./SelectionField"
 import { makeStyles } from "@material-ui/core"
@@ -14,24 +13,13 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.success.main,
     color: theme.palette.success.contrastText,
   },
-}))
-const theme = createMuiTheme({
-  overrides: {
-    MuiTextField: {
-      root: {
-        width: "8em",
-        margin: "8px",
-        marginTop: "-8px",
-        marginBottom: "12px",
-      },
-    },
-    MuiInput: {
-      input: {
-        textAlign: "center",
-      },
+  input: {
+    width: "150px",
+    "& input": {
+      textAlign: "center",
     },
   },
-})
+}))
 
 const setSelectedFieldValue = (sel, i) => {
   if (sel === undefined) {
@@ -50,6 +38,7 @@ export const ConvertToFillInTheBlank = ({
   selectedAnswer,
 }) => {
   const classes = useStyles()
+
   const val = rawText
   const splitRe = /({.*?})/g
   const textArr = val.split(splitRe)
@@ -85,10 +74,13 @@ export const ConvertToFillInTheBlank = ({
         newQuestion.push(
           <Fragment key={i}>
             <TextField
+              classes={{ root: classes.input }}
               disabled={submitted}
               variant={"standard"}
               autoComplete={"false"}
+              spellCheck={"false"}
               size={"small"}
+              color={"primary"}
               onChange={(event) => onSelectionChange(i, event.target.value)}
               value={setSelectedFieldValue(selectedAnswer, i)}
             />
@@ -112,5 +104,5 @@ export const ConvertToFillInTheBlank = ({
     }
   })
 
-  return <ThemeProvider theme={theme}>{newQuestion}</ThemeProvider>
+  return <>{newQuestion}</>
 }

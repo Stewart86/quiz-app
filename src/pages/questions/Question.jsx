@@ -22,7 +22,11 @@ const useStyles = makeStyles((theme) => ({
   answerCard: {
     marginBottom: theme.spacing(1),
   },
-  question: { ...theme.typography.body1, fontSize: "1.4em" },
+  question: {
+    ...theme.typography.body1,
+    backgroundColor: theme.palette.background.paper,
+    fontSize: "1.4em",
+  },
 }))
 
 export const Question = ({
@@ -42,7 +46,7 @@ export const Question = ({
       if (currentChoice === Number(question.answer) - 1) {
         return theme.palette.success.main
       } else if (currentChoice !== question.selectedAnswer) {
-        return theme.palette.common.white
+        return null
       } else {
         return theme.palette.error.main
       }
@@ -105,6 +109,7 @@ export const Question = ({
               <Editor
                 className={classes.question}
                 readOnly
+                theme={{ background: classes.question.backgroundColor }}
                 defaultValue={
                   question.type === QUESTION_TYPE.note
                     ? question.explain
@@ -160,6 +165,7 @@ export const Question = ({
               <Editor
                 className={classes.question}
                 readOnly
+                theme={{ background: classes.question.backgroundColor }}
                 defaultValue={question.explain}
                 value={question.explain}
               />
