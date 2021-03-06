@@ -22,6 +22,7 @@ import { AuthContext } from "../../components/AuthProvider"
 import { Loading } from "../../components"
 import { PaymentModal } from "../../components/PaymentModal"
 import { makeStyles } from "@material-ui/core/styles"
+import { sendVerificationEmail } from "../../auth/auth"
 
 const useStyles = makeStyles((theme) => ({
   notice: {
@@ -80,6 +81,10 @@ export const AccountSettings = () => {
     setOpenInfo(true)
   }
 
+  const handleVerify = async () => {
+    await sendVerificationEmail(currentUser)
+  }
+
   if (!user) {
     return <Loading />
   }
@@ -123,6 +128,29 @@ export const AccountSettings = () => {
                         {roles.student && "Paid "}
                         {roles.trial && "Trial "}
                         {!user.isEnabled && "Account Disabled"}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        <Typography variant={"button"}>Verified</Typography>
+                      </TableCell>
+                      <TableCell>
+                        {currentUser.emailVerified ? (
+                          "Yes"
+                        ) : (
+                          <>
+                            <Typography>No</Typography>
+                            <Typography variant={"subtitle1"}>
+                              Click verify and check your email to continue
+                            </Typography>
+                            <Button
+                              color={"primary"}
+                              variant={"contained"}
+                              onClick={handleVerify}>
+                              Verify
+                            </Button>
+                          </>
+                        )}
                       </TableCell>
                     </TableRow>
                   </TableBody>

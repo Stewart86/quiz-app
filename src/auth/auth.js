@@ -4,7 +4,11 @@ import { post } from "../firestore/users"
 export const signup = async (name, email, phone, password) => {
   const user = await auth.createUserWithEmailAndPassword(email, password)
   const id = user.user.uid
-  
+
+  await user.user.sendEmailVerification({
+    url: window.location.origin + "/account/settings",
+  })
+
   return await post({ id, name, email, phone })
 }
 
@@ -28,4 +32,8 @@ export const forgetPassword = async (email) => {
 
 export const confirmPasswordReset = async (code, email) => {
   return auth.confirmPasswordReset(code, email)
+}
+
+export const sendVerificationEmail = async (user) => {
+  await user.sendEmailVerification()
 }

@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react"
 
 import { DueDateReminder } from "../../components/DueDateReminder"
 import PrintIcon from "@material-ui/icons/Print"
+import { QUESTION_TYPE } from "../../helper/enum"
 import { genNumOfQuestions } from "../../helper/utilities"
 import { getTopic } from "../../firestore/topics"
 import { makeStyles } from "@material-ui/core"
@@ -151,9 +152,7 @@ export const QuestionsSelection = ({
             <Button
               className={classes.levelBtn}
               color={"primary"}
-              variant={
-                category.level === value ? "contained" : "outlined"
-              }
+              variant={category.level === value ? "contained" : "outlined"}
               key={value}
               onClick={() => handleForm({ level: value })}>
               {value}
@@ -184,7 +183,11 @@ export const QuestionsSelection = ({
         </Grid>
         <Grid item>
           <FormControl>
-            <InputLabel>Number of Questions</InputLabel>
+            <InputLabel>
+              {category.type === QUESTION_TYPE.note
+                ? "Number of Notes"
+                : "Number of Questions"}
+            </InputLabel>
             <Select
               label={"Number of Questions"}
               className={classes.dropdown}

@@ -3,6 +3,7 @@ import {
   Button,
   IconButton,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
@@ -96,15 +97,16 @@ export const Nav = () => {
                 {"Logout"}
               </Button>
               <Typography
-                noWarp
                 display={"block"}
                 className={classes.greeting}>{`Hi ${userName}`}</Typography>
-              <IconButton
-                href={"/account/settings"}
-                variant={"outlined"}
-                color='inherit'>
-                <AccountCircleOutlined />
-              </IconButton>
+              <Tooltip title={"Account Settings"}>
+                <IconButton
+                  href={"/account/settings"}
+                  variant={"outlined"}
+                  color='inherit'>
+                  <AccountCircleOutlined />
+                </IconButton>
+              </Tooltip>
             </>
           ) : (
             <Button className={classes.btn} href={"/"} color='inherit'>

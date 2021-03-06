@@ -3,7 +3,6 @@ import React, { useState } from "react"
 import { DueDateReminder } from "../../components/DueDateReminder"
 import { Loading } from "../../components"
 import { Printable } from "./Printable"
-import { Prompt } from "react-router"
 import { QuestionsSelection } from "./QuestionsSelection"
 import { Quiz } from "./Quiz"
 import { TypeSelection } from "./TypeSelection"
@@ -99,7 +98,6 @@ export const Questions = () => {
         autoHideDuration={3000}
       />
       <DueDateReminder />
-      <Prompt when={true} message={"Leaving now will reset your progress. Are you sure?"} />
     </>
   )
 }
