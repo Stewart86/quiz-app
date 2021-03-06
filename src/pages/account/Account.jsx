@@ -15,7 +15,7 @@ export const Account = () => (
       <PublicRoute path={"/account/signup"} component={SignUp} />
       <PublicRoute path={"/account/reset"} component={Reset} />
       <AdminRoute path={"/account/renew"} component={Renew} />
-      <AdminRoute path={"/account/manage"} component={Manage} />
+      <AdminRoute path={"/account/manage/:type"} component={Manage} />
       <StudentRoute path={"/account/settings"} component={AccountSettings} />
     </Switch>
   </>

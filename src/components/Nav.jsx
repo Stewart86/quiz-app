@@ -16,7 +16,7 @@ import { signout } from "../auth/auth"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    height: "48px"
+    height: "48px",
   },
   title: {
     flexGrow: 1,
@@ -65,13 +65,19 @@ export const Nav = () => {
             <>
               <Button
                 className={classes.btn}
-                href='/account/manage'
+                href='/account/manage/staff'
                 color='inherit'>
-                Admin
+                Staff
+              </Button>
+              <Button
+                className={classes.btn}
+                href='/account/manage/users'
+                color='inherit'>
+                Users
               </Button>
             </>
           )}
-          {roles && roles.tutor && (
+          {roles && (roles.tutor || roles.admin) && (
             <Button className={classes.btn} href='/admin' color='inherit'>
               Manage
             </Button>

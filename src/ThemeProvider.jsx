@@ -6,10 +6,8 @@ import {
 import { cyan, deepOrange } from "@material-ui/core/colors"
 
 import React from "react"
-import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 export const ThemeProvider = ({ children }) => {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
 
   let theme = createMuiTheme({
     typography: {
@@ -36,16 +34,23 @@ export const ThemeProvider = ({ children }) => {
         fontFamily: "Raleway",
       },
       body2: {
-        fontFamily: "Raleway",
+        fontFamily: "Open Sans",
       },
       button: {
         fontFamily: "Open Sans",
+      },
+      mono: {
+        fontFamily: "monospace",
+        fontWeight: 400,
+        letterSpacing: "0.12em",
+        lineHeight: 2,
+        fontSize: "1.2rem"
       },
     },
     palette: {
       primary: cyan,
       secondary: deepOrange,
-      type: prefersDarkMode ? "dark" : "light",
+      type: "light",
     },
   })
   theme = responsiveFontSizes(theme)

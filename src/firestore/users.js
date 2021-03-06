@@ -92,7 +92,7 @@ export const getRole = async (uid) => {
   }
 }
 
-export const getAllStudents = async () => {
+export const getAllUsers = async (type) => {
   const userCollection = db.collection("users")
   const allUsers = await userCollection.get()
   const result = {}
@@ -132,7 +132,17 @@ export const getAllStudents = async () => {
       isEnabled: result[key].isEnabled,
     }
   })
-  return result
+  if (type === "staff") {
+    return Object.keys(result)
+      .map((key, i) => result[key])
+      .filter((x) => x.admin || x.tutor)
+  } else if (type === "users") {
+    return Object.keys(result)
+      .map((key, i) => result[key])
+      .filter((x) => x.student || x.trial)
+  } else {
+    return result
+  }
 }
 
 export const expireUser = async (uid) => {
