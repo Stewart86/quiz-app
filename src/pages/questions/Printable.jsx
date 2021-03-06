@@ -4,11 +4,13 @@ import {
   FormGroup,
   Grid,
   Switch,
-  Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
 
+import { PrintableFITBAnswer } from "./PrintableFITBAnswer"
+import { PrintableMCQAnswer } from "./PrintableMCQAnswer"
 import { PrintableQuestions } from "./PrintableQuestions"
+import { QUESTION_TYPE } from "../../helper/enum"
 
 export const Printable = ({ questions }) => {
   const [showAnswer, setShowAnswer] = useState(false)
@@ -16,26 +18,35 @@ export const Printable = ({ questions }) => {
   return (
     <Container>
       <Grid container>
-      <FormGroup row>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={showAnswer}
-              onChange={() => setShowAnswer((state) => !state)}
+        {questions[1].type !== QUESTION_TYPE.note && (
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={showAnswer}
+                  onChange={() => setShowAnswer((state) => !state)}
+                />
+              }
+              label='Show Answer'
             />
-          }
-          label='Show Answer'
-        />
-      </FormGroup>
+          </FormGroup>
+        )}
       </Grid>
       {showAnswer ? (
-        <Grid container direction={"column"}>
-          {Object.keys(questions).map((key, i) => (
-            <Typography key={key}>
-              Question {i + 1}: {questions[key]["answer"]}
-            </Typography>
-          ))}
-        </Grid>
+        <>
+          {(() => {
+            switch (questions[1].type) {
+              case QUESTION_TYPE.multipleChoice:
+                return <PrintableMCQAnswer questions={questions} />
+
+              case QUESTION_TYPE.fillInTheBlank:
+                return <PrintableFITBAnswer questions={questions} />
+
+              default:
+                break
+            }
+          })()}
+        </>
       ) : (
         <Grid container direction={"column"} spacing={2}>
           {Object.keys(questions).map((key) => (

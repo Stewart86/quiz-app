@@ -43,7 +43,6 @@ export const upgradeRole = async (uid, role) => {
 
 export const renewOne = async (uid, date) => {
   const userCollection = db.collection("users").doc(uid)
-  console.log(date)
   return await userCollection.update({
     expireStart: firebase.firestore.Timestamp.fromMillis(date),
     updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
@@ -60,8 +59,7 @@ export const convertToStudent = async (uid) => {
       student: true,
     })
   } catch (error) {
-    console.log(uid)
-    console.log(error)
+    console.error(error)
   }
   const userCollection = db.collection("users").doc(uid)
   return await userCollection.update({

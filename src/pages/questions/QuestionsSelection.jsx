@@ -19,13 +19,13 @@ import { DueDateReminder } from "../../components/DueDateReminder"
 import PrintIcon from "@material-ui/icons/Print"
 import { genNumOfQuestions } from "../../helper/utilities"
 import { getTopic } from "../../firestore/topics"
-import { levelLookup } from "../../helper/enum"
 import { makeStyles } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
   centerContent: {
     minHeight: "94vh",
     width: "100%",
+    paddingLeft: "80px",
   },
   subjectArea: {
     display: "flex",
@@ -89,16 +89,9 @@ export const QuestionsSelection = ({
 
     setCategory((state) => {
       let obj = null
-      if (key === "level") {
-        obj = {
-          ...state,
-          [key]: levelLookup[incomingCategory[key]],
-        }
-      } else {
-        obj = {
-          ...state,
-          [key]: incomingCategory[key],
-        }
+      obj = {
+        ...state,
+        [key]: incomingCategory[key],
       }
 
       if (key === "numOfQuestions") {
@@ -131,13 +124,12 @@ export const QuestionsSelection = ({
   return (
     <Grid
       className={classes.centerContent}
-      alignContent={"center"}
       justify={"center"}
-      direction={"column"}
       spacing={10}
+      direction={"column"}
       container>
       <Grid container justify={"center"} spacing={5} item>
-        <Typography variant={"h4"}>Choose Your Quiz</Typography>
+        <Typography variant={"h3"}>Choose Your Quiz</Typography>
       </Grid>
       <Grid container justify={"center"} spacing={5} item>
         <ButtonGroup color={"primary"}>
@@ -160,7 +152,7 @@ export const QuestionsSelection = ({
               className={classes.levelBtn}
               color={"primary"}
               variant={
-                category.level === levelLookup[value] ? "contained" : "outlined"
+                category.level === value ? "contained" : "outlined"
               }
               key={value}
               onClick={() => handleForm({ level: value })}>

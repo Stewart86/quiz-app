@@ -1,3 +1,5 @@
+import "./App.css"
+
 import { Admin, Error } from "./pages"
 import {
   Redirect,
@@ -15,38 +17,41 @@ import { Login } from "./pages/account/Login"
 import { Questions } from "./pages/questions/Questions"
 import React from "react"
 import { StudentRoute } from "./Routes/StudentRoute"
+import { ThemeProvider } from "./ThemeProvider"
 
 export default function App() {
   return (
-    <AuthProvider>
-      <CssBaseline />
-      <Router>
-        <Switch>
-          <StudentRoute path='/question' component={Questions} />
-          <Route path={"/Account"}>
+    <ThemeProvider>
+      <AuthProvider>
+        <CssBaseline />
+        <Router>
+          <Switch>
+            <StudentRoute path='/question' component={Questions} />
+            <Route path={"/Account"}>
               <Account />
-          </Route>
-          <Route path={"/admin"}>
-            <FullScreenContentLayout>
-              <Admin />
-            </FullScreenContentLayout>
-          </Route>
-          <Route path='/login'>
-            <CenterContentLayout>
-              <Login />
-            </CenterContentLayout>
-          </Route>
-          <Route exact path='/'>
-            <Redirect to='/login' />
-          </Route>
-          <Route path='/error'>
-            <Error />
-          </Route>
-          <Route path='*'>
-            <Error />
-          </Route>
-        </Switch>
-      </Router>
-    </AuthProvider>
+            </Route>
+            <Route path={"/admin"}>
+              <FullScreenContentLayout>
+                <Admin />
+              </FullScreenContentLayout>
+            </Route>
+            <Route path='/login'>
+              <CenterContentLayout>
+                <Login />
+              </CenterContentLayout>
+            </Route>
+            <Route exact path='/'>
+              <Redirect to='/login' />
+            </Route>
+            <Route path='/error'>
+              <Error />
+            </Route>
+            <Route path='*'>
+              <Error />
+            </Route>
+          </Switch>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }

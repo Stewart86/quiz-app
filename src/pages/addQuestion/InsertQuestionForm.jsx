@@ -9,10 +9,18 @@ const useStyles = makeStyles((theme) => ({
   editorWrapper: {
     paddingLeft: theme.spacing(5),
   },
-  editor: { ...theme.typography.body1, maxWidth: "50vw" },
+  editor: {
+    ...theme.typography.body1,
+    backgroundColor: theme.palette.background.paper,
+    maxWidth: "50vw",
+  },
 }))
 
-export const InsertQuestionForm = ({ question, editorTitle, handleEditorChange }) => {
+export const InsertQuestionForm = ({
+  question,
+  editorTitle,
+  handleEditorChange,
+}) => {
   const classes = useStyles()
 
   const handleUploadImage = async (file) => {
@@ -28,6 +36,7 @@ export const InsertQuestionForm = ({ question, editorTitle, handleEditorChange }
           value={question}
           className={classes.editor}
           onChange={handleEditorChange}
+          theme={{ background: classes.editor.backgroundColor }}
           placeholder={`Enter your ${editorTitle.toLowerCase()} here...`}
           uploadImage={async (file) => handleUploadImage(file)}
         />

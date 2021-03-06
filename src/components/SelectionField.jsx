@@ -12,6 +12,10 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.success.main,
     color: theme.palette.success.contrastText,
   },
+  input: {
+    width: "150px",
+    textAlign: "center"
+  },
 }))
 export const SelectionField = ({
   index,
@@ -38,10 +42,12 @@ export const SelectionField = ({
     <>
       <TextField
         select
+        classes={{ root: classes.input }}
         disabled={submitted}
         value={value}
         onChange={handleSetValue}
         variant={"standard"}
+        color={"primary"}
         size={"small"}>
         <MenuItem selected value={-1}></MenuItem>
         {options.map((val, i) => (
@@ -49,7 +55,7 @@ export const SelectionField = ({
             {val}
           </MenuItem>
         ))}
-      </TextField>{" "}
+      </TextField>
       {submitted && (
         <Chip
           className={

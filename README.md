@@ -48,15 +48,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - subscription
 - add reminder at question sections
 - redirect to renew / subscribe after due date
+- change question selection
+- add createMUI theme
 
 ## To Do
 - email varification
 - reset password
 - forget password
-
-- change question selection
 - stripe payment
-- add createMUI theme
 
 ## bugs
 

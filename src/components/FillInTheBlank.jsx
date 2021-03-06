@@ -18,6 +18,8 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     padding: theme.spacing(1),
     fontSize: theme.typography.fontSize,
+    background: theme.palette.background.paper,
+    color: theme.palette.text.primary,
     lineHeight: 2,
   },
   input: {
@@ -68,7 +70,10 @@ export const FillInTheBlank = ({ question, handleSetQuestion }) => {
         <Card>
           <CardHeader title={"Preview"} />
           <CardContent>
-            <ConvertToFillInTheBlank rawText={rawText} />
+            <ConvertToFillInTheBlank
+              onSelectionChange={(i, v) => {}}
+              rawText={rawText}
+            />
           </CardContent>
         </Card>
       </Grid>

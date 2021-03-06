@@ -16,16 +16,17 @@ import { signout } from "../auth/auth"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    marginBottom: "108px",
+    height: "48px"
   },
   title: {
     flexGrow: 1,
   },
   greeting: {
     flexGrow: 0,
+    fontFamily: "Indie Flower",
   },
   btn: {
-    margin: theme.spacing(2),
+    margin: theme.spacing(1),
   },
 }))
 
@@ -89,6 +90,8 @@ export const Nav = () => {
                 {"Logout"}
               </Button>
               <Typography
+                noWarp
+                display={"block"}
                 className={classes.greeting}>{`Hi ${userName}`}</Typography>
               <IconButton
                 href={"/account/settings"}

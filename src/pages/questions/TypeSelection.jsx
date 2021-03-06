@@ -5,6 +5,7 @@ import { AuthContext } from "../../components/AuthProvider"
 import { QUESTION_TYPE } from "../../helper/enum"
 import { TypeCircle } from "./TypeCircle"
 import { getUser } from "../../firestore/users"
+import placeholder from "../../images/placeholder.png"
 
 const useStyles = makeStyles((theme) => ({
   centerContent: {
@@ -53,6 +54,7 @@ export const TypeSelection = ({ handleSetType }) => {
         <Grid item>
           <TypeCircle
             type={"Multiple Choice"}
+            image={placeholder}
             handleClick={() =>
               handleSetType({ type: QUESTION_TYPE.multipleChoice })
             }
@@ -61,6 +63,7 @@ export const TypeSelection = ({ handleSetType }) => {
         <Grid item>
           <TypeCircle
             type={"Fill In The Blank"}
+            image={placeholder}
             handleClick={() =>
               handleSetType({ type: QUESTION_TYPE.fillInTheBlank })
             }
@@ -69,6 +72,7 @@ export const TypeSelection = ({ handleSetType }) => {
         <Grid item>
           <TypeCircle
             type={"Notes"}
+            image={placeholder}
             handleClick={() => handleSetType({ type: QUESTION_TYPE.note })}
           />
         </Grid>
