@@ -92,7 +92,7 @@ export const getRole = async (uid) => {
   }
 }
 
-export const getAllStudents = async () => {
+export const getAllUsers = async () => {
   const userCollection = db.collection("users")
   const allUsers = await userCollection.get()
   const result = {}

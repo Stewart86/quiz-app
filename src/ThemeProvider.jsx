@@ -9,7 +9,6 @@ import React from "react"
 import useMediaQuery from "@material-ui/core/useMediaQuery"
 
 export const ThemeProvider = ({ children }) => {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
 
   let theme = createMuiTheme({
     typography: {
@@ -52,7 +51,7 @@ export const ThemeProvider = ({ children }) => {
     palette: {
       primary: cyan,
       secondary: deepOrange,
-      type: prefersDarkMode ? "dark" : "light",
+      type: "light",
     },
   })
   theme = responsiveFontSizes(theme)

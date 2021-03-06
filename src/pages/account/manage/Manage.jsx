@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react"
 import {
   disableUser,
   enableUser,
-  getAllStudents,
+  getAllUsers,
   upgradeRole,
 } from "../../../firestore/users"
 
@@ -36,7 +36,7 @@ export const Manage = () => {
   const { currentUser } = useContext(AuthContext)
 
   const getUsersFromDB = async () => {
-    const Users = convertObjToArr(await getAllStudents())
+    const Users = convertObjToArr(await getAllUsers())
     setUsers(Users)
     setLoading(false)
   }
