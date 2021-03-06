@@ -49,8 +49,14 @@ export const Manage = () => {
     setLoading(false)
   }
   useEffect(() => {
+    const getUsersFromDB = async () => {
+      const Users = convertObjToArr(await getAllUsers(type))
+      setUsers(Users)
+      setLoading(false)
+    }
     getUsersFromDB()
-  }, [])
+    console.log("effect")
+  }, [type])
 
   const handleToAdmin = async (uid) => {
     setLoading(true)

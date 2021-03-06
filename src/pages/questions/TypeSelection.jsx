@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react"
 
 import { AuthContext } from "../../components/AuthProvider"
 import { QUESTION_TYPE } from "../../helper/enum"
+import { Redirect } from "react-router"
 import { TypeCircle } from "./TypeCircle"
 import { getUser } from "../../firestore/users"
 import placeholder from "../../images/placeholder.png"
@@ -34,6 +35,10 @@ export const TypeSelection = ({ handleSetType }) => {
       mounted = false
     }
   }, [currentUser])
+
+  if (!currentUser.emailVerified) {
+    return <Redirect to={"/account/settings"} />
+  }
   return (
     <Container>
       <Grid
