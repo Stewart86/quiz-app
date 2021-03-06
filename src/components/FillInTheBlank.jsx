@@ -15,12 +15,11 @@ import { makeStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles((theme) => ({
   editor: {
+    ...theme.typography.mono,
     width: "100%",
     padding: theme.spacing(1),
-    fontSize: theme.typography.fontSize,
     background: theme.palette.background.paper,
     color: theme.palette.text.primary,
-    lineHeight: 2,
   },
   input: {
     textAlign: "center",

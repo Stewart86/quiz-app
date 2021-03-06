@@ -36,10 +36,17 @@ export const ThemeProvider = ({ children }) => {
         fontFamily: "Raleway",
       },
       body2: {
-        fontFamily: "Raleway",
+        fontFamily: "Open Sans",
       },
       button: {
         fontFamily: "Open Sans",
+      },
+      mono: {
+        fontFamily: "monospace",
+        fontWeight: 400,
+        letterSpacing: "0.12em",
+        lineHeight: 2,
+        fontSize: "1.2rem"
       },
     },
     palette: {
