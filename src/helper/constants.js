@@ -1,3 +1,4 @@
+export const CONFIRMATION_EMAIL_REDIRECT  = "http://localhost:3000/account/settings"
 export const TYPES = ["Multiple Choice", "Fill In The Blank", "Notes"]
 export const SUBJECTS = ["English", "Maths", "Science", "Chinese"]
 export const LEVELS = [

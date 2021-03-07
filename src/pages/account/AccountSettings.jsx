@@ -21,6 +21,7 @@ import { convertToStudent, getUser, renewOne } from "../../firestore/users"
 import { AuthContext } from "../../components/AuthProvider"
 import { Loading } from "../../components"
 import { PaymentModal } from "../../components/PaymentModal"
+import { Reset } from "./Reset"
 import { makeStyles } from "@material-ui/core/styles"
 import { sendVerificationEmail } from "../../auth/auth"
 
@@ -37,6 +38,8 @@ export const AccountSettings = () => {
   const [openStripe, setOpenStripe] = useState(false)
   const [openInfo, setOpenInfo] = useState(false)
   const [mode, setMode] = useState(null)
+  const [resend, setResend] = useState(false)
+  const [openResetPassword, setOpenResetPassword] = useState(true)
 
   const { currentUser, roles } = useContext(AuthContext)
 
@@ -54,12 +57,13 @@ export const AccountSettings = () => {
     return () => {
       mounted = false
     }
-  }, [currentUser])
+  }, [currentUser, roles])
 
   const getDbUser = async (uid) => {
     const dbUser = await getUser(uid)
     setUser(dbUser)
   }
+
   const handleOpen = (mode) => {
     setMode(mode)
     setOpenStripe(true)
@@ -83,11 +87,17 @@ export const AccountSettings = () => {
 
   const handleVerify = async () => {
     await sendVerificationEmail(currentUser)
+    setResend(true)
+  }
+
+  const handleResetPassword = () => {
+    setOpenResetPassword(true)
   }
 
   if (!user) {
     return <Loading />
   }
+
   return (
     <Container>
       <Card style={{ width: "100%" }}>
@@ -116,20 +126,22 @@ export const AccountSettings = () => {
                       </TableCell>
                       <TableCell>{user.email}</TableCell>
                     </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Typography variant={"button"}>
-                          {"Registration Status"}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        {roles.admin && "Admin "}
-                        {roles.tutor && "Tutor "}
-                        {roles.student && "Paid "}
-                        {roles.trial && "Trial "}
-                        {!user.isEnabled && "Account Disabled"}
-                      </TableCell>
-                    </TableRow>
+                    {roles && (
+                      <TableRow>
+                        <TableCell>
+                          <Typography variant={"button"}>
+                            {"Registration Status"}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          {roles.admin && "Admin "}
+                          {roles.tutor && "Tutor "}
+                          {roles.student && "Paid "}
+                          {roles.trial && "Trial "}
+                          {!user.isEnabled && "Account Disabled"}
+                        </TableCell>
+                      </TableRow>
+                    )}
                     <TableRow>
                       <TableCell>
                         <Typography variant={"button"}>Verified</Typography>
@@ -147,7 +159,7 @@ export const AccountSettings = () => {
                               color={"primary"}
                               variant={"contained"}
                               onClick={handleVerify}>
-                              Verify
+                              {resend ? "resend" : "verify"}
                             </Button>
                           </>
                         )}
@@ -157,7 +169,7 @@ export const AccountSettings = () => {
                 </Table>
               </TableContainer>
             </Grid>
-            {(roles.student || roles.trial) && (
+            {roles && (roles.student || roles.trial) && (
               <>
                 <Grid item>
                   <Divider />
@@ -192,7 +204,7 @@ export const AccountSettings = () => {
                     </Grid>
                   </>
                 )}
-                {roles.student && (
+                {roles && roles.student && (
                   <>
                     <Grid item>
                       <Typography
@@ -241,7 +253,10 @@ export const AccountSettings = () => {
               </Grid>
             )}
             <Grid item>
-              <Button disabled color={"primary"} variant={"contained"}>
+              <Button
+                onClick={handleResetPassword}
+                color={"primary"}
+                variant={"contained"}>
                 {"Reset Password"}
               </Button>
             </Grid>
@@ -257,6 +272,10 @@ export const AccountSettings = () => {
         open={openStripe}
         handleClose={handleClose}
         handlePayment={handlePayment}
+      />
+      <Reset
+        open={openResetPassword}
+        onClose={() => setOpenResetPassword(false)}
       />
     </Container>
   )

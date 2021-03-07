@@ -4,16 +4,20 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   TextField,
   Typography,
 } from "@material-ui/core"
 import React, { useContext, useState } from "react"
+import { forgetPassword, signin } from "../../auth/auth"
 
 import { AuthContext } from "../../components/AuthProvider"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { isString } from "lodash"
-import { signin } from "../../auth/auth"
 import { useHistory } from "react-router-dom"
 
 export const Login = () => {
@@ -21,6 +25,8 @@ export const Login = () => {
   const { currentUser } = useContext(AuthContext)
   const [cred, setCred] = useState({ email: "", password: "" })
   const [warning, setWarning] = useState({ open: false, msg: "" })
+  const [openForgetPw, setOpenForgetPw] = useState(false)
+  const [email, setEmail] = useState("")
 
   const handleLogin = async () => {
     const result = await signin(cred.email, cred.password)
@@ -30,17 +36,21 @@ export const Login = () => {
       history.push("/admin")
     }
   }
+
   const handleSignUp = () => {
     history.push("/account/signup")
   }
+
   const handleChange = (obj) => {
     setCred((state) => ({ ...state, ...obj }))
   }
+
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleLogin()
     }
   }
+
   const handleWarningClose = () => {
     setWarning({ open: false, msg: "" })
   }
@@ -48,47 +58,72 @@ export const Login = () => {
     history.push("/admin")
     return null
   }
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value)
+  }
+
+  const handleForgetPw = async () => {
+    await forgetPassword(email)
+    setOpenForgetPw(false)
+  }
+
   return (
-    <Card elevation={5}>
-      <CardHeader
-        title={"Quiz App"}
-        subheader={"Your One Stop Learning Solution"}
-      />
-      <CardContent>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            required
-            autoFocus
-            type={"email"}
-            onChange={(event) => handleChange({ email: event.target.value })}
-            label={"Email"}
-            variant={"outlined"}
-            margin={"dense"}
+    <>
+      <Card elevation={5}>
+        <CardContent>
+          <CardHeader
+            title={"Quiz App"}
+            subheader={"Your One Stop Learning Solution"}
           />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            onChange={(event) => handleChange({ password: event.target.value })}
-            required
-            type={"password"}
-            label={"Password"}
-            variant={"outlined"}
-            margin={"dense"}
-            onKeyPress={handleKeyPress}
-          />
-        </Grid>
-        <Typography>todo: forget password</Typography>
-      </CardContent>
-      <CardActions>
-        <Grid container justify={"space-around"}>
-          <Button onClick={handleSignUp} variant={"outlined"}>
-            Sign Up
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              required
+              autoFocus
+              type={"email"}
+              onChange={(event) => handleChange({ email: event.target.value })}
+              label={"Email"}
+              variant={"outlined"}
+              margin={"dense"}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              onChange={(event) =>
+                handleChange({ password: event.target.value })
+              }
+              required
+              type={"password"}
+              label={"Password"}
+              variant={"outlined"}
+              margin={"dense"}
+              onKeyPress={handleKeyPress}
+            />
+          </Grid>
+          <Button onClick={() => setOpenForgetPw(true)} size={"small"}>
+            Forget Password
           </Button>
-          <Button onClick={handleLogin}>Login</Button>
-        </Grid>
-      </CardActions>
+        </CardContent>
+        <CardActions disableSpacing>
+          <Grid container justify={"space-between"}>
+            <Grid item>
+              <Button
+                onClick={handleSignUp}
+                color={"secondary"}
+                variant={"contained"}>
+                Sign Up
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button onClick={handleLogin} variant={"outlined"}>
+                Login
+              </Button>
+            </Grid>
+          </Grid>
+        </CardActions>
+      </Card>
       <WarningSnackBar
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         open={warning.open}
@@ -96,6 +131,23 @@ export const Login = () => {
         onClose={handleWarningClose}
         autoHideDuration={3000}
       />
-    </Card>
+      <Dialog open={openForgetPw} onClose={() => setOpenForgetPw(false)}>
+        <DialogTitle>Forget Password</DialogTitle>
+        <DialogContent>
+          <Typography variant={"subtitle1"} gutterBottom>
+            Enter the email you use to sign in.
+          </Typography>
+          <TextField
+            fullWidth
+            label={"Email"}
+            variant={"outlined"}
+            onChange={handleEmailChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleForgetPw}>Reset Password</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   )
 }

@@ -3,12 +3,17 @@ import {
   Card,
   CardActions,
   CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Grid,
   TextField,
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
 
+import { getRole } from "../../firestore/users"
 import { makeStyles } from "@material-ui/core/styles"
 import { signup } from "../../auth/auth"
 import { useHistory } from "react-router"
@@ -42,6 +47,7 @@ export const SignUp = () => {
     msg: "",
   })
   const [accountDetails, setAccountDetails] = useState({})
+  const [openThankYou, setOpenThankYou] = useState(false)
 
   const onHandleChange = (field) => {
     setAccountDetails((state) => ({ ...state, ...field }))
@@ -85,6 +91,7 @@ export const SignUp = () => {
       })
     }
   }
+
   const passwordConfirmCheck = (event) => {
     if (!accountDetails && !accountDetails.password1) {
       setComfirmPasswordHelper({ error: false, msg: "" })
@@ -111,13 +118,14 @@ export const SignUp = () => {
     } else if (!accountDetails.password2) {
       setNameHelper("Confirm password cannot be empty")
     } else {
-      await signup(
+      const uid = await signup(
         accountDetails.name,
         accountDetails.email,
         accountDetails.phone,
         accountDetails.password2
       )
-      history.push("/account/settings")
+      await getRole(uid)
+      setOpenThankYou(true)
     }
   }
 
@@ -136,7 +144,9 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ name: event.target.value })
                 }
-                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
+                onKeyPress={async (event) =>
+                  event.key === "Enter" && (await handleSubmit())
+                }
                 onBlur={nameValidation}
                 error={nameHelper.error}
                 helper={nameHelper.msg}
@@ -153,7 +163,9 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ phone: event.target.value })
                 }
-                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
+                onKeyPress={async (event) =>
+                  event.key === "Enter" && (await handleSubmit())
+                }
                 onBlur={phoneValidation}
                 error={phoneHelper.error}
                 helperText={phoneHelper.msg}
@@ -173,7 +185,9 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ email: event.target.value })
                 }
-                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
+                onKeyPress={async (event) =>
+                  event.key === "Enter" && (await handleSubmit())
+                }
                 onBlur={emailValidation}
                 error={emailHelper.error}
                 helperText={emailHelper.msg}
@@ -191,7 +205,9 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ password1: event.target.value })
                 }
-                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
+                onKeyPress={async (event) =>
+                  event.key === "Enter" && (await handleSubmit())
+                }
                 onBlur={passwordValidation}
                 error={passwordHelper.error}
                 helperText={passwordHelper.msg}
@@ -209,7 +225,9 @@ export const SignUp = () => {
                 onChange={(event) =>
                   onHandleChange({ password2: event.target.value })
                 }
-                onKeyPress={(event) => event.key === "Enter" && handleSubmit()}
+                onKeyPress={async (event) =>
+                  event.key === "Enter" && (await handleSubmit())
+                }
                 onBlur={passwordConfirmCheck}
                 error={confirmPasswordHelper.error}
                 helperText={confirmPasswordHelper.msg}
@@ -235,6 +253,21 @@ export const SignUp = () => {
           </Button>
         </CardActions>
       </Card>
+      <Dialog open={openThankYou} onClose={() => setOpenThankYou(false)}>
+        <DialogTitle>Thank you for Signing up!</DialogTitle>
+        <DialogContent>
+          You are required to verify your email to access to the quiz. Please
+          check your email for verification. If you cannot find the verification
+          email, do check your junk / spam mail box too.
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant={"outlined"}
+            onClick={() => history.push("/account/settings")}>
+            Account Settings
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Grid>
   )
 }
