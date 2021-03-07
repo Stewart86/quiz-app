@@ -91,6 +91,7 @@ export const SignUp = () => {
       })
     }
   }
+
   const passwordConfirmCheck = (event) => {
     if (!accountDetails && !accountDetails.password1) {
       setComfirmPasswordHelper({ error: false, msg: "" })
@@ -258,14 +259,14 @@ export const SignUp = () => {
           You are required to verify your email to access to the quiz. Please
           check your email for verification. If you cannot find the verification
           email, do check your junk / spam mail box too.
-          <DialogActions>
-            <Button
-              variant={"outlined"}
-              onClick={() => history.push("/account/settings")}>
-              Account Settings
-            </Button>
-          </DialogActions>
         </DialogContent>
+        <DialogActions>
+          <Button
+            variant={"outlined"}
+            onClick={() => history.push("/account/settings")}>
+            Account Settings
+          </Button>
+        </DialogActions>
       </Dialog>
     </Grid>
   )

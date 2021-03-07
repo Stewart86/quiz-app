@@ -21,6 +21,7 @@ import { convertToStudent, getUser, renewOne } from "../../firestore/users"
 import { AuthContext } from "../../components/AuthProvider"
 import { Loading } from "../../components"
 import { PaymentModal } from "../../components/PaymentModal"
+import { Reset } from "./Reset"
 import { makeStyles } from "@material-ui/core/styles"
 import { sendVerificationEmail } from "../../auth/auth"
 
@@ -38,6 +39,7 @@ export const AccountSettings = () => {
   const [openInfo, setOpenInfo] = useState(false)
   const [mode, setMode] = useState(null)
   const [resend, setResend] = useState(false)
+  const [openResetPassword, setOpenResetPassword] = useState(true)
 
   const { currentUser, roles } = useContext(AuthContext)
 
@@ -61,6 +63,7 @@ export const AccountSettings = () => {
     const dbUser = await getUser(uid)
     setUser(dbUser)
   }
+
   const handleOpen = (mode) => {
     setMode(mode)
     setOpenStripe(true)
@@ -87,9 +90,14 @@ export const AccountSettings = () => {
     setResend(true)
   }
 
+  const handleResetPassword = () => {
+    setOpenResetPassword(true)
+  }
+
   if (!user) {
     return <Loading />
   }
+
   return (
     <Container>
       <Card style={{ width: "100%" }}>
@@ -245,7 +253,10 @@ export const AccountSettings = () => {
               </Grid>
             )}
             <Grid item>
-              <Button disabled color={"primary"} variant={"contained"}>
+              <Button
+                onClick={handleResetPassword}
+                color={"primary"}
+                variant={"contained"}>
                 {"Reset Password"}
               </Button>
             </Grid>
@@ -261,6 +272,10 @@ export const AccountSettings = () => {
         open={openStripe}
         handleClose={handleClose}
         handlePayment={handlePayment}
+      />
+      <Reset
+        open={openResetPassword}
+        onClose={() => setOpenResetPassword(false)}
       />
     </Container>
   )
