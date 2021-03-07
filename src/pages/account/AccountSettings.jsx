@@ -22,6 +22,7 @@ import { AuthContext } from "../../components/AuthProvider"
 import { Loading } from "../../components"
 import { PaymentModal } from "../../components/PaymentModal"
 import { Reset } from "./Reset"
+import { checkoutSession } from "../../firestore/products"
 import { makeStyles } from "@material-ui/core/styles"
 import { sendVerificationEmail } from "../../auth/auth"
 
@@ -35,11 +36,11 @@ export const AccountSettings = () => {
   const classes = useStyles()
 
   const [user, setUser] = useState(null)
-  const [openStripe, setOpenStripe] = useState(false)
+  const [openStripe, setOpenStripe] = useState(true)
   const [openInfo, setOpenInfo] = useState(false)
   const [mode, setMode] = useState(null)
   const [resend, setResend] = useState(false)
-  const [openResetPassword, setOpenResetPassword] = useState(true)
+  const [openResetPassword, setOpenResetPassword] = useState(false)
 
   const { currentUser, roles } = useContext(AuthContext)
 
@@ -83,6 +84,10 @@ export const AccountSettings = () => {
     await getDbUser(user.id)
     setOpenStripe(false)
     setOpenInfo(true)
+  }
+
+  const handleStripeTest = async () => {
+    await checkoutSession(currentUser)
   }
 
   const handleVerify = async () => {
@@ -271,7 +276,7 @@ export const AccountSettings = () => {
       <PaymentModal
         open={openStripe}
         handleClose={handleClose}
-        handlePayment={handlePayment}
+        handlePayment={handleStripeTest}
       />
       <Reset
         open={openResetPassword}

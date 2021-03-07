@@ -3,24 +3,36 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
 } from "@material-ui/core"
+import { CardElement, Elements } from "@stripe/react-stripe-js"
 
 import React from "react"
+import { loadStripe } from "@stripe/stripe-js"
+import { makeStyles } from "@material-ui/core/styles"
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+  },
+  content: {
+    width: 550
+  }
+}))
+
+const stripePromise = loadStripe(
+  "pk_test_51ISMnzAhlGA96d4e6jQvCCFReCKSAZsonqn7nammjSuMpqfteJQZiqoXFo2wmUKVXNXGtVDwmtQxq05lkiIRT5JW001zHApot2"
+)
 
 export const PaymentModal = ({ open, handleClose, handlePayment }) => {
+  const classes = useStyles()
+
   return (
-    <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Pay With Stripe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque,
-            repellendus facere. Et tempore, quae, doloremque eaque fuga
-            assumenda ab voluptatibus ad enim veniam libero pariatur cum
-            aliquam. Hic, at quaerat?
-          </DialogContentText>
+    <Dialog className={classes.root} open={open} onClose={handleClose}>
+      <Elements stripe={stripePromise}>
+        <DialogTitle>Credit Card Information</DialogTitle>
+        <DialogContent className={classes.content}>
+          <CardElement />
         </DialogContent>
         <DialogActions>
           <Button
@@ -30,7 +42,7 @@ export const PaymentModal = ({ open, handleClose, handlePayment }) => {
             Pay
           </Button>
         </DialogActions>
-      </Dialog>
-    </div>
+      </Elements>
+    </Dialog>
   )
 }
