@@ -266,7 +266,7 @@ export const AccountSettings = () => {
               </Button>
             </Grid>
             <Grid item>
-              <Button disabled color={"secondary"} variant={"contained"}>
+              <Button disabled onClick={handlePayment} color={"secondary"} variant={"contained"}>
                 Delete Account
               </Button>
             </Grid>
