@@ -39,7 +39,7 @@ export const AccountSettings = () => {
   const [openInfo, setOpenInfo] = useState(false)
   const [mode, setMode] = useState(null)
   const [resend, setResend] = useState(false)
-  const [openResetPassword, setOpenResetPassword] = useState(true)
+  const [openResetPassword, setOpenResetPassword] = useState(false)
 
   const { currentUser, roles } = useContext(AuthContext)
 

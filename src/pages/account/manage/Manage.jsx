@@ -43,47 +43,40 @@ export const Manage = () => {
 
   const { currentUser } = useContext(AuthContext)
 
-  const getUsersFromDB = async () => {
-    const Users = convertObjToArr(await getAllUsers(type))
-    setUsers(Users)
-    setLoading(false)
+  const getUsersFromDB = () => {
+    setLoading(true)
   }
   useEffect(() => {
     const getUsersFromDB = async () => {
-      const Users = convertObjToArr(await getAllUsers(type))
-      setUsers(Users)
-      setLoading(false)
+      if (loading) {
+        const Users = convertObjToArr(await getAllUsers(type))
+        setUsers(Users)
+        setLoading(false)
+      }
     }
     getUsersFromDB()
     console.log("effect")
-  }, [type])
+  }, [loading, type])
 
   const handleToAdmin = async (uid) => {
-    setLoading(true)
     await upgradeRole(uid, "admin")
-    await getUsersFromDB()
-    setLoading(false)
+    getUsersFromDB()
   }
 
   const handleToTutor = async (uid) => {
-    setLoading(true)
     await upgradeRole(uid, "tutor")
-    await getUsersFromDB()
-    setLoading(false)
+    getUsersFromDB()
   }
   const handleEnable = async (uid) => {
-    setLoading(true)
     await enableUser(uid)
-    await getUsersFromDB()
-    setLoading(false)
+    getUsersFromDB()
   }
   const handleDisable = async (uid) => {
-    setLoading(true)
     if (currentUser.uid === uid) {
       alert("You cannot disable yourself.")
     } else {
       await disableUser(uid)
-      await getUsersFromDB()
+      getUsersFromDB()
     }
     setLoading(false)
   }
