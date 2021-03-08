@@ -43,8 +43,14 @@ export const getMany = async (categories) => {
       cur = cur.where("level", "==", level)
       cur = cur.where("type", "==", type)
 
-      if (chunkTopics[i] > 0) {
-        cur = cur.where("topic", "in", chunkTopics[i])
+      if (chunkTopics.length > 0) {
+        if (chunkTopics.length === 1) {
+          cur = cur.where("topic", "in", chunkTopics[i])
+        } else {
+          cur = cur.where("topic", "in", [chunkTopics[i]])
+        }
+      } else {
+        cur = cur.where("topic", "==", chunkTopics[0][0])
       }
 
       const snapshot = await cur.get()

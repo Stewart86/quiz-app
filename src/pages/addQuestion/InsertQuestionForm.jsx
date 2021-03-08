@@ -36,7 +36,6 @@ export const InsertQuestionForm = ({
           value={question}
           className={classes.editor}
           onChange={handleEditorChange}
-          theme={{ background: classes.editor.backgroundColor }}
           placeholder={`Enter your ${editorTitle.toLowerCase()} here...`}
           uploadImage={async (file) => handleUploadImage(file)}
         />

@@ -137,7 +137,7 @@ export const getAllUsers = async (type) => {
   } else if (type === "users") {
     return Object.keys(result)
       .map((key, i) => result[key])
-      .filter((x) => x.student || x.trial)
+      .filter((x) => !x.admin && !x.tutor)
   } else {
     return result
   }
