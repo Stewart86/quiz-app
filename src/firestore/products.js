@@ -1,4 +1,5 @@
-import { db } from "../firebase"
+import { db, functions } from "../firebase"
+
 import { loadStripe } from "@stripe/stripe-js"
 
 export const get = async () => {
@@ -43,4 +44,12 @@ export const checkoutSession = async (currentUser) => {
         stripe.redirectToCheckout({ sessionId })
       })
   })
+}
+
+export const createPortalLink = async () => {
+  const functionRef = functions.httpsCallable(
+    "ext-firestore-stripe-subscriptions-createPortalLink"
+  )
+  const { data } = await functionRef({ returnUrl: window.location.origin })
+  window.location.assign(data.url)
 }

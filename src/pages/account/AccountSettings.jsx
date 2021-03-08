@@ -16,13 +16,12 @@ import {
 } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
 import { addOneMonth, dayToTrialEnd, daysToRenew } from "../../helper/utilities"
+import { checkoutSession, createPortalLink } from "../../firestore/products"
 import { convertToStudent, getUser, renewOne } from "../../firestore/users"
 
 import { AuthContext } from "../../components/AuthProvider"
 import { Loading } from "../../components"
-import { PaymentModal } from "../../components/PaymentModal"
 import { Reset } from "./Reset"
-import { checkoutSession } from "../../firestore/products"
 import { makeStyles } from "@material-ui/core/styles"
 import { sendVerificationEmail } from "../../auth/auth"
 
@@ -36,9 +35,7 @@ export const AccountSettings = () => {
   const classes = useStyles()
 
   const [user, setUser] = useState(null)
-  const [openStripe, setOpenStripe] = useState(true)
   const [openInfo, setOpenInfo] = useState(false)
-  const [mode, setMode] = useState(null)
   const [resend, setResend] = useState(false)
   const [openResetPassword, setOpenResetPassword] = useState(false)
 
@@ -60,33 +57,7 @@ export const AccountSettings = () => {
     }
   }, [currentUser, roles])
 
-  const getDbUser = async (uid) => {
-    const dbUser = await getUser(uid)
-    setUser(dbUser)
-  }
-
-  const handleOpen = (mode) => {
-    setMode(mode)
-    setOpenStripe(true)
-  }
-
-  const handleClose = () => {
-    setOpenStripe(false)
-  }
-
   const handlePayment = async () => {
-    if (mode === "renew") {
-      const newDate = addOneMonth(user.expireStart.seconds)
-      await renewOne(user.id, newDate)
-    } else if (mode === "subscribe") {
-      await convertToStudent(user.id)
-    }
-    await getDbUser(user.id)
-    setOpenStripe(false)
-    setOpenInfo(true)
-  }
-
-  const handleStripeTest = async () => {
     await checkoutSession(currentUser)
   }
 
@@ -101,6 +72,10 @@ export const AccountSettings = () => {
 
   if (!user) {
     return <Loading />
+  }
+
+  const handleStripePortal = async () => {
+    await createPortalLink()
   }
 
   return (
@@ -170,6 +145,21 @@ export const AccountSettings = () => {
                         )}
                       </TableCell>
                     </TableRow>
+                    <TableRow>
+                      <TableCell>
+                        <Typography variant={"button"}>
+                          Subscription Details
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant={"contained"}
+                          color={"primary"}
+                          onClick={handleStripePortal}>
+                          Stripe Portal
+                        </Button>
+                      </TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -201,7 +191,7 @@ export const AccountSettings = () => {
                     </Grid>
                     <Grid item>
                       <Button
-                        onClick={() => handleOpen("subscribe")}
+                        onClick={() => handlePayment("subscribe")}
                         color={"primary"}
                         variant={"contained"}>
                         Subscribe now
@@ -228,7 +218,7 @@ export const AccountSettings = () => {
                     </Grid>
                     <Grid item>
                       <Button
-                        onClick={() => handleOpen("renew")}
+                        onClick={() => handlePayment("renew")}
                         color={"primary"}
                         variant={"contained"}>
                         Renew
@@ -250,7 +240,7 @@ export const AccountSettings = () => {
             {user.isExpired && (
               <Grid item>
                 <Button
-                  onClick={() => handleOpen("subscribe")}
+                  onClick={() => handlePayment("subscribe")}
                   color={"primary"}
                   variant={"contained"}>
                   Subscribe now
@@ -265,19 +255,9 @@ export const AccountSettings = () => {
                 {"Reset Password"}
               </Button>
             </Grid>
-            <Grid item>
-              <Button disabled onClick={handlePayment} color={"secondary"} variant={"contained"}>
-                Delete Account
-              </Button>
-            </Grid>
           </Grid>
         </CardContent>
       </Card>
-      <PaymentModal
-        open={openStripe}
-        handleClose={handleClose}
-        handlePayment={handleStripeTest}
-      />
       <Reset
         open={openResetPassword}
         onClose={() => setOpenResetPassword(false)}

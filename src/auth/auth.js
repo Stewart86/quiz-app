@@ -1,4 +1,4 @@
-import firebase, { auth } from "../firebase"
+import { auth, provider } from "../firebase"
 
 import { CONFIRMATION_EMAIL_REDIRECT } from "../helper/constants"
 import { post } from "../firestore/users"
@@ -33,10 +33,7 @@ export const signout = async () => {
 export const resetPassword = async (oldPassword, newPassword) => {
   try {
     const email = auth.currentUser.email
-    const credential = firebase.auth.EmailAuthProvider.credential(
-      email,
-      oldPassword
-    )
+    const credential = provider.credential(email, oldPassword)
     await auth.currentUser.reauthenticateWithCredential(credential)
     await auth.currentUser.updatePassword(newPassword)
   } catch (e) {
