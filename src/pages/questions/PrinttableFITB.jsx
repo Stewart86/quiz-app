@@ -14,6 +14,7 @@ export const PrinttableFITB = ({ question, count }) => {
         <ConvertToFillInTheBlank
           onSelectionChange={(i, v) => {}}
           rawText={question.question}
+          printable
         />
       </CardContent>
     </Card>
