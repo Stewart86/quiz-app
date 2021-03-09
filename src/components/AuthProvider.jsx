@@ -3,6 +3,7 @@ import React, { createContext, useEffect, useState } from "react"
 import { Loading } from "./Loading"
 import { auth } from "../firebase"
 import { getRole } from "../firestore/users"
+import { isSubscriptionActive } from "../firestore/products"
 
 export const AuthContext = createContext()
 
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }) => {
     const getRolesFromDb = async () => {
       if (currentUser) {
         setRoles(await getRole(currentUser.uid))
+        await isSubscriptionActive(currentUser.uid)
       }
     }
     getRolesFromDb()

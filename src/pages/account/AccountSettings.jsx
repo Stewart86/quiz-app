@@ -15,13 +15,13 @@ import {
   Typography,
 } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
-import { addOneMonth, dayToTrialEnd, daysToRenew } from "../../helper/utilities"
 import { checkoutSession, createPortalLink } from "../../firestore/products"
-import { convertToStudent, getUser, renewOne } from "../../firestore/users"
+import { dayToTrialEnd, daysToRenew } from "../../helper/utilities"
 
 import { AuthContext } from "../../components/AuthProvider"
 import { Loading } from "../../components"
 import { Reset } from "./Reset"
+import { getUser } from "../../firestore/users"
 import { makeStyles } from "@material-ui/core/styles"
 import { sendVerificationEmail } from "../../auth/auth"
 
@@ -35,7 +35,6 @@ export const AccountSettings = () => {
   const classes = useStyles()
 
   const [user, setUser] = useState(null)
-  const [openInfo, setOpenInfo] = useState(false)
   const [resend, setResend] = useState(false)
   const [openResetPassword, setOpenResetPassword] = useState(false)
 
@@ -227,14 +226,6 @@ export const AccountSettings = () => {
                   </>
                 )}
               </>
-            )}
-            {openInfo && (
-              <Grid item>
-                <Typography>
-                  It might take awhile for the system to refresh. Check back
-                  again later or refresh the browser for update.
-                </Typography>
-              </Grid>
             )}
             <Divider />
             {user.isExpired && (
