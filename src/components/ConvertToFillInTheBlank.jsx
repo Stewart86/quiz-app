@@ -1,4 +1,4 @@
-import { Box, Chip, Paper, TextField, Typography } from "@material-ui/core"
+import { Chip, Paper, TextField, Typography } from "@material-ui/core"
 import React, { Fragment } from "react"
 
 import { SelectionField } from "./SelectionField"
@@ -60,9 +60,9 @@ export const ConvertToFillInTheBlank = ({
         if (options.length > 0) {
           if (printable) {
             newQuestion.push(
-              <Paper component={"span"} elevation={5} style={{padding: 5}}>
+              <Paper component={"span"} elevation={5} style={{ padding: 5 }}>
                 {options.map((v) => (
-                  <span style={{ margin: 10, fontSize:"1.3em" }}>{v}</span>
+                  <span style={{ margin: 10, fontSize: "1.3em" }}>{v}</span>
                 ))}
               </Paper>
             )
