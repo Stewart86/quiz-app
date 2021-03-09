@@ -56,18 +56,22 @@ export const createPortalLink = async () => {
 
 export const isSubscriptionActive = async (uid) => {
   let active = false
-  db.collection("users")
+  let data = null
+  const subRef = db
+    .collection("users")
     .doc(uid)
     .collection("subscriptions")
     .where("status", "in", ["trialing", "active"])
-    .onSnapshot(async (snapshot) => {
-      // In this implementation we only expect one active or trialing subscription to exist.
-      const doc = snapshot.docs[0]
-      console.log(doc)
-      if (doc) {
-        active = true
-        console.log(doc.id, " => ", doc.data())
-      }
-    })
-  return active
+
+  const snapshot = await subRef.get()
+
+  snapshot.forEach((doc) => {
+    if (doc && doc.exists) {
+      console.log(doc.data())
+      active = true
+      data = doc.data()
+    }
+  })
+
+  return { active, data }
 }

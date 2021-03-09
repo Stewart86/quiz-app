@@ -1,6 +1,8 @@
 import { dayToTrialEnd, daysToRenew } from "../helper/utilities"
 import firebase, { db } from "../firebase"
 
+import { isSubscriptionActive } from "./products"
+
 export const post = async (user) => {
   const id = user.id
   user.createdOn = firebase.firestore.FieldValue.serverTimestamp()
@@ -73,7 +75,14 @@ export const getUser = async (uid) => {
   const userCollection = db.collection("users").doc(uid)
   try {
     const user = await userCollection.get()
-    return user.data()
+    let dbUser = user.data()
+
+    const subscription = await isSubscriptionActive(uid)
+    if (subscription.active) {
+      dbUser = { ...user.data(), ...subscription.data }
+    }
+
+    return dbUser
   } catch (error) {
     console.error(error)
   }
