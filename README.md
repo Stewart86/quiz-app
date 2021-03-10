@@ -59,19 +59,19 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Tasks to complete by priority
 
 1. Legal Documentations
-  - terms and conditions
-  - privacy policies (must be inline with data usage and retention)
+    - terms and conditions
+    - privacy policies (must be inline with data usage and retention)
 2. Assets
-  - favicons
-  - logo
-  - offical App Name
-  - required images
+    - favicons
+    - logo
+    - offical App Name
+    - required images
 3. Themes
-  - primary color
-  - secondary color
-  - header font
-  - body text font
-  - alternative text font
+    - primary color
+    - secondary color
+    - header font
+    - body text font
+    - alternative text font
 4. Pre-deployment checklist
 5. Post-deployment checklist
 6. Maintenence Guide
