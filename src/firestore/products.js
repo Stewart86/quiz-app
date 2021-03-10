@@ -23,7 +23,8 @@ export const checkoutSession = async (currentUser) => {
     .doc(currentUser.uid)
     .collection("checkout_sessions")
     .add({
-      price: "price_1ISNO7AhlGA96d4eVM3dwyWP",
+      price: "price_1ITRvWHSBlztNPVochBJjTrK",
+      allow_promotion_codes: true,
       success_url: window.location.origin,
       cancel_url: window.location.origin,
     })
@@ -39,7 +40,7 @@ export const checkoutSession = async (currentUser) => {
       // We have a session, let's redirect to Checkout
       // Init Stripe
       loadStripe(
-        "pk_test_51ISMnzAhlGA96d4e6jQvCCFReCKSAZsonqn7nammjSuMpqfteJQZiqoXFo2wmUKVXNXGtVDwmtQxq05lkiIRT5JW001zHApot2"
+        "pk_test_51ITOYHHSBlztNPVoyJM9n6bhlbbly2CUcFJHPCHZL4MiDCVBbLliONPTVEWT8sSN9bMl2dVrkDP48wKdi3Y1zqk800zbT37vHA"
       ).then((stripe) => {
         stripe.redirectToCheckout({ sessionId })
       })
