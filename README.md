@@ -42,6 +42,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - tutor / admin account will be created with admin rights
 - roles will be Admin, Tutor, Student (since trial is managed by Stripe)
 - rewrite logic with `roles.student` and `roles.trial` to just `roles.student`
+- access control for admin / tutor page to check if document exist in DB
+- access for admin to check `isAdmin` field in DB
 - rewrite router to remove `roles.trial`
 - user table changes (update user table with the new data from Stripe)
   - including Customer Portal redirect
