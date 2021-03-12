@@ -1,11 +1,10 @@
 import { Container, Grid, Typography, makeStyles } from "@material-ui/core"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, } from "react"
 
 import { AuthContext } from "../../components/AuthProvider"
 import { QUESTION_TYPE } from "../../helper/enum"
 import { Redirect } from "react-router"
 import { TypeCircle } from "./TypeCircle"
-import { getUser } from "../../firestore/users"
 import placeholder from "../../images/placeholder.png"
 
 const useStyles = makeStyles((theme) => ({
@@ -16,25 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const TypeSelection = ({ handleSetType }) => {
   const classes = useStyles()
-  const [userName, setUserName] = useState()
-
   const { currentUser } = useContext(AuthContext)
-
-  useEffect(() => {
-    let mounted = true
-    const getUserNameFromDb = async (user) => {
-      if (user) {
-        const dbUser = await getUser(user.uid)
-        if (mounted) {
-          setUserName(dbUser.name)
-        }
-      }
-    }
-    getUserNameFromDb(currentUser)
-    return () => {
-      mounted = false
-    }
-  }, [currentUser])
 
   if (!currentUser.emailVerified) {
     return <Redirect to={"/account/settings"} />
@@ -49,7 +30,7 @@ export const TypeSelection = ({ handleSetType }) => {
         spacing={6}
         container>
         <Grid container justify={"center"} item xs={12}>
-          <Typography variant={"h3"}>Welcome {userName}</Typography>
+          <Typography variant={"h3"}>Welcome {currentUser.displayName}</Typography>
         </Grid>
         <Grid container justify={"center"} item xs={12}>
           <Typography variant={"h5"}>

@@ -6,13 +6,13 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext } from "react"
 
 import { AccountCircleOutlined } from "@material-ui/icons"
 import { AuthContext } from "./AuthProvider"
-import { getUser } from "../firestore/users"
 import { makeStyles } from "@material-ui/core/styles"
 import { signout } from "../auth/auth"
+import { useHistory } from "react-router"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,30 +33,14 @@ const useStyles = makeStyles((theme) => ({
 
 export const Nav = () => {
   const classes = useStyles()
-  const [userName, setUserName] = useState(null)
-  const { currentUser, roles } = useContext(AuthContext)
+  const history = useHistory()
+  const { currentUser } = useContext(AuthContext)
 
-  useEffect(() => {
-    let mounted = true
-    const getUserNameFromDb = async (user) => {
-      if (user) {
-        const dbUser = await getUser(user.uid)
-        if (mounted) {
-          if (dbUser) {
-            setUserName(dbUser.name)
-          }
-        }
-      }
-    }
-    getUserNameFromDb(currentUser)
-    return () => {
-      mounted = false
-    }
-  }, [currentUser])
-
-  const handleLogout = () => {
-    signout()
+  const handleLogout = async () => {
+    await signout()
+    history.push("/")
   }
+
   return (
     <div className={classes.root}>
       <AppBar position='fixed'>
@@ -64,7 +48,7 @@ export const Nav = () => {
           <Typography className={classes.title} variant='h6'>
             Quiz App
           </Typography>
-          {roles && roles.admin && (
+          {currentUser.role === "staff" && currentUser.db.isAdmin && (
             <>
               <Button
                 className={classes.btn}
@@ -80,17 +64,15 @@ export const Nav = () => {
               </Button>
             </>
           )}
-          {roles && (roles.tutor || roles.admin) && (
+          {currentUser.role === "staff" && (
             <Button className={classes.btn} href='/admin' color='inherit'>
               Manage
             </Button>
           )}
-          {roles && (roles.tutor || roles.student || roles.trial) && (
-            <Button className={classes.btn} href='/question' color='inherit'>
-              Quiz
-            </Button>
-          )}
-          {userName ? (
+          <Button className={classes.btn} href='/question' color='inherit'>
+            Quiz
+          </Button>
+          {currentUser.displayName ? (
             <>
               <Button
                 className={classes.btn}
@@ -100,7 +82,7 @@ export const Nav = () => {
               </Button>
               <Typography
                 display={"block"}
-                className={classes.greeting}>{`Hi ${userName}`}</Typography>
+                className={classes.greeting}>{`Hi ${currentUser.displayName}`}</Typography>
               <Tooltip title={"Account Settings"}>
                 <IconButton
                   href={"/account/settings"}

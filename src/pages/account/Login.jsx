@@ -54,7 +54,8 @@ export const Login = () => {
   const handleWarningClose = () => {
     setWarning({ open: false, msg: "" })
   }
-  if (currentUser) {
+
+  if (currentUser && currentUser.uid) {
     history.push("/admin")
     return null
   }

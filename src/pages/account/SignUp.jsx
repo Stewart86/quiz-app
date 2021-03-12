@@ -1,19 +1,15 @@
 import {
   Button,
-  Card,
-  CardActions,
-  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
-  Grid,
   TextField,
   Typography,
 } from "@material-ui/core"
 import React, { useState } from "react"
 
-import { getRole } from "../../firestore/users"
 import { makeStyles } from "@material-ui/core/styles"
 import { signup } from "../../auth/auth"
 import { useHistory } from "react-router"
@@ -31,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const SignUp = () => {
+export const SignUp = ({ open, handleClose, addStaff = false }) => {
   const classes = useStyles()
   const history = useHistory()
 
@@ -118,141 +114,117 @@ export const SignUp = () => {
     } else if (!accountDetails.password2) {
       setNameHelper("Confirm password cannot be empty")
     } else {
-      const uid = await signup(
+       await signup(
         accountDetails.name,
         accountDetails.email,
         accountDetails.phone,
-        accountDetails.password2
+        accountDetails.password2,
+        addStaff
       )
-      await getRole(uid)
       setOpenThankYou(true)
     }
   }
 
   return (
-    <Grid item className={classes.root}>
-      <Card>
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography align={"center"} variant={"h4"}>
-                {"Create an account"}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                onChange={(event) =>
-                  onHandleChange({ name: event.target.value })
-                }
-                onKeyPress={async (event) =>
-                  event.key === "Enter" && (await handleSubmit())
-                }
-                onBlur={nameValidation}
-                error={nameHelper.error}
-                helper={nameHelper.msg}
-                fullWidth
-                required
-                color={"primary"}
-                label={"Name"}
-                variant={"outlined"}>
-                {"Name"}
-              </TextField>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                onChange={(event) =>
-                  onHandleChange({ phone: event.target.value })
-                }
-                onKeyPress={async (event) =>
-                  event.key === "Enter" && (await handleSubmit())
-                }
-                onBlur={phoneValidation}
-                error={phoneHelper.error}
-                helperText={phoneHelper.msg}
-                required
-                fullWidth
-                color={"primary"}
-                label={"Phone"}
-                variant={"outlined"}>
-                {"Email"}
-              </TextField>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography gutterBottom variant={"h6"}>
-                {"Login Credential"}
-              </Typography>
-              <TextField
-                onChange={(event) =>
-                  onHandleChange({ email: event.target.value })
-                }
-                onKeyPress={async (event) =>
-                  event.key === "Enter" && (await handleSubmit())
-                }
-                onBlur={emailValidation}
-                error={emailHelper.error}
-                helperText={emailHelper.msg}
-                fullWidth
-                required
-                color={"primary"}
-                label={"Email"}
-                type={"email"}
-                variant={"outlined"}>
-                {"Email"}
-              </TextField>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                onChange={(event) =>
-                  onHandleChange({ password1: event.target.value })
-                }
-                onKeyPress={async (event) =>
-                  event.key === "Enter" && (await handleSubmit())
-                }
-                onBlur={passwordValidation}
-                error={passwordHelper.error}
-                helperText={passwordHelper.msg}
-                required
-                fullWidth
-                color={"primary"}
-                type={"password"}
-                label={"Password"}
-                variant={"outlined"}>
-                {"Password"}
-              </TextField>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                onChange={(event) =>
-                  onHandleChange({ password2: event.target.value })
-                }
-                onKeyPress={async (event) =>
-                  event.key === "Enter" && (await handleSubmit())
-                }
-                onBlur={passwordConfirmCheck}
-                error={confirmPasswordHelper.error}
-                helperText={confirmPasswordHelper.msg}
-                required
-                fullWidth
-                color={"primary"}
-                type={"password"}
-                label={"Confirm Password"}
-                variant={"outlined"}>
-                {"Confirm Passward"}
-              </TextField>
-              <Typography>todo: t&c</Typography>
-            </Grid>
-          </Grid>
-        </CardContent>
-        <CardActions disableSpacing>
+    <>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent className={classes.textFieldWrapper}>
+          <DialogTitle>{"Create an account"}</DialogTitle>
+          <TextField
+            onChange={(event) => onHandleChange({ name: event.target.value })}
+            onKeyPress={async (event) =>
+              event.key === "Enter" && (await handleSubmit())
+            }
+            onBlur={nameValidation}
+            error={nameHelper.error}
+            helper={nameHelper.msg}
+            fullWidth
+            required
+            color={"primary"}
+            label={"Name"}
+            variant={"outlined"}>
+            {"Name"}
+          </TextField>
+          <TextField
+            onChange={(event) => onHandleChange({ phone: event.target.value })}
+            onKeyPress={async (event) =>
+              event.key === "Enter" && (await handleSubmit())
+            }
+            onBlur={phoneValidation}
+            error={phoneHelper.error}
+            helperText={phoneHelper.msg}
+            required
+            fullWidth
+            color={"primary"}
+            label={"Phone"}
+            variant={"outlined"}>
+            {"Email"}
+          </TextField>
+          <DialogContentText>{"Login Credential"}</DialogContentText>
+          <TextField
+            onChange={(event) => onHandleChange({ email: event.target.value })}
+            onKeyPress={async (event) =>
+              event.key === "Enter" && (await handleSubmit())
+            }
+            onBlur={emailValidation}
+            error={emailHelper.error}
+            helperText={emailHelper.msg}
+            fullWidth
+            required
+            color={"primary"}
+            label={"Email"}
+            type={"email"}
+            variant={"outlined"}>
+            {"Email"}
+          </TextField>
+          <TextField
+            onChange={(event) =>
+              onHandleChange({ password1: event.target.value })
+            }
+            onKeyPress={async (event) =>
+              event.key === "Enter" && (await handleSubmit())
+            }
+            onBlur={passwordValidation}
+            error={passwordHelper.error}
+            helperText={passwordHelper.msg}
+            required
+            fullWidth
+            color={"primary"}
+            type={"password"}
+            label={"Password"}
+            variant={"outlined"}>
+            {"Password"}
+          </TextField>
+          <TextField
+            onChange={(event) =>
+              onHandleChange({ password2: event.target.value })
+            }
+            onKeyPress={async (event) =>
+              event.key === "Enter" && (await handleSubmit())
+            }
+            onBlur={passwordConfirmCheck}
+            error={confirmPasswordHelper.error}
+            helperText={confirmPasswordHelper.msg}
+            required
+            fullWidth
+            color={"primary"}
+            type={"password"}
+            label={"Confirm Password"}
+            variant={"outlined"}>
+            {"Confirm Passward"}
+          </TextField>
+          <Typography>todo: t&c</Typography>
+        </DialogContent>
+        <DialogActions>
           <Button
             onClick={handleSubmit}
             className={classes.submitBtn}
             color={"primary"}
             variant={"contained"}>
-            {"Create my account"}
+            {"Create account"}
           </Button>
-        </CardActions>
-      </Card>
+        </DialogActions>
+      </Dialog>
       <Dialog open={openThankYou} onClose={() => setOpenThankYou(false)}>
         <DialogTitle>Thank you for Signing up!</DialogTitle>
         <DialogContent>
@@ -268,6 +240,6 @@ export const SignUp = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Grid>
+    </>
   )
 }

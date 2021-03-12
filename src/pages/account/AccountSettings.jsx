@@ -17,13 +17,13 @@ import {
 import React, { useContext, useEffect, useState } from "react"
 import { checkoutSession, createPortalLink } from "../../firestore/products"
 import { dayToTrialEnd, daysToRenew } from "../../helper/utilities"
+import { sendVerificationEmail, signout } from "../../auth/auth"
 
 import { AuthContext } from "../../components/AuthProvider"
 import { Loading } from "../../components"
 import { Reset } from "./Reset"
-import { getUser } from "../../firestore/users"
+import { getStudent } from "../../firestore/users"
 import { makeStyles } from "@material-ui/core/styles"
-import { sendVerificationEmail } from "../../auth/auth"
 
 const useStyles = makeStyles((theme) => ({
   notice: {
@@ -34,27 +34,10 @@ const useStyles = makeStyles((theme) => ({
 export const AccountSettings = () => {
   const classes = useStyles()
 
-  const [user, setUser] = useState(null)
   const [resend, setResend] = useState(false)
   const [openResetPassword, setOpenResetPassword] = useState(false)
 
-  const { currentUser, roles } = useContext(AuthContext)
-
-  useEffect(() => {
-    let mounted = true
-    const getDbUser = async (user) => {
-      if (user) {
-        const dbUser = await getUser(user.uid)
-        if (mounted) {
-          setUser(dbUser)
-        }
-      }
-    }
-    getDbUser(currentUser)
-    return () => {
-      mounted = false
-    }
-  }, [currentUser, roles])
+  const { currentUser } = useContext(AuthContext)
 
   const handlePayment = async () => {
     await checkoutSession(currentUser)
@@ -69,7 +52,11 @@ export const AccountSettings = () => {
     setOpenResetPassword(true)
   }
 
-  if (!user) {
+  const handleLogout = async () => {
+    await signout()
+  }
+
+  if (!currentUser) {
     return <Loading />
   }
 
@@ -91,36 +78,38 @@ export const AccountSettings = () => {
                       <TableCell>
                         <Typography variant={"button"}>{"Name"}</Typography>
                       </TableCell>
-                      <TableCell>{user.name}</TableCell>
+                      <TableCell>{currentUser.displayName}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
                         <Typography variant={"button"}>{"Phone"}</Typography>
                       </TableCell>
-                      <TableCell>{user.phone}</TableCell>
+                      <TableCell>{currentUser.phone}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
                         <Typography variant={"button"}>{"Email"}</Typography>
                       </TableCell>
-                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{currentUser.email}</TableCell>
                     </TableRow>
-                    {roles && (
-                      <TableRow>
-                        <TableCell>
-                          <Typography variant={"button"}>
-                            {"Registration Status"}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {roles.admin && "Admin "}
-                          {roles.tutor && "Tutor "}
-                          {roles.student && "Paid "}
-                          {roles.trial && "Trial "}
-                          {!user.isEnabled && "Account Disabled"}
-                        </TableCell>
-                      </TableRow>
-                    )}
+                    <TableRow>
+                      <TableCell>
+                        <Typography variant={"button"}>
+                          {"Registration Status"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {currentUser.db && currentUser.db.isAdmin && "Admin "}
+                        {currentUser.role === "staff" && "Tutor "}
+                        {currentUser.role === "student" &&
+                          currentUser.status === "active" &&
+                          "Paid "}
+                        {currentUser.role === "student" &&
+                          currentUser.status === "trailing" &&
+                          "Trial "}
+                        {currentUser.db && !currentUser.db.isEnabled && "Account Disabled"}
+                      </TableCell>
+                    </TableRow>
                     <TableRow>
                       <TableCell>
                         <Typography variant={"button"}>Verified</Typography>
@@ -163,7 +152,7 @@ export const AccountSettings = () => {
                 </Table>
               </TableContainer>
             </Grid>
-            {roles && (roles.student || roles.trial) && (
+            {currentUser.role === "student" && (
               <>
                 <Grid item>
                   <Divider />
@@ -171,7 +160,7 @@ export const AccountSettings = () => {
                 <Grid item>
                   <Typography variant={"h6"}>Days Remaining</Typography>
                 </Grid>
-                {roles.trial && (
+                {/* {roles.trial && (
                   <>
                     <Grid item>
                       <Typography
@@ -197,8 +186,8 @@ export const AccountSettings = () => {
                       </Button>
                     </Grid>
                   </>
-                )}
-                {roles && roles.student && (
+                )} */}
+                {/* {roles && roles.student && (
                   <>
                     <Grid item>
                       <Typography
@@ -224,26 +213,24 @@ export const AccountSettings = () => {
                       </Button>
                     </Grid>
                   </>
-                )}
+                )} */}
               </>
             )}
             <Divider />
-            {user.isExpired && (
-              <Grid item>
-                <Button
-                  onClick={() => handlePayment("subscribe")}
-                  color={"primary"}
-                  variant={"contained"}>
-                  Subscribe now
-                </Button>
-              </Grid>
-            )}
             <Grid item>
               <Button
                 onClick={handleResetPassword}
                 color={"primary"}
                 variant={"contained"}>
                 {"Reset Password"}
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                onClick={handleLogout}
+                color={"primary"}
+                variant={"contained"}>
+                {"Logout"}
               </Button>
             </Grid>
           </Grid>
