@@ -14,34 +14,19 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core"
-import React, { useContext, useEffect, useState } from "react"
-import { checkoutSession, createPortalLink } from "../../firestore/products"
-import { dayToTrialEnd, daysToRenew } from "../../helper/utilities"
+import React, { useContext, useState } from "react"
 import { sendVerificationEmail, signout } from "../../auth/auth"
 
 import { AuthContext } from "../../components/AuthProvider"
 import { Loading } from "../../components"
 import { Reset } from "./Reset"
-import { getStudent } from "../../firestore/users"
-import { makeStyles } from "@material-ui/core/styles"
-
-const useStyles = makeStyles((theme) => ({
-  notice: {
-    color: theme.palette.warning.main,
-  },
-}))
+import { createPortalLink } from "../../firestore/products"
 
 export const AccountSettings = () => {
-  const classes = useStyles()
-
   const [resend, setResend] = useState(false)
   const [openResetPassword, setOpenResetPassword] = useState(false)
 
   const { currentUser } = useContext(AuthContext)
-
-  const handlePayment = async () => {
-    await checkoutSession(currentUser)
-  }
 
   const handleVerify = async () => {
     await sendVerificationEmail(currentUser)
@@ -76,7 +61,9 @@ export const AccountSettings = () => {
                   <TableBody>
                     <TableRow>
                       <TableCell>
-                        <Typography variant={"button"}>{"Name"}</Typography>
+                        <Typography variant={"button"}>
+                          {"Display Name"}
+                        </Typography>
                       </TableCell>
                       <TableCell>{currentUser.displayName}</TableCell>
                     </TableRow>
@@ -84,7 +71,7 @@ export const AccountSettings = () => {
                       <TableCell>
                         <Typography variant={"button"}>{"Phone"}</Typography>
                       </TableCell>
-                      <TableCell>{currentUser.phone}</TableCell>
+                      <TableCell>{currentUser.db.phone}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
@@ -95,7 +82,9 @@ export const AccountSettings = () => {
                     <TableRow>
                       <TableCell>
                         <Typography variant={"button"}>
-                          {"Registration Status"}
+                          {currentUser.role === "staff"
+                            ? "Staff Role"
+                            : "Registration Status"}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -107,7 +96,9 @@ export const AccountSettings = () => {
                         {currentUser.role === "student" &&
                           currentUser.status === "trailing" &&
                           "Trial "}
-                        {currentUser.db && !currentUser.db.isEnabled && "Account Disabled"}
+                        {currentUser.db &&
+                          !currentUser.db.isEnabled &&
+                          "Account Disabled"}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -133,21 +124,23 @@ export const AccountSettings = () => {
                         )}
                       </TableCell>
                     </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <Typography variant={"button"}>
-                          Subscription Details
-                        </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant={"contained"}
-                          color={"primary"}
-                          onClick={handleStripePortal}>
-                          Stripe Portal
-                        </Button>
-                      </TableCell>
-                    </TableRow>
+                    {currentUser.role === "student" && (
+                      <TableRow>
+                        <TableCell>
+                          <Typography variant={"button"}>
+                            Subscription Details
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            variant={"contained"}
+                            color={"primary"}
+                            onClick={handleStripePortal}>
+                            Stripe Portal
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

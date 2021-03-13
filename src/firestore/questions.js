@@ -80,9 +80,6 @@ export const getOne = async (id) => {
 }
 
 export const updateOne = async (id, question) => {
-  // convert P1 to Primary 1
-  const level = levelLookup[question.level]
-  question.level = level
   const cur = db.collection("questions").doc(id)
   await cur.update(question)
 }

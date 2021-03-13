@@ -54,6 +54,7 @@ export const resetPassword = async (oldPassword, newPassword) => {
   }
   return { error: false }
 }
+
 export const forgetPassword = async (email) => {
   try {
     await auth.sendPasswordResetEmail(email)
@@ -70,7 +71,7 @@ export const confirmPasswordReset = async (code, email) => {
   }
 }
 
-export const sendVerificationEmail = async (user) => {
+export const sendVerificationEmail = async () => {
   try {
     await auth.currentUser.sendEmailVerification({
       url: CONFIRMATION_EMAIL_REDIRECT,

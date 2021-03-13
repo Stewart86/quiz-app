@@ -2,11 +2,11 @@ import { Add, CancelOutlined, CheckCircleOutline } from "@material-ui/icons"
 import { Button, Fab, Grid, Typography } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
 import {
+  changeRole,
   disableUser,
   enableUser,
   getAllAdmins,
   getAllUsers,
-  upgradeRole,
 } from "../../../firestore/users"
 
 import { AuthContext } from "../../../components/AuthProvider"
@@ -54,17 +54,6 @@ export const Manage = () => {
 
   const { currentUser } = useContext(AuthContext)
 
-  const getUsersFromDB = async () => {
-    let Users
-    if (type === "staff") {
-      Users = convertObjToArr(await getAllAdmins())
-    } else {
-      Users = convertObjToArr(await getAllUsers())
-    }
-    setUsers(Users)
-    setLoading(false)
-  }
-
   useEffect(() => {
     const getUsersFromDB = async () => {
       let Users
@@ -78,38 +67,34 @@ export const Manage = () => {
     }
     getUsersFromDB()
     console.log("effect")
-  }, [type])
+  }, [type, loading])
 
   const handleToAdmin = async (uid) => {
     setLoading(true)
-    await upgradeRole(uid, "admin")
-    await getUsersFromDB()
-    setLoading(false)
+    await changeRole(uid, "admin")
   }
 
   const handleToTutor = async (uid) => {
-    setLoading(true)
-    await upgradeRole(uid, "tutor")
-    await getUsersFromDB()
-    setLoading(false)
+    if (currentUser.uid === uid) {
+      alert("You cannot downgrade yourself.")
+    } else {
+      setLoading(true)
+      await changeRole(uid, "tutor")
+    }
   }
 
   const handleEnable = async (uid) => {
     setLoading(true)
     await enableUser(uid)
-    await getUsersFromDB()
-    setLoading(false)
   }
 
   const handleDisable = async (uid) => {
-    setLoading(true)
     if (currentUser.uid === uid) {
       alert("You cannot disable yourself.")
     } else {
+      setLoading(true)
       await disableUser(uid)
-      await getUsersFromDB()
     }
-    setLoading(false)
   }
 
   const handleOpenAddUserModal = () => {

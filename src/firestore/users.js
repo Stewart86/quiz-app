@@ -29,15 +29,17 @@ export const deleteUser = async (uid) => {
   await userColl.delete()
 }
 
-export const upgradeRole = async (uid, role) => {
-  // todo: remove stripe cust id and data in firestore
-  // reset user for role
-  const userRef = db.collection("users").doc(uid)
-  await userRef.update({
-    expireStart: firebase.firestore.FieldValue.delete(),
-    createdOn: firebase.firestore.FieldValue.serverTimestamp(),
+export const changeRole = async (uid, role) => {
+  let update = {
     updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
-  })
+  }
+  if (role === "tutor") {
+    update.isAdmin = firebase.firestore.FieldValue.delete()
+  } else {
+    update.isAdmin = true
+  }
+  const userRef = db.collection("admin").doc(uid)
+  await userRef.update(update)
 }
 
 export const renewOne = async (uid, date) => {
@@ -121,9 +123,7 @@ export const getAllUsers = async () => {
     }
   })
 
-
-  return Object.keys(result)
-    .map((key, i) => result[key])
+  return Object.keys(result).map((key, i) => result[key])
 }
 
 export const disableUser = async (uid) => {
