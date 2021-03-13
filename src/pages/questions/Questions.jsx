@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 
-import { DueDateReminder } from "../../components/DueDateReminder"
 import { Loading } from "../../components"
 import { Printable } from "./Printable"
 import { QuestionsSelection } from "./QuestionsSelection"
@@ -11,6 +10,18 @@ import { questionComponents as components } from "../../helper/enum"
 import { getMany } from "../../firestore/questions"
 import { isEmpty } from "lodash"
 import { questionKeyRename } from "../../helper/utilities"
+
+// import { DueDateReminder } from "../../components/DueDateReminder"
+
+
+
+
+
+
+
+
+
+
 
 export const Questions = () => {
   const [questions, setQuestions] = useState({})
@@ -97,7 +108,7 @@ export const Questions = () => {
         onClose={() => setOpenSnackBar(false)}
         autoHideDuration={3000}
       />
-      <DueDateReminder />
+      {/* <DueDateReminder /> */}
     </>
   )
 }

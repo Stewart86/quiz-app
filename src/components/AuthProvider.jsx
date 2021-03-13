@@ -3,6 +3,7 @@ import { getStaff, getStudent } from "../firestore/users"
 
 import { AskToVerify } from "./AskToVerify"
 import { Loading } from "./Loading"
+import { SubscribeToTrial } from "./SubscribeToTrial"
 import { auth } from "../firebase"
 import { isEmpty } from "lodash"
 
@@ -45,6 +46,10 @@ export const AuthProvider = ({ children }) => {
           role={currentUser.role}
         />
       )}
+      {!isEmpty(currentUser) &&
+        currentUser.role === "student" &&
+        currentUser.emailVerified &&
+        currentUser.db.subscription === false && <SubscribeToTrial currentUser={currentUser} />}
       {children}
     </AuthContext.Provider>
   )

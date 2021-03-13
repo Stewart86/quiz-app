@@ -1,29 +1,38 @@
 import { db, functions } from "../firebase"
 
+import { STRIPE_PK } from "../helper/constants"
 import { loadStripe } from "@stripe/stripe-js"
 
-export const get = async () => {
-  db.collection("products")
+export const getProduct = () => {
+  const test = db
+    .collection("products")
     .where("active", "==", true)
     .get()
     .then(function (querySnapshot) {
-      querySnapshot.forEach(async function (doc) {
-        console.log(doc.id, " => ", doc.data())
-        const priceSnap = await doc.ref.collection("prices").get()
+      let products = []
+      querySnapshot.forEach(async function (prodDoc) {
+        const priceSnap = await prodDoc.ref.collection("prices").get()
         priceSnap.docs.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data())
+          products.push({
+            ...prodDoc.data(),
+            prod_id: prodDoc.id,
+            price_id: doc.id,
+            ...doc.data(),
+          })
         })
       })
+      return products
     })
+  return test.then((res) => res)
 }
 
-export const checkoutSession = async (currentUser) => {
+export const checkoutSession = async (currentUser, price_id) => {
   const docRef = await db
     .collection("users")
     .doc(currentUser.uid)
     .collection("checkout_sessions")
     .add({
-      price: "price_1ITRvWHSBlztNPVochBJjTrK",
+      price: price_id,
       allow_promotion_codes: true,
       success_url: window.location.origin,
       cancel_url: window.location.origin,
@@ -39,9 +48,7 @@ export const checkoutSession = async (currentUser) => {
     if (sessionId)
       // We have a session, let's redirect to Checkout
       // Init Stripe
-      loadStripe(
-        "pk_test_51ITOYHHSBlztNPVoyJM9n6bhlbbly2CUcFJHPCHZL4MiDCVBbLliONPTVEWT8sSN9bMl2dVrkDP48wKdi3Y1zqk800zbT37vHA"
-      ).then((stripe) => {
+      loadStripe(STRIPE_PK).then((stripe) => {
         stripe.redirectToCheckout({ sessionId })
       })
   })

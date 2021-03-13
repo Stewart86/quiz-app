@@ -16,6 +16,7 @@ import React, { useContext, useState } from "react"
 import { forgetPassword, signin } from "../../auth/auth"
 
 import { AuthContext } from "../../components/AuthProvider"
+import { SignUp } from "./SignUp"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { isString } from "lodash"
 import { useHistory } from "react-router-dom"
@@ -27,6 +28,7 @@ export const Login = () => {
   const [warning, setWarning] = useState({ open: false, msg: "" })
   const [openForgetPw, setOpenForgetPw] = useState(false)
   const [email, setEmail] = useState("")
+  const [openSignUp, setOpenSignUp] = useState(false)
 
   const handleLogin = async () => {
     const result = await signin(cred.email, cred.password)
@@ -38,7 +40,7 @@ export const Login = () => {
   }
 
   const handleSignUp = () => {
-    history.push("/account/signup")
+    setOpenSignUp(true)
   }
 
   const handleChange = (obj) => {
@@ -114,7 +116,7 @@ export const Login = () => {
                 onClick={handleSignUp}
                 color={"secondary"}
                 variant={"contained"}>
-                Sign Up
+                Start your trial now
               </Button>
             </Grid>
             <Grid item>
@@ -149,6 +151,7 @@ export const Login = () => {
           <Button onClick={handleForgetPw}>Reset Password</Button>
         </DialogActions>
       </Dialog>
+      <SignUp open={openSignUp} handleClose={() => setOpenSignUp(false)} />
     </>
   )
 }

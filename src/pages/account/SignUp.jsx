@@ -103,17 +103,15 @@ export const SignUp = ({ open, handleClose, addStaff = false }) => {
   }
 
   const handleSubmit = async () => {
-    if (!accountDetails.name) {
-      setNameHelper("Name cannot be empty")
-    } else if (!accountDetails.phone) {
-      setNameHelper("Phone cannot be empty")
-    } else if (!accountDetails.email) {
-      setNameHelper("Email cannot be empty")
-    } else if (!accountDetails.password1) {
-      setNameHelper("Password cannot be empty")
-    } else if (!accountDetails.password2) {
-      setNameHelper("Confirm password cannot be empty")
-    } else {
+    const sumOfErrors = [
+      !nameHelper.error,
+      !phoneHelper.error,
+      !emailHelper.error,
+      !passwordHelper.error,
+      !confirmPasswordHelper.error,
+    ].reduce((a, b) => a + b)
+
+    if (sumOfErrors === 5) {
       await signup(
         accountDetails.name,
         accountDetails.email,
@@ -130,8 +128,8 @@ export const SignUp = ({ open, handleClose, addStaff = false }) => {
   return (
     <>
       <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>{"Create an account"}</DialogTitle>
         <DialogContent className={classes.textFieldWrapper}>
-          <DialogTitle>{"Create an account"}</DialogTitle>
           <TextField
             onChange={(event) => onHandleChange({ name: event.target.value })}
             onKeyPress={async (event) =>
@@ -223,7 +221,7 @@ export const SignUp = ({ open, handleClose, addStaff = false }) => {
             className={classes.submitBtn}
             color={"primary"}
             variant={"contained"}>
-            {"Create account"}
+            {"Create an account"}
           </Button>
         </DialogActions>
       </Dialog>

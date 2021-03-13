@@ -1,5 +1,4 @@
-import { dayToTrialEnd, daysToRenew } from "../helper/utilities"
-import firebase, { auth, db } from "../firebase"
+import firebase, { db } from "../firebase"
 
 import { isSubscriptionActive } from "./products"
 
@@ -79,6 +78,8 @@ export const getStudent = async (uid) => {
     const subscription = await isSubscriptionActive(uid)
     if (subscription.active) {
       dbUser = { ...user.data(), ...subscription.data }
+    } else {
+      dbUser = { ...user.data(), ...{subscription: false} }
     }
 
     return dbUser
