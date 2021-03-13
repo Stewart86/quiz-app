@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   Container,
   Divider,
   Grid,
@@ -13,6 +14,7 @@ import {
   TableContainer,
   TableRow,
   Typography,
+  makeStyles,
 } from "@material-ui/core"
 import React, { useContext, useState } from "react"
 import { sendVerificationEmail, signout } from "../../auth/auth"
@@ -22,9 +24,26 @@ import { Loading } from "../../components"
 import { Reset } from "./Reset"
 import { createPortalLink } from "../../firestore/products"
 
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.palette.success.main,
+    position: "absolute",
+    top: "50%",
+    left: "7%",
+    marginTop: -12,
+    marginLeft: 0,
+  },
+}))
+
 export const AccountSettings = () => {
+  const classes = useStyles()
   const [resend, setResend] = useState(false)
   const [openResetPassword, setOpenResetPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const { currentUser } = useContext(AuthContext)
 
@@ -46,6 +65,7 @@ export const AccountSettings = () => {
   }
 
   const handleStripePortal = async () => {
+    setLoading(true)
     await createPortalLink()
   }
 
@@ -94,8 +114,7 @@ export const AccountSettings = () => {
                           currentUser.status === "active" &&
                           "Paid "}
                         {currentUser.role === "student" &&
-                          currentUser.status === "trailing" &&
-                          "Trial "}
+                          currentUser.db.status}
                         {currentUser.db &&
                           !currentUser.db.isEnabled &&
                           "Account Disabled"}
@@ -132,12 +151,27 @@ export const AccountSettings = () => {
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Button
-                            variant={"contained"}
-                            color={"primary"}
-                            onClick={handleStripePortal}>
-                            Stripe Portal
-                          </Button>
+                          <div className={classes.wrapper}>
+                            <Button
+                              disabled={loading}
+                              variant={"contained"}
+                              color={"primary"}
+                              onClick={handleStripePortal}>
+                              Stripe Portal
+                            </Button>
+                            {loading && (
+                              <CircularProgress
+                                size={24}
+                                className={classes.buttonProgress}
+                              />
+                            )}
+                          </div>
+                          {loading && (
+                            <Typography variant={"caption"}>
+                              Please wait while we redirect you to your
+                              subscription details.
+                            </Typography>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
@@ -145,70 +179,6 @@ export const AccountSettings = () => {
                 </Table>
               </TableContainer>
             </Grid>
-            {currentUser.role === "student" && (
-              <>
-                <Grid item>
-                  <Divider />
-                </Grid>
-                <Grid item>
-                  <Typography variant={"h6"}>Days Remaining</Typography>
-                </Grid>
-                {/* {roles.trial && (
-                  <>
-                    <Grid item>
-                      <Typography
-                        variant={"subtitle1"}
-                        className={classes.notice}>
-                        <strong>
-                          {dayToTrialEnd(user.expireStart.seconds) > 0
-                            ? `${dayToTrialEnd(
-                                user.expireStart.seconds
-                              )} days left for trial.`
-                            : `Your trial expired ${Math.abs(
-                                dayToTrialEnd(user.expireStart.seconds)
-                              )} days ago.`}
-                        </strong>
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        onClick={() => handlePayment("subscribe")}
-                        color={"primary"}
-                        variant={"contained"}>
-                        Subscribe now
-                      </Button>
-                    </Grid>
-                  </>
-                )} */}
-                {/* {roles && roles.student && (
-                  <>
-                    <Grid item>
-                      <Typography
-                        variant={"subtitle1"}
-                        className={classes.notice}>
-                        <strong>
-                          {daysToRenew(user.expireStart.seconds) > 0
-                            ? `${daysToRenew(
-                                user.expireStart.seconds
-                              )} days left for current usage period.`
-                            : `Your trial expired ${Math.abs(
-                                daysToRenew(user.expireStart.seconds)
-                              )} days ago.`}
-                        </strong>
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        onClick={() => handlePayment("renew")}
-                        color={"primary"}
-                        variant={"contained"}>
-                        Renew
-                      </Button>
-                    </Grid>
-                  </>
-                )} */}
-              </>
-            )}
             <Divider />
             <Grid item>
               <Button

@@ -38,7 +38,6 @@ export const SubscribeToTrial = ({ currentUser }) => {
   const handleSubscribe = async () => {
     setLoading(true)
     await checkoutSession(currentUser, prices[0].price_id)
-    setLoading(false)
   }
 
   return (

@@ -11,18 +11,6 @@ import { getMany } from "../../firestore/questions"
 import { isEmpty } from "lodash"
 import { questionKeyRename } from "../../helper/utilities"
 
-// import { DueDateReminder } from "../../components/DueDateReminder"
-
-
-
-
-
-
-
-
-
-
-
 export const Questions = () => {
   const [questions, setQuestions] = useState({})
   const [category, setCategory] = useState({})
@@ -108,7 +96,6 @@ export const Questions = () => {
         onClose={() => setOpenSnackBar(false)}
         autoHideDuration={3000}
       />
-      {/* <DueDateReminder /> */}
     </>
   )
 }

@@ -15,7 +15,6 @@ import {
 import { LEVELS, SUBJECTS } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
 
-import { DueDateReminder } from "../../components/DueDateReminder"
 import PrintIcon from "@material-ui/icons/Print"
 import { QUESTION_TYPE } from "../../helper/enum"
 import { genNumOfQuestions } from "../../helper/utilities"
@@ -225,7 +224,6 @@ export const QuestionsSelection = ({
           </IconButton>
         </Grid>
       </Grid>
-      <DueDateReminder />
     </Grid>
   )
 }
