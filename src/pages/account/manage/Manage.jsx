@@ -1,5 +1,5 @@
 import { Add, CancelOutlined, CheckCircleOutline } from "@material-ui/icons"
-import { Button, Fab, Grid, Link, Typography } from "@material-ui/core"
+import { Button, Fab, Grid, Typography } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
 import {
   changeRole,
@@ -81,7 +81,6 @@ export const Manage = () => {
       setLoading(true)
       await changeRole(uid, "tutor")
     }
-
   }
 
   const handleEnable = async (uid) => {
