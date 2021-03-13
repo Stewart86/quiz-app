@@ -58,9 +58,9 @@ export const Nav = () => {
               </Button>
               <Button
                 className={classes.btn}
-                href='/account/manage/users'
+                href='/account/manage/students'
                 color='inherit'>
-                Users
+                Students
               </Button>
             </>
           )}

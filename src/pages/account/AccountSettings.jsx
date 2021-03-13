@@ -111,9 +111,6 @@ export const AccountSettings = () => {
                         {currentUser.db && currentUser.db.isAdmin && "Admin "}
                         {currentUser.role === "staff" && "Tutor "}
                         {currentUser.role === "student" &&
-                          currentUser.status === "active" &&
-                          "Paid "}
-                        {currentUser.role === "student" &&
                           currentUser.db.status}
                         {currentUser.db &&
                           !currentUser.db.isEnabled &&

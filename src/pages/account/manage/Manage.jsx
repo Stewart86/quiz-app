@@ -1,5 +1,5 @@
 import { Add, CancelOutlined, CheckCircleOutline } from "@material-ui/icons"
-import { Button, Fab, Grid, Typography } from "@material-ui/core"
+import { Button, Fab, Grid, Link, Typography } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
 import {
   changeRole,
@@ -206,33 +206,18 @@ export const Manage = () => {
         new Date(CellParams.value.seconds * 1000).toLocaleString(),
     },
     {
-      field: "dueIn",
-      headerName: "Account Expiry",
+      field: "stripeLink",
+      headerName: "Customer Portal",
       width: 160,
-    },
-    {
-      field: "student",
-      headerName: "Student",
-      width: 105,
-      hide: type === "staff",
-      renderCell: (cell) =>
-        cell.value ? (
-          <CheckCircleOutline className={classes.check} />
-        ) : (
-          <CancelOutlined className={classes.cross} />
-        ),
-    },
-    {
-      field: "trial",
-      headerName: "Trial",
-      width: 105,
-      hide: type === "staff",
-      renderCell: (cell) =>
-        cell.value ? (
-          <CheckCircleOutline className={classes.check} />
-        ) : (
-          <CancelOutlined className={classes.cross} />
-        ),
+      renderCell: (cell) => (
+        <Button
+          href={cell.value}
+          color={"primary"}
+          size={"small"}
+          variant={"contained"}>
+          Stripe
+        </Button>
+      ),
     },
     {
       field: "isEnabled",
