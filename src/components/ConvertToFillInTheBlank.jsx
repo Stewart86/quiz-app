@@ -1,4 +1,4 @@
-import { Chip, TextField, Typography } from "@material-ui/core"
+import { Chip, Paper, TextField, Typography } from "@material-ui/core"
 import React, { Fragment } from "react"
 
 import { SelectionField } from "./SelectionField"
@@ -36,6 +36,7 @@ export const ConvertToFillInTheBlank = ({
   submitted,
   onSelectionChange,
   selectedAnswer,
+  printable = false,
 }) => {
   const classes = useStyles()
 
@@ -57,17 +58,27 @@ export const ConvertToFillInTheBlank = ({
         const answer = value.trim().split(":")[0].replace("{", "")
         const options = value.trim().split(":")[1].replace("}", "").split("|")
         if (options.length > 0) {
-          newQuestion.push(
-            <SelectionField
-              key={i}
-              index={i}
-              options={options}
-              answer={answer}
-              submitted={submitted}
-              onSelectionChange={onSelectionChange}
-              selectedAnswer={setSelectedFieldValue(selectedAnswer, i)}
-            />
-          )
+          if (printable) {
+            newQuestion.push(
+              <Paper component={"span"} elevation={5} style={{ padding: 5 }}>
+                {options.map((v) => (
+                  <span style={{ margin: 10, fontSize: "1.3em" }}>{v}</span>
+                ))}
+              </Paper>
+            )
+          } else {
+            newQuestion.push(
+              <SelectionField
+                key={i}
+                index={i}
+                options={options}
+                answer={answer}
+                submitted={submitted}
+                onSelectionChange={onSelectionChange}
+                selectedAnswer={setSelectedFieldValue(selectedAnswer, i)}
+              />
+            )
+          }
         }
       } else {
         const answer = value.replace("{", "").replace("}", "")
