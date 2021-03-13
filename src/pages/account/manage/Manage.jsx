@@ -81,10 +81,10 @@ export const Manage = () => {
       setLoading(true)
       await changeRole(uid, "tutor")
     }
+
   }
 
   const handleEnable = async (uid) => {
-    setLoading(true)
     await enableUser(uid)
   }
 

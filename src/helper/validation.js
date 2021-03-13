@@ -13,6 +13,7 @@ export const isMultipleChoiceQuestionValid = (question) => {
       "answer",
       "choices",
       "type",
+      "explain",
     ],
     [QUESTION_TYPE.fillInTheBlank]: [
       "subject",
@@ -21,6 +22,7 @@ export const isMultipleChoiceQuestionValid = (question) => {
       "answer",
       "question",
       "type",
+      "explain",
     ],
     [QUESTION_TYPE.note]: ["subject", "level", "topic", "explain", "type"],
   }

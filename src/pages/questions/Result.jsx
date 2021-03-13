@@ -12,6 +12,8 @@ import {
 import { CorrectAnswer } from "./CorrectAnswer"
 import { Link } from "react-router-dom"
 import { ListOfButtons } from "./ListOfButtons"
+import { Loading } from "../../components"
+import { QUESTION_TYPE } from "../../helper/enum.js"
 import React from "react"
 import { getAttempted } from "../../helper/utilities"
 import { makeStyles } from "@material-ui/core"
@@ -26,6 +28,11 @@ export const Result = ({ questions, fromResultGoTo }) => {
   const classes = useStyles()
 
   const attempts = getAttempted(questions)
+
+  if (questions[Object.keys(questions)[0]].type === QUESTION_TYPE.note) {
+    window.location.reload()
+    return <Loading />
+  }
 
   return (
     <Grid

@@ -124,6 +124,7 @@ export const getAllUsers = async () => {
     }
   })
 
+
   return Object.keys(result).map((key, i) => result[key])
 }
 
