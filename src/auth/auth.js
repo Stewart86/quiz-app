@@ -1,12 +1,14 @@
 import { auth, provider } from "../firebase"
-import { deleteUser, postStaff, postStudent } from "../firestore/users"
+import {
+  deleteUser,
+  getStaff,
+  postStaff,
+  postStudent,
+} from "../firestore/users"
 
 import { CONFIRMATION_EMAIL_REDIRECT } from "../helper/constants"
 
 export const signup = async (name, email, phone, password, addStaff) => {
-  if (auth.currentUser) {
-    auth.signOut()
-  }
   const user = await auth.createUserWithEmailAndPassword(email, password)
   if (user) {
     const id = user.user.uid
@@ -72,6 +74,11 @@ export const confirmPasswordReset = async (code, email) => {
 }
 
 export const sendVerificationEmail = async () => {
+  if (await getStaff(auth.currentUser.uid)) {
+    console.log(auth.currentUser.uid)
+    // delete stripe account / user db
+    await deleteUser(auth.currentUser.uid)
+  }
   try {
     await auth.currentUser.sendEmailVerification({
       url: CONFIRMATION_EMAIL_REDIRECT,
@@ -79,4 +86,5 @@ export const sendVerificationEmail = async () => {
   } catch (e) {
     console.error(e.message)
   }
+  window.location.reload()
 }

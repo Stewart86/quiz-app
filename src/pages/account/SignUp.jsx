@@ -114,14 +114,16 @@ export const SignUp = ({ open, handleClose, addStaff = false }) => {
     } else if (!accountDetails.password2) {
       setNameHelper("Confirm password cannot be empty")
     } else {
-       await signup(
+      await signup(
         accountDetails.name,
         accountDetails.email,
         accountDetails.phone,
         accountDetails.password2,
         addStaff
       )
-      setOpenThankYou(true)
+      if (!addStaff) {
+        setOpenThankYou(true)
+      }
     }
   }
 

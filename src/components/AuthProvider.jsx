@@ -17,10 +17,11 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         const staff = await getStaff(user.uid)
         if (staff === false) {
-          console.log("get Staff")
+          console.log("get student")
           const student = await getStudent(user.uid)
           setCurrentUser({ ...user, db: student, role: "student" })
         } else {
+          console.log("get Staff")
           setCurrentUser({ ...user, db: staff, role: "staff" })
         }
       } else {
@@ -38,7 +39,11 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{ currentUser }}>
       {!isEmpty(currentUser) && (
-        <AskToVerify verified={currentUser.emailVerified} />
+        <AskToVerify
+          verified={currentUser.emailVerified}
+          email={currentUser.email}
+          role={currentUser.role}
+        />
       )}
       {children}
     </AuthContext.Provider>
