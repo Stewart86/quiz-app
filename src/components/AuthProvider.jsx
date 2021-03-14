@@ -18,11 +18,9 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         const staff = await getStaff(user.uid)
         if (staff === false) {
-          console.log("get student")
           const student = await getStudent(user.uid)
           setCurrentUser({ ...user, db: student, role: "student" })
         } else {
-          console.log("get Staff")
           setCurrentUser({ ...user, db: staff, role: "staff" })
         }
       } else {

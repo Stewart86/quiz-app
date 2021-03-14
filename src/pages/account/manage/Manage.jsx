@@ -66,7 +66,6 @@ export const Manage = () => {
       setLoading(false)
     }
     getUsersFromDB()
-    console.log("effect")
   }, [type, loading])
 
   const handleToAdmin = async (uid) => {
