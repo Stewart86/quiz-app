@@ -2,7 +2,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## User Management (Deprecated read below for updates)
+## User Management
 
 ### Login User Roles
 
