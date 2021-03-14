@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     width: "150px",
-    textAlign: "center"
+    textAlign: "center",
   },
 }))
 export const SelectionField = ({

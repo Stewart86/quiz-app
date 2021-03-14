@@ -46,7 +46,7 @@ export const Nav = () => {
       <AppBar position='fixed'>
         <Toolbar variant={"dense"}>
           <Typography className={classes.title} variant='h6'>
-            Quiz App
+            SG School Work
           </Typography>
           {currentUser.role === "staff" && currentUser.db.isAdmin && (
             <>
@@ -82,7 +82,9 @@ export const Nav = () => {
               </Button>
               <Typography
                 display={"block"}
-                className={classes.greeting}>{`Hi ${currentUser.displayName}`}</Typography>
+                className={
+                  classes.greeting
+                }>{`Hi ${currentUser.displayName}`}</Typography>
               <Tooltip title={"Account Settings"}>
                 <IconButton
                   href={"/account/settings"}

@@ -13,7 +13,6 @@ export const isMultipleChoiceQuestionValid = (question) => {
       "answer",
       "choices",
       "type",
-      "explain",
     ],
     [QUESTION_TYPE.fillInTheBlank]: [
       "subject",
@@ -22,7 +21,6 @@ export const isMultipleChoiceQuestionValid = (question) => {
       "answer",
       "question",
       "type",
-      "explain",
     ],
     [QUESTION_TYPE.note]: ["subject", "level", "topic", "explain", "type"],
   }
@@ -63,6 +61,12 @@ export const isMultipleChoiceQuestionValid = (question) => {
   requiredKeys[question.type].forEach((val) => {
     result[val] = question[val]
   })
+
+  if ("explain" in question) {
+    if (question["explain"].match(/w+/)) {
+      result["explain"] = question["explain"]
+    }
+  }
 
   return { isValid, result }
 }

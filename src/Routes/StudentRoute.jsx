@@ -12,11 +12,7 @@ export const StudentRoute = ({ component: Component, ...rest }) => {
       <Route
         {...rest}
         render={(props) =>
-          currentUser.uid ? (
-            <Component {...props} />
-          ) : (
-            <Redirect to={"/"} />
-          )
+          currentUser.uid ? <Component {...props} /> : <Redirect to={"/"} />
         }
       />
     </FullScreenContentLayout>

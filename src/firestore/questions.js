@@ -87,5 +87,5 @@ export const getOne = async (id) => {
 
 export const updateOne = async (id, question) => {
   const cur = db.collection("questions").doc(id)
-  await cur.update(question)
+  await cur.set(question)
 }

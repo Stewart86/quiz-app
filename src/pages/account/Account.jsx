@@ -6,7 +6,6 @@ import { CenterContentLayout } from "../../layouts/CenterContentRoute"
 import { Manage } from "./manage/Manage"
 import { PublicRoute } from "../../Routes/PublicRoute"
 import React from "react"
-import { Renew } from "./Renew"
 import { Reset } from "./Reset"
 import { SignUp } from "./SignUp"
 import { StudentRoute } from "../../Routes/StudentRoute"
@@ -20,7 +19,6 @@ export const Account = () => (
         </CenterContentLayout>
       </Route>
       <PublicRoute path={"/account/reset"} component={Reset} />
-      <AdminRoute path={"/account/renew"} component={Renew} />
       <AdminRoute path={"/account/manage/:type"} component={Manage} />
       <StudentRoute path={"/account/settings"} component={AccountSettings} />
     </Switch>

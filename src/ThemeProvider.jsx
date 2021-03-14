@@ -8,7 +8,6 @@ import { cyan, deepOrange } from "@material-ui/core/colors"
 import React from "react"
 
 export const ThemeProvider = ({ children }) => {
-
   let theme = createMuiTheme({
     typography: {
       fontFamily: "Indie Flower, Open Sans, Raleway,",
@@ -44,7 +43,7 @@ export const ThemeProvider = ({ children }) => {
         fontWeight: 400,
         letterSpacing: "0.12em",
         lineHeight: 2,
-        fontSize: "1.2rem"
+        fontSize: "1.2rem",
       },
     },
     palette: {
