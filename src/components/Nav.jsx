@@ -46,7 +46,7 @@ export const Nav = () => {
       <AppBar position='fixed'>
         <Toolbar variant={"dense"}>
           <Typography className={classes.title} variant='h6'>
-            Quiz App
+            SG School Work
           </Typography>
           {currentUser.role === "staff" && currentUser.db.isAdmin && (
             <>
