@@ -1,7 +1,6 @@
 import { chunk, isNumber, sampleSize } from "lodash"
+import firebase, { db } from "../firebase"
 import { levelLookup, typeReverseLookup } from "../helper/enum"
-
-import { db } from "../firebase"
 
 export const post = async (question) => {
   // convert P1 to Primary 1
@@ -87,5 +86,5 @@ export const getOne = async (id) => {
 
 export const updateOne = async (id, question) => {
   const cur = db.collection("questions").doc(id)
-  await cur.update(question)
+  await cur.set(question)
 }
