@@ -14,14 +14,17 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 1. Access to User management (Tutor and Student alike)
 2. Ability to change Tutor and Admin role
-3. Access to Stripe Customer Portal
-4. Ability to delete questions
-5. All features of Tutor role
+3. Ability to access Signup for Tutor role
+4. Access to Stripe Customer Portal
+5. Ability to delete questions
+6. To gain Admin role, signup new Tutor, then change the role to Admin
+7. All features of Tutor role
 
 #### Tutor
 
 1. Access to manage questions (create, update, but not delete)
-2. All features of Student role
+2. Tutor role can only be created by Admin
+3. All features of Student role
 
 #### Student (on Subscription only)
 
