@@ -79,7 +79,7 @@ export const getStudent = async (uid) => {
     if (subscription.active) {
       dbUser = { ...user.data(), ...subscription.data }
     } else {
-      dbUser = { ...user.data(), ...{subscription: false} }
+      dbUser = { ...user.data(), ...{ subscription: false } }
     }
 
     return dbUser
@@ -123,7 +123,6 @@ export const getAllUsers = async () => {
       isEnabled: result[doc.id].isEnabled,
     }
   })
-
 
   return Object.keys(result).map((key, i) => result[key])
 }

@@ -59,8 +59,10 @@ export const InsertAnswerForm = ({
           <FormControl>
             <InputLabel>Answer</InputLabel>
             <Select value={answer} onChange={handleAnswer}>
-              {choices.map((value, i) => ( 
-                <MenuItem value={i + 1}>choice {i + 1} ({value})</MenuItem>
+              {choices.map((value, i) => (
+                <MenuItem value={i + 1}>
+                  choice {i + 1} ({value})
+                </MenuItem>
               ))}
             </Select>
           </FormControl>

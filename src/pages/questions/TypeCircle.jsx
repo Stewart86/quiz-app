@@ -27,11 +27,7 @@ export const TypeCircle = ({ type, handleClick, image }) => {
       <Grid item>
         <Card className={classes.card}>
           <CardActionArea onClick={handleClick}>
-            <CardMedia
-              className={classes.media}
-              image={image}
-              title={type}
-            />
+            <CardMedia className={classes.media} image={image} title={type} />
           </CardActionArea>
         </Card>
       </Grid>

@@ -82,7 +82,9 @@ export const Nav = () => {
               </Button>
               <Typography
                 display={"block"}
-                className={classes.greeting}>{`Hi ${currentUser.displayName}`}</Typography>
+                className={
+                  classes.greeting
+                }>{`Hi ${currentUser.displayName}`}</Typography>
               <Tooltip title={"Account Settings"}>
                 <IconButton
                   href={"/account/settings"}

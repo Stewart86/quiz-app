@@ -19,6 +19,6 @@ export const provider = new firebase.auth.EmailAuthProvider()
 export const auth = firebase.auth()
 export const db = firebase.firestore()
 export const storage = firebase.storage()
-export const functions = firebase.app().functions('asia-southeast2')
+export const functions = firebase.app().functions("asia-southeast2")
 export const fieldval = firebase.firestore.FieldValue
 export default firebase

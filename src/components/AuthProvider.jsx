@@ -47,7 +47,9 @@ export const AuthProvider = ({ children }) => {
       {!isEmpty(currentUser) &&
         currentUser.role === "student" &&
         currentUser.emailVerified &&
-        currentUser.db.subscription === false && <SubscribeToTrial currentUser={currentUser} />}
+        currentUser.db.subscription === false && (
+          <SubscribeToTrial currentUser={currentUser} />
+        )}
       {children}
     </AuthContext.Provider>
   )

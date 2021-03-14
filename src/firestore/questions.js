@@ -1,6 +1,7 @@
 import { chunk, isNumber, sampleSize } from "lodash"
-import firebase, { db } from "../firebase"
 import { levelLookup, typeReverseLookup } from "../helper/enum"
+
+import { db } from "../firebase"
 
 export const post = async (question) => {
   // convert P1 to Primary 1

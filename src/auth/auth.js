@@ -41,7 +41,10 @@ export const signout = async () => {
 export const resetPassword = async (oldPassword, newPassword) => {
   try {
     const email = auth.currentUser.email
-    const credential = firebase.auth.EmailAuthProvider.credential(email, oldPassword)
+    const credential = firebase.auth.EmailAuthProvider.credential(
+      email,
+      oldPassword
+    )
     await auth.currentUser.reauthenticateWithCredential(credential)
     await auth.currentUser.updatePassword(newPassword)
   } catch (e) {

@@ -1,8 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@material-ui/core"
+import { Card, CardContent, CardHeader } from "@material-ui/core"
 
 import Editor from "rich-markdown-editor"
 import React from "react"
