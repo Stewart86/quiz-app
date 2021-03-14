@@ -75,11 +75,12 @@ export const isSubscriptionActive = async (uid) => {
 
   snapshot.forEach((doc) => {
     if (doc && doc.exists) {
-      console.log(doc.data())
       active = true
       data = doc.data()
+    } else {
+      active = false
+      data = null
     }
   })
-
   return { active, data }
 }

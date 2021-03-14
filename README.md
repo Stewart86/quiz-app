@@ -43,6 +43,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 1. All subscription starts from free trial specified in Stripe (can be changed within Stripe and will in updated to app automatically. refer to [Stripe integration](#stripe-integration))
 2. Cancelation during free trial period will allow user to continue using till the trial period ends
+3. if user did not verify their account, the app cannot proceed further
+4. if Student role user did not subscribe via Stripe, the app cannot proceed further
 
 ## Stripe Integration
 

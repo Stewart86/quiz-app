@@ -13,8 +13,9 @@ import {
   Typography,
 } from "@material-ui/core"
 import { LEVELS, SUBJECTS } from "../../helper/constants"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
+import { AuthContext } from "../../components/AuthProvider"
 import PrintIcon from "@material-ui/icons/Print"
 import { QUESTION_TYPE } from "../../helper/enum"
 import { genNumOfQuestions } from "../../helper/utilities"
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     width: 100,
   },
 }))
+
 export const QuestionsSelection = ({
   type,
   handlePrintable,
@@ -72,6 +74,9 @@ export const QuestionsSelection = ({
   const [selectedTopics, setSelectedTopics] = useState([])
   const [numOfQuestions, setNumOfQuestions] = useState(5)
   const [isBeginDisabled, setIsBeginDisabled] = useState(true)
+  const [isTrial, setIsTrial] = useState(true)
+
+  const { currentUser } = useContext(AuthContext)
 
   useEffect(() => {
     if (category.subject && category.level) {
@@ -83,6 +88,20 @@ export const QuestionsSelection = ({
       handleGetTopics(SUBJECTS[0], LEVELS[0])
     }
   }, [category.subject, category.level])
+
+  useEffect(() => {
+    if (!isBeginDisabled) {
+      if (currentUser.db.status === "active") {
+        setIsTrial(false)
+      }
+      if (currentUser.role === "staff") {
+        setIsTrial(false)
+      }
+    }
+    if (isBeginDisabled) {
+      setIsTrial(true)
+    }
+  }, [currentUser.role, currentUser.db.status, isBeginDisabled])
 
   const handleForm = (incomingCategory) => {
     const key = Object.keys(incomingCategory)[0]
@@ -216,7 +235,7 @@ export const QuestionsSelection = ({
         </Grid>
         <Grid item>
           <IconButton
-            disabled={isBeginDisabled}
+            disabled={isTrial}
             color={"secondary"}
             className={classes.button}
             onClick={() => handlePrintable(category)}>
