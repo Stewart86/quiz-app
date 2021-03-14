@@ -20,8 +20,12 @@ export const AskToVerify = ({ verified, email, role }) => {
           <DialogContentText>Role: {role}</DialogContentText>
         )}
         <DialogContentText>
-          Click on the verify button and check your email. Use the link provided
-          in the email to verify your account.
+          A verification email has been sent to the email address stated here.
+          Please check your inbox (including the junk folder). Then click on the
+          link provided.
+        </DialogContentText>
+        <DialogContentText>
+          If you did not recieve the email, click on the resend button.
         </DialogContentText>
         <DialogActions>
           <Button onClick={async () => await signout()}>Logout</Button>
@@ -29,7 +33,7 @@ export const AskToVerify = ({ verified, email, role }) => {
             color={"primary"}
             variant={"contained"}
             onClick={async () => await sendVerificationEmail()}>
-            Verify
+            resend
           </Button>
         </DialogActions>
       </DialogContent>
