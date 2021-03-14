@@ -4,60 +4,93 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## User Management
 
-1. Admin and Tutor role can exist in a single account together
-2. Being as a Admin or Tutor role will remove student and trial role
-3. a user can only be either trial or student not both
-4. upgrading to admin and / or tutor will remove student / trial role
-5. disabling an account will automatically default user to trial role and disable
-6. re-enabling user will start from trial role
-7. IMPORTANT! you can disable yourself as an admin (a backup admin account will prevent accidental lock out)
-8. a reminder will show below the page when due date is lesser than 7 days
+### Login User Roles
 
-## RBCA flow
+1. Admin
+2. Tutor
+3. Student
 
-- signup -> auto trial
-- make payment -> trial to student | admin -> trial to tutor / admin
-- trial 7 days
-- subscription 30 days
-- if role == trial -> check days left
-- if role == student -> check days left
-- if day left 7 show remind on questions (trial or renew)
-- when subscribe -> subscribe page -> stripe payment -> subscribe function
-  1. update expireStart field
-  2. update role == student
+#### Admin
 
-## Testing
+1. Access to User management (Tutor and Student alike)
+2. Ability to change Tutor and Admin role
+3. Ability to access Signup for Tutor role
+4. Access to Stripe Customer Portal
+5. Ability to delete questions
+6. To gain Admin role, signup new Tutor, then change the role to Admin
+7. All features of Tutor role
 
-- add function trial to tutor
-- add function trial to student
-- student list
-- student to tutor
-- tutor list
-- convert admin page to tutor page
-- convert manage page to admin page
-- admin page nav bar missing
-- admin table actions column unable to click
-- multiple selection not triggering multiple delete
-- topic once selected unable to change
-- admin should redirect to admin
-- tutor should redirect to manage
-- disabled user not doing anything
-- delete /disable account
-- admin page create button convert to fab
-- renewal
-- subscription
-- add reminder at question sections
-- redirect to renew / subscribe after due date
-- change question selection
-- add createMUI theme
+#### Tutor
 
-## To Do
-- email varification
-- reset password
-- forget password
-- stripe payment
+1. Access to manage questions (create, update, but not delete)
+2. Tutor role can only be created by Admin
+3. All features of Student role
 
-## bugs
+#### Student (on Subscription only)
 
-## enhancement
-- page transition is smooth
+1. All access to quizes and notes
+
+#### Student (Trial)
+
+1. All access to quizes and notes (except for printing)
+
+## Student Signup flow
+
+1. Click on "Start your free trial" button
+2. Register an account
+3. Verify email
+4. Subscription page
+5. Access to content
+
+###### note:
+
+1. All subscription starts from free trial specified in Stripe (can be changed within Stripe and will in updated to app automatically. refer to [Stripe integration](#stripe-integration))
+2. Cancelation during free trial period will allow user to continue using till the trial period ends
+3. if user did not verify their account, the app cannot proceed further
+4. if Student role user did not subscribe via Stripe, the app cannot proceed further
+
+## Stripe Integration
+
+Product and pricing will be updated automatically with this condition in place
+
+- only 1 product and 1 price within the product must be within the Stripe account
+- if multiple product in Stripe, this App will only takes the first product
+- if multiple prices in the product, this App will only take the last price stated
+- by any means try to stick to one product and price. This App is optimised this way
+
+## App Architecture
+
+### Techology Stack
+
+- FireBase Auth
+- FireStore
+- React.js
+- Stripe
+- Google Cloud Functions (for Stripe use only)
+
+### Key React Libary used
+
+- React Material UI
+- Rich Markdown Editor
+- Lodash
+
+## Tasks to complete by priority
+
+1. Legal Documentations
+   - terms and conditions
+   - privacy policies (must be inline with data usage and retention)
+2. Assets
+   - favicons
+   - logo
+   - offical App Name
+   - required images
+3. Themes
+   - primary color
+   - secondary color
+   - header font
+   - body text font
+   - alternative text font
+4. Pre-deployment checklist
+5. Post-deployment checklist
+6. Maintenence Guide
+7. Bug reporting Guide

@@ -1,16 +1,18 @@
-import { Button, Grid, Typography } from "@material-ui/core"
-import { CancelOutlined, CheckCircleOutline } from "@material-ui/icons"
+import { Add, CancelOutlined, CheckCircleOutline } from "@material-ui/icons"
+import { Button, Fab, Grid, Typography } from "@material-ui/core"
 import React, { useContext, useEffect, useState } from "react"
 import {
+  changeRole,
   disableUser,
   enableUser,
+  getAllAdmins,
   getAllUsers,
-  upgradeRole,
 } from "../../../firestore/users"
 
 import { AuthContext } from "../../../components/AuthProvider"
 import { DataGrid } from "@material-ui/data-grid"
 import { FullScreenContentLayout } from "../../../layouts/FullScreenContentRoute"
+import { SignUp } from "../SignUp"
 import { capitalize } from "lodash"
 import { convertObjToArr } from "../../../helper/utilities"
 import { makeStyles } from "@material-ui/core/styles"
@@ -31,6 +33,14 @@ const useStyles = makeStyles((theme) => ({
   cross: {
     color: theme.palette.error.main,
   },
+  rightBtn: {
+    position: "fixed",
+    bottom: theme.spacing(10),
+    right: theme.spacing(2),
+  },
+  input: {
+    marginBottom: 10,
+  },
 }))
 
 export const Manage = () => {
@@ -40,76 +50,63 @@ export const Manage = () => {
 
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [addUserModal, setAddUserModal] = useState(false)
 
   const { currentUser } = useContext(AuthContext)
 
-  const getUsersFromDB = () => {
-    setLoading(true)
-  }
   useEffect(() => {
     const getUsersFromDB = async () => {
-      if (loading) {
-        const Users = convertObjToArr(await getAllUsers(type))
-        setUsers(Users)
-        setLoading(false)
+      let Users
+      if (type === "staff") {
+        Users = convertObjToArr(await getAllAdmins())
+      } else {
+        Users = convertObjToArr(await getAllUsers())
       }
+      setUsers(Users)
+      setLoading(false)
     }
     getUsersFromDB()
-  }, [loading, type])
+  }, [type, loading])
 
   const handleToAdmin = async (uid) => {
-    await upgradeRole(uid, "admin")
-    getUsersFromDB()
+    setLoading(true)
+    await changeRole(uid, "admin")
   }
 
   const handleToTutor = async (uid) => {
-    await upgradeRole(uid, "tutor")
-    getUsersFromDB()
+    if (currentUser.uid === uid) {
+      alert("You cannot downgrade yourself.")
+    } else {
+      setLoading(true)
+      await changeRole(uid, "tutor")
+    }
   }
+
   const handleEnable = async (uid) => {
     await enableUser(uid)
-    getUsersFromDB()
   }
+
   const handleDisable = async (uid) => {
     if (currentUser.uid === uid) {
       alert("You cannot disable yourself.")
     } else {
+      setLoading(true)
       await disableUser(uid)
-      getUsersFromDB()
     }
-    setLoading(false)
   }
 
-  const dataColumn = [
+  const handleOpenAddUserModal = () => {
+    setAddUserModal(true)
+  }
+
+  const staffColumn = [
     { field: "name", headerName: "Name", width: 180 },
     { field: "email", headerName: "Email", width: 300 },
     { field: "phone", headerName: "Phone", width: 100 },
     {
-      field: "createdOn",
-      headerName: "Created Date",
-      width: 210,
-      type: "dateTime",
-      valueFormatter: (CellParams) =>
-        new Date(CellParams.value.seconds * 1000).toLocaleString(),
-    },
-    {
-      field: "updatedOn",
-      headerName: "Updated Date",
-      width: 210,
-      type: "dateTime",
-      valueFormatter: (CellParams) =>
-        new Date(CellParams.value.seconds * 1000).toLocaleString(),
-    },
-    {
-      field: "dueIn",
-      headerName: "Account Expiry",
-      width: 160,
-    },
-    {
-      field: "admin",
+      field: "isAdmin",
       headerName: "Admin",
       width: 105,
-      hide: type === "users",
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -118,34 +115,9 @@ export const Manage = () => {
         ),
     },
     {
-      field: "tutor",
+      field: "isTutor",
       headerName: "Tutor",
       width: 105,
-      hide: type === "users",
-      renderCell: (cell) =>
-        cell.value ? (
-          <CheckCircleOutline className={classes.check} />
-        ) : (
-          <CancelOutlined className={classes.cross} />
-        ),
-    },
-    {
-      field: "student",
-      headerName: "Student",
-      width: 105,
-      hide: type === "staff",
-      renderCell: (cell) =>
-        cell.value ? (
-          <CheckCircleOutline className={classes.check} />
-        ) : (
-          <CancelOutlined className={classes.cross} />
-        ),
-    },
-    {
-      field: "trial",
-      headerName: "Trial",
-      width: 105,
-      hide: type === "staff",
       renderCell: (cell) =>
         cell.value ? (
           <CheckCircleOutline className={classes.check} />
@@ -210,6 +182,80 @@ export const Manage = () => {
       ),
     },
   ]
+
+  const userColumn = [
+    { field: "name", headerName: "Name", width: 180 },
+    { field: "email", headerName: "Email", width: 300 },
+    { field: "phone", headerName: "Phone", width: 100 },
+    {
+      field: "createdOn",
+      headerName: "Created Date",
+      width: 210,
+      type: "dateTime",
+      valueFormatter: (CellParams) =>
+        new Date(CellParams.value.seconds * 1000).toLocaleString(),
+    },
+    {
+      field: "updatedOn",
+      headerName: "Updated Date",
+      width: 210,
+      type: "dateTime",
+      valueFormatter: (CellParams) =>
+        new Date(CellParams.value.seconds * 1000).toLocaleString(),
+    },
+    {
+      field: "stripeLink",
+      headerName: "Customer Portal",
+      width: 160,
+      renderCell: (cell) => (
+        <Button
+          href={cell.value}
+          color={"primary"}
+          size={"small"}
+          variant={"contained"}>
+          Stripe
+        </Button>
+      ),
+    },
+    {
+      field: "isEnabled",
+      headerName: "Enabled",
+      width: 105,
+      renderCell: (cell) =>
+        cell.value ? (
+          <CheckCircleOutline className={classes.check} />
+        ) : (
+          <CancelOutlined className={classes.cross} />
+        ),
+    },
+    {
+      field: "action",
+      headerName: "User Management",
+      width: 180,
+      renderCell: (cell) => (
+        <>
+          <Button
+            disabled={cell.value.isEnabled}
+            style={{ marginRight: 5 }}
+            size={"small"}
+            color={"primary"}
+            variant={"contained"}
+            onClick={() => handleEnable(cell.value.id)}>
+            enable
+          </Button>
+          <Button
+            disabled={!cell.value.isEnabled}
+            style={{ marginRight: 5 }}
+            size={"small"}
+            color={"secondary"}
+            variant={"contained"}
+            onClick={() => handleDisable(cell.value.id)}>
+            disable
+          </Button>
+        </>
+      ),
+    },
+  ]
   return (
     <FullScreenContentLayout>
       <Grid container>
@@ -217,9 +263,30 @@ export const Manage = () => {
           <Typography variant={"h3"}>{capitalize(type)}</Typography>
         </Grid>
         <Grid item className={classes.dataTable}>
-          <DataGrid loading={loading} rows={users} columns={dataColumn} />
+          <DataGrid
+            loading={loading}
+            rows={users}
+            columns={type === "staff" ? staffColumn : userColumn}
+          />
         </Grid>
       </Grid>
+      {type === "staff" && (
+        <>
+          <SignUp
+            open={addUserModal}
+            handleClose={() => {
+              setAddUserModal(false)
+            }}
+            addStaff
+          />
+          <Fab
+            className={classes.rightBtn}
+            onClick={handleOpenAddUserModal}
+            color={"primary"}>
+            <Add />
+          </Fab>
+        </>
+      )}
     </FullScreenContentLayout>
   )
 }

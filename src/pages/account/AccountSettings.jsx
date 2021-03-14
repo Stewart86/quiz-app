@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   Container,
   Divider,
   Grid,
@@ -13,77 +14,38 @@ import {
   TableContainer,
   TableRow,
   Typography,
+  makeStyles,
 } from "@material-ui/core"
-import React, { useContext, useEffect, useState } from "react"
-import { addOneMonth, dayToTrialEnd, daysToRenew } from "../../helper/utilities"
-import { convertToStudent, getUser, renewOne } from "../../firestore/users"
+import React, { useContext, useState } from "react"
+import { sendVerificationEmail, signout } from "../../auth/auth"
 
 import { AuthContext } from "../../components/AuthProvider"
 import { Loading } from "../../components"
-import { PaymentModal } from "../../components/PaymentModal"
 import { Reset } from "./Reset"
-import { makeStyles } from "@material-ui/core/styles"
-import { sendVerificationEmail } from "../../auth/auth"
+import { createPortalLink } from "../../firestore/products"
 
 const useStyles = makeStyles((theme) => ({
-  notice: {
-    color: theme.palette.warning.main,
+  wrapper: {
+    margin: theme.spacing(1),
+    position: "relative",
+  },
+  buttonProgress: {
+    color: theme.palette.success.main,
+    position: "absolute",
+    top: "50%",
+    left: "7%",
+    marginTop: -12,
+    marginLeft: 0,
   },
 }))
 
 export const AccountSettings = () => {
   const classes = useStyles()
-
-  const [user, setUser] = useState(null)
-  const [openStripe, setOpenStripe] = useState(false)
-  const [openInfo, setOpenInfo] = useState(false)
-  const [mode, setMode] = useState(null)
   const [resend, setResend] = useState(false)
   const [openResetPassword, setOpenResetPassword] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const { currentUser, roles } = useContext(AuthContext)
-
-  useEffect(() => {
-    let mounted = true
-    const getDbUser = async (user) => {
-      if (user) {
-        const dbUser = await getUser(user.uid)
-        if (mounted) {
-          setUser(dbUser)
-        }
-      }
-    }
-    getDbUser(currentUser)
-    return () => {
-      mounted = false
-    }
-  }, [currentUser, roles])
-
-  const getDbUser = async (uid) => {
-    const dbUser = await getUser(uid)
-    setUser(dbUser)
-  }
-
-  const handleOpen = (mode) => {
-    setMode(mode)
-    setOpenStripe(true)
-  }
-
-  const handleClose = () => {
-    setOpenStripe(false)
-  }
-
-  const handlePayment = async () => {
-    if (mode === "renew") {
-      const newDate = addOneMonth(user.expireStart.seconds)
-      await renewOne(user.id, newDate)
-    } else if (mode === "subscribe") {
-      await convertToStudent(user.id)
-    }
-    await getDbUser(user.id)
-    setOpenStripe(false)
-    setOpenInfo(true)
-  }
+  const { currentUser } = useContext(AuthContext)
 
   const handleVerify = async () => {
     await sendVerificationEmail(currentUser)
@@ -94,8 +56,17 @@ export const AccountSettings = () => {
     setOpenResetPassword(true)
   }
 
-  if (!user) {
+  const handleLogout = async () => {
+    await signout()
+  }
+
+  if (!currentUser) {
     return <Loading />
+  }
+
+  const handleStripePortal = async () => {
+    setLoading(true)
+    await createPortalLink()
   }
 
   return (
@@ -110,38 +81,42 @@ export const AccountSettings = () => {
                   <TableBody>
                     <TableRow>
                       <TableCell>
-                        <Typography variant={"button"}>{"Name"}</Typography>
+                        <Typography variant={"button"}>
+                          {"Display Name"}
+                        </Typography>
                       </TableCell>
-                      <TableCell>{user.name}</TableCell>
+                      <TableCell>{currentUser.displayName}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
                         <Typography variant={"button"}>{"Phone"}</Typography>
                       </TableCell>
-                      <TableCell>{user.phone}</TableCell>
+                      <TableCell>{currentUser.db.phone}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>
                         <Typography variant={"button"}>{"Email"}</Typography>
                       </TableCell>
-                      <TableCell>{user.email}</TableCell>
+                      <TableCell>{currentUser.email}</TableCell>
                     </TableRow>
-                    {roles && (
-                      <TableRow>
-                        <TableCell>
-                          <Typography variant={"button"}>
-                            {"Registration Status"}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {roles.admin && "Admin "}
-                          {roles.tutor && "Tutor "}
-                          {roles.student && "Paid "}
-                          {roles.trial && "Trial "}
-                          {!user.isEnabled && "Account Disabled"}
-                        </TableCell>
-                      </TableRow>
-                    )}
+                    <TableRow>
+                      <TableCell>
+                        <Typography variant={"button"}>
+                          {currentUser.role === "staff"
+                            ? "Staff Role"
+                            : "Registration Status"}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {currentUser.db && currentUser.db.isAdmin && "Admin "}
+                        {currentUser.role === "staff" && "Tutor "}
+                        {currentUser.role === "student" &&
+                          currentUser.db.status}
+                        {currentUser.db &&
+                          !currentUser.db.isEnabled &&
+                          "Account Disabled"}
+                      </TableCell>
+                    </TableRow>
                     <TableRow>
                       <TableCell>
                         <Typography variant={"button"}>Verified</Typography>
@@ -165,93 +140,43 @@ export const AccountSettings = () => {
                         )}
                       </TableCell>
                     </TableRow>
+                    {currentUser.role === "student" && (
+                      <TableRow>
+                        <TableCell>
+                          <Typography variant={"button"}>
+                            Subscription Details
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <div className={classes.wrapper}>
+                            <Button
+                              disabled={loading}
+                              variant={"contained"}
+                              color={"primary"}
+                              onClick={handleStripePortal}>
+                              Stripe Portal
+                            </Button>
+                            {loading && (
+                              <CircularProgress
+                                size={24}
+                                className={classes.buttonProgress}
+                              />
+                            )}
+                          </div>
+                          {loading && (
+                            <Typography variant={"caption"}>
+                              Please wait while we redirect you to your
+                              subscription details.
+                            </Typography>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>
             </Grid>
-            {roles && (roles.student || roles.trial) && (
-              <>
-                <Grid item>
-                  <Divider />
-                </Grid>
-                <Grid item>
-                  <Typography variant={"h6"}>Days Remaining</Typography>
-                </Grid>
-                {roles.trial && (
-                  <>
-                    <Grid item>
-                      <Typography
-                        variant={"subtitle1"}
-                        className={classes.notice}>
-                        <strong>
-                          {dayToTrialEnd(user.expireStart.seconds) > 0
-                            ? `${dayToTrialEnd(
-                                user.expireStart.seconds
-                              )} days left for trial.`
-                            : `Your trial expired ${Math.abs(
-                                dayToTrialEnd(user.expireStart.seconds)
-                              )} days ago.`}
-                        </strong>
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        onClick={() => handleOpen("subscribe")}
-                        color={"primary"}
-                        variant={"contained"}>
-                        Subscribe now
-                      </Button>
-                    </Grid>
-                  </>
-                )}
-                {roles && roles.student && (
-                  <>
-                    <Grid item>
-                      <Typography
-                        variant={"subtitle1"}
-                        className={classes.notice}>
-                        <strong>
-                          {daysToRenew(user.expireStart.seconds) > 0
-                            ? `${daysToRenew(
-                                user.expireStart.seconds
-                              )} days left for current usage period.`
-                            : `Your trial expired ${Math.abs(
-                                daysToRenew(user.expireStart.seconds)
-                              )} days ago.`}
-                        </strong>
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        onClick={() => handleOpen("renew")}
-                        color={"primary"}
-                        variant={"contained"}>
-                        Renew
-                      </Button>
-                    </Grid>
-                  </>
-                )}
-              </>
-            )}
-            {openInfo && (
-              <Grid item>
-                <Typography>
-                  It might take awhile for the system to refresh. Check back
-                  again later or refresh the browser for update.
-                </Typography>
-              </Grid>
-            )}
             <Divider />
-            {user.isExpired && (
-              <Grid item>
-                <Button
-                  onClick={() => handleOpen("subscribe")}
-                  color={"primary"}
-                  variant={"contained"}>
-                  Subscribe now
-                </Button>
-              </Grid>
-            )}
             <Grid item>
               <Button
                 onClick={handleResetPassword}
@@ -261,18 +186,16 @@ export const AccountSettings = () => {
               </Button>
             </Grid>
             <Grid item>
-              <Button disabled color={"secondary"} variant={"contained"}>
-                Delete Account
+              <Button
+                onClick={handleLogout}
+                color={"primary"}
+                variant={"contained"}>
+                {"Logout"}
               </Button>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
-      <PaymentModal
-        open={openStripe}
-        handleClose={handleClose}
-        handlePayment={handlePayment}
-      />
       <Reset
         open={openResetPassword}
         onClose={() => setOpenResetPassword(false)}

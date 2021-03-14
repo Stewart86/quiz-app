@@ -12,9 +12,10 @@ import {
   Tooltip,
 } from "@material-ui/core"
 import { LEVELS, SUBJECTS } from "../../helper/constants"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { deleteMany, getMany } from "../../firestore/questions"
 
+import { AuthContext } from "../../components/AuthProvider"
 import { DataGrid } from "@material-ui/data-grid"
 import { InsertCategoriesForm } from "../addQuestion/InsertCategoriesForm"
 import { QUESTION_TYPE } from "../../helper/enum"
@@ -44,6 +45,8 @@ export const ManageQuestions = () => {
   const classes = useStyles()
   const history = useHistory()
 
+  const { currentUser } = useContext(AuthContext)
+
   const dataColumn = [
     {
       field: "id",
@@ -51,14 +54,16 @@ export const ManageQuestions = () => {
       width: 110,
       renderCell: (cell) => (
         <>
-          <Tooltip title={"Delete"}>
-            <IconButton
-              className={classes.deleteIcon}
-              size={"small"}
-              onClick={() => handleConfirm(cell.value)}>
-              <DeleteForever />
-            </IconButton>
-          </Tooltip>
+          {currentUser.db.isAdmin && (
+            <Tooltip title={"Delete"}>
+              <IconButton
+                className={classes.deleteIcon}
+                size={"small"}
+                onClick={() => handleConfirm(cell.value)}>
+                <DeleteForever />
+              </IconButton>
+            </Tooltip>
+          )}
           <Tooltip title={"Edit"}>
             <IconButton
               className={classes.editIcon}

@@ -4,7 +4,7 @@ import React from "react"
 import { Switch } from "react-router"
 import { TutorRoute } from "../Routes/TutorRoute"
 
-export const Admin = ({ authenticated, roles }) => {
+export const Admin = () => {
   return (
     <>
       <Switch>

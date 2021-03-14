@@ -5,7 +5,7 @@ import { AuthContext } from "../../components/AuthProvider"
 import { QUESTION_TYPE } from "../../helper/enum"
 import { Redirect } from "react-router"
 import { TypeCircle } from "./TypeCircle"
-import { getUser } from "../../firestore/users"
+import { isSubscriptionActive } from "../../firestore/products"
 import placeholder from "../../images/placeholder.png"
 
 const useStyles = makeStyles((theme) => ({
@@ -16,27 +16,20 @@ const useStyles = makeStyles((theme) => ({
 
 export const TypeSelection = ({ handleSetType }) => {
   const classes = useStyles()
-  const [userName, setUserName] = useState()
-
   const { currentUser } = useContext(AuthContext)
+  const [redirect, setRedirect] = useState(false)
 
   useEffect(() => {
-    let mounted = true
-    const getUserNameFromDb = async (user) => {
-      if (user) {
-        const dbUser = await getUser(user.uid)
-        if (mounted) {
-          setUserName(dbUser.name)
-        }
+    const checkSubscription = async () => {
+      if (currentUser.role === "student") {
+        const { active } = await isSubscriptionActive(currentUser.uid)
+        setRedirect(!active)
       }
     }
-    getUserNameFromDb(currentUser)
-    return () => {
-      mounted = false
-    }
-  }, [currentUser])
+    checkSubscription()
+  }, [currentUser.role, currentUser.uid])
 
-  if (!currentUser.emailVerified) {
+  if (redirect) {
     return <Redirect to={"/account/settings"} />
   }
   return (
@@ -49,7 +42,9 @@ export const TypeSelection = ({ handleSetType }) => {
         spacing={6}
         container>
         <Grid container justify={"center"} item xs={12}>
-          <Typography variant={"h3"}>Welcome {userName}</Typography>
+          <Typography variant={"h3"}>
+            Welcome {currentUser.displayName}
+          </Typography>
         </Grid>
         <Grid container justify={"center"} item xs={12}>
           <Typography variant={"h5"}>
