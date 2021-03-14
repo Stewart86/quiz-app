@@ -1,10 +1,10 @@
-import { auth, provider } from "../firebase"
 import {
   deleteUser,
   getStaff,
   postStaff,
   postStudent,
 } from "../firestore/users"
+import firebase, { auth } from "../firebase"
 
 export const signup = async (name, email, phone, password, addStaff) => {
   const user = await auth.createUserWithEmailAndPassword(email, password)
@@ -41,7 +41,7 @@ export const signout = async () => {
 export const resetPassword = async (oldPassword, newPassword) => {
   try {
     const email = auth.currentUser.email
-    const credential = provider.credential(email, oldPassword)
+    const credential = firebase.auth.EmailAuthProvider.credential(email, oldPassword)
     await auth.currentUser.reauthenticateWithCredential(credential)
     await auth.currentUser.updatePassword(newPassword)
   } catch (e) {
