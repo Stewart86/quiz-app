@@ -25,6 +25,7 @@ export const getTopic = async (subject, level) => {
 }
 
 export const updateTopic = async (subject, level, topic) => {
+  console.log("udpate topic", level)
   const topics = db.collection("topics")
   let query = null
   if (String(level).includes("Primary")) {
