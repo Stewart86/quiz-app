@@ -89,7 +89,6 @@ export const updateOne = async (id, question) => {
   if (!question.level.includes("Primary")) {
     question.level = question.level.replace(/P\d/, "Primary ")
   }
-  console.log(id, question)
   const cur = db.collection("questions").doc(id)
   await cur.set(question)
 }
