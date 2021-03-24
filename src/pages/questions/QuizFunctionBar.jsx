@@ -8,7 +8,6 @@ import {
 } from "@material-ui/core"
 import { CancelOutlined, PrintOutlined } from "@material-ui/icons"
 
-import CancelIcon from "@material-ui/icons/Cancel"
 import MenuOpenIcon from "@material-ui/icons/MenuOpen"
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"

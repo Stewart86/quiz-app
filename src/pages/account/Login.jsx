@@ -4,7 +4,6 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  CardMedia,
   Dialog,
   DialogActions,
   DialogContent,
@@ -20,7 +19,6 @@ import { AuthContext } from "../../components/AuthProvider"
 import { SignUp } from "./SignUp"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { isString } from "lodash"
-import logo from "../../images/logo.png"
 import { useHistory } from "react-router-dom"
 
 export const Login = () => {
