@@ -166,6 +166,7 @@ export const AddQuestion = () => {
         }
       }
     } catch (error) {
+      console.error(error)
       setWarning({ open: true, msg: error.message })
       setLoading(false)
     }
