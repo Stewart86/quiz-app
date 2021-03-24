@@ -14,14 +14,10 @@ import {
 } from "@material-ui/core"
 import { LEVELS, SUBJECTS, TYPES } from "../../helper/constants"
 import React, { useEffect, useState } from "react"
-import {
-  levelLookup,
-  levelReverseLookup,
-  typeReverseLookup,
-} from "../../helper/enum"
 
 import { getTopic } from "../../firestore/topics"
 import { makeStyles } from "@material-ui/core/styles"
+import { typeReverseLookup } from "../../helper/enum"
 
 const useStyles = makeStyles((theme) => ({
   topicInput: {
