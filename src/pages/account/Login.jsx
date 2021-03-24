@@ -4,6 +4,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  CardMedia,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,6 +20,7 @@ import { AuthContext } from "../../components/AuthProvider"
 import { SignUp } from "./SignUp"
 import { WarningSnackBar } from "../../components/WarningSnackBar"
 import { isString } from "lodash"
+import logo from "../../images/logo.png"
 import { useHistory } from "react-router-dom"
 
 export const Login = () => {
@@ -73,11 +75,11 @@ export const Login = () => {
 
   return (
     <>
-      <Card elevation={5}>
+      <Card style={{ width: "15vw", marginTop: "30px" }} elevation={5}>
         <CardContent>
           <CardHeader
-            title={"Quiz App"}
-            subheader={"Your One Stop Learning Solution"}
+            title={"SG School Work"}
+            subheader={"We make learning easy"}
           />
           <Grid item xs={12}>
             <TextField

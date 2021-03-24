@@ -6,12 +6,12 @@ import {
   Toolbar,
   Tooltip,
 } from "@material-ui/core"
+import { CancelOutlined, PrintOutlined } from "@material-ui/icons"
 
 import CancelIcon from "@material-ui/icons/Cancel"
 import MenuOpenIcon from "@material-ui/icons/MenuOpen"
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
 import NavigateNextIcon from "@material-ui/icons/NavigateNext"
-import PrintIcon from "@material-ui/icons/Print"
 import React from "react"
 import { makeStyles } from "@material-ui/core"
 
@@ -44,8 +44,9 @@ export const QuizFunctionBar = ({
             <Divider orientation={"vertical"} flexItem />
             <Tooltip title={"Menu"}>
               <IconButton
+                size={"small"}
                 variant={"outlined"}
-                color={"secondary"}
+                color={"default"}
                 onClick={() => onHandleDrawer(true)}>
                 <MenuOpenIcon />
               </IconButton>
@@ -53,8 +54,9 @@ export const QuizFunctionBar = ({
             <Tooltip title={"Previous"} component={"span"}>
               <IconButton
                 disabled={handleDisablePreviousBtn}
+                size={"small"}
                 variant={"contained"}
-                color={"secondary"}
+                color={"default"}
                 onClick={handlePreviousClick}>
                 <NavigateBeforeIcon />
               </IconButton>
@@ -62,24 +64,26 @@ export const QuizFunctionBar = ({
             <Tooltip title={"Next"}>
               <IconButton
                 disabled={handleDisableNextBtn}
+                size={"small"}
                 variant={"contained"}
-                color={"secondary"}
+                color={"default"}
                 onClick={handleNextClick}>
                 <NavigateNextIcon />
               </IconButton>
             </Tooltip>
             <Divider orientation={"vertical"} flexItem />
             <Tooltip title={"Print"}>
-              <IconButton color={"secondary"} onClick={() => handlePrintable()}>
-                <PrintIcon />
+              <IconButton size={"small"} color={"default"} onClick={() => handlePrintable()}>
+                <PrintOutlined />
               </IconButton>
             </Tooltip>
             <Tooltip title={"End"}>
               <IconButton
                 variant={"outlined"}
-                color={"secondary"}
+                size={"small"}
+                color={"default"}
                 onClick={handleEndClick}>
-                <CancelIcon />
+                <CancelOutlined />
               </IconButton>
             </Tooltip>
             <Divider orientation={"vertical"} flexItem />

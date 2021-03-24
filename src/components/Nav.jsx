@@ -10,6 +10,7 @@ import React, { useContext } from "react"
 
 import { AccountCircleOutlined } from "@material-ui/icons"
 import { AuthContext } from "./AuthProvider"
+import logo from "../images/logo.png"
 import { makeStyles } from "@material-ui/core/styles"
 import { signout } from "../auth/auth"
 import { useHistory } from "react-router"
@@ -24,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
   },
   greeting: {
     flexGrow: 0,
-    fontFamily: "Indie Flower",
   },
   btn: {
     margin: theme.spacing(1),
@@ -41,13 +41,17 @@ export const Nav = () => {
     history.push("/")
   }
 
+  const handleHome = () => {
+    history.push("/")
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position='fixed'>
         <Toolbar variant={"dense"}>
-          <Typography className={classes.title} variant='h6'>
-            SG School Work
-          </Typography>
+          <div className={classes.title}>
+            <img height={"50em"} src={logo} alt={"SG Schoolwork logo"} onClick={handleHome} />
+          </div>
           {currentUser.role === "staff" && currentUser.db.isAdmin && (
             <>
               <Button

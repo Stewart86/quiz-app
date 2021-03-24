@@ -3,31 +3,31 @@ import {
   createMuiTheme,
   responsiveFontSizes,
 } from "@material-ui/core/styles"
-import { cyan, deepOrange } from "@material-ui/core/colors"
 
 import React from "react"
+import { deepOrange } from "@material-ui/core/colors"
 
 export const ThemeProvider = ({ children }) => {
   let theme = createMuiTheme({
     typography: {
-      fontFamily: "Indie Flower, Open Sans, Raleway,",
+      fontFamily: "Archivo Black, Open Sans, Raleway,",
       h1: {
-        fontFamily: "Indie Flower",
+        fontFamily: "Archivo Black",
       },
       h2: {
-        fontFamily: "Indie Flower",
+        fontFamily: "Archivo Black",
       },
       h3: {
-        fontFamily: "Indie Flower",
+        fontFamily: "Archivo Black",
       },
       h4: {
-        fontFamily: "Indie Flower",
+        fontFamily: "Archivo",
       },
       h5: {
-        fontFamily: "Indie Flower",
+        fontFamily: "Archivo Narrow",
       },
       h6: {
-        fontFamily: "Raleway",
+        fontFamily: "Archivo Narrow",
       },
       body1: {
         fontFamily: "Raleway",
@@ -36,7 +36,7 @@ export const ThemeProvider = ({ children }) => {
         fontFamily: "Open Sans",
       },
       button: {
-        fontFamily: "Open Sans",
+        fontFamily: "Archivo",
       },
       mono: {
         fontFamily: "monospace",
@@ -47,7 +47,9 @@ export const ThemeProvider = ({ children }) => {
       },
     },
     palette: {
-      primary: cyan,
+      primary: {
+        main: "#2464B9",
+      },
       secondary: deepOrange,
       type: "light",
     },
