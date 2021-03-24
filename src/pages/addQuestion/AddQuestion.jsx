@@ -148,6 +148,11 @@ export const AddQuestion = () => {
       if (validation.isValid) {
         if (id) {
           await updateOne(id, validation.result)
+          await updateTopic(
+            categories.subject,
+            categories.level,
+            categories.topic
+          )
           setOpenSnackBar({ open: true, msg: "Question Successfully updated." })
           history.goBack()
         } else {
@@ -161,6 +166,7 @@ export const AddQuestion = () => {
         }
       }
     } catch (error) {
+      console.error(error)
       setWarning({ open: true, msg: error.message })
       setLoading(false)
     }

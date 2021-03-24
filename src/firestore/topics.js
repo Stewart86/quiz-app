@@ -42,6 +42,6 @@ export const updateTopic = async (subject, level, topic) => {
   const snapshot = await query.get()
 
   if (snapshot.empty) {
-    topics.add({ subject, level: levelLookup[level], topic })
+    topics.add({ subject, level: level, topic })
   }
 }

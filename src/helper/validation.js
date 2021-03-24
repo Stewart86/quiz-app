@@ -63,7 +63,7 @@ export const isMultipleChoiceQuestionValid = (question) => {
   })
 
   if ("explain" in question) {
-    if (question["explain"].match(/w+/)) {
+    if (question["explain"].match(/\w+/)) {
       result["explain"] = question["explain"]
     }
   }

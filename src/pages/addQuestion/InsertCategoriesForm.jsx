@@ -31,7 +31,10 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
   const classes = useStyles()
 
   const [selSubject, setSubject] = useState(categories.subject || SUBJECTS[0])
-  const [selLevel, setLevel] = useState(categories.level || LEVELS[0])
+  const [selLevel, setLevel] = useState(
+    categories.level.replace(/Primary\s+/g, "P") || LEVELS[0]
+  )
+
   const [selType, setType] = useState(
     typeReverseLookup[categories.type] || TYPES[0]
   )
@@ -41,11 +44,15 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
   useEffect(() => {
     let mounted = true
     const setOptions = async () => {
-      const topics = await getTopic(selSubject, selLevel, selType)
       let arr = []
-      topics.forEach((topic) => arr.push({ topic }))
+      if (selSubject && selLevel) {
+        const topics = await getTopic(selSubject, selLevel)
+        topics.forEach((topic) => arr.push({ topic }))
+      }
       if (mounted) {
         setTopicOptions(arr)
+        setSubject(categories.subject)
+        setLevel(categories.level.replace(/Primary\s+/g, "P"))
       }
     }
     if (categories.topic) {
@@ -61,7 +68,14 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
     return () => {
       mounted = false
     }
-  }, [selSubject, selLevel, selType, categories.topic])
+  }, [
+    selSubject,
+    selLevel,
+    selType,
+    categories.topic,
+    categories.subject,
+    categories.level,
+  ])
 
   const handleSubjectChange = async (event) => {
     const subject = event.target.value
