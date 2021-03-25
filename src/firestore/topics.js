@@ -2,7 +2,6 @@ import { db } from "../firebase"
 import { levelLookup } from "../helper/enum"
 
 export const getTopic = async (type, subject, level) => {
-  console.log(type, subject, level)
   let topics = null
   if (String(level).includes("Primary")) {
     topics = db
@@ -28,7 +27,6 @@ export const getTopic = async (type, subject, level) => {
 }
 
 export const updateTopic = async (type, subject, level, topic) => {
-  console.log(subject, level, topic)
   const topics = db.collection("topics")
   let query = null
   if (String(level).includes("Primary")) {
