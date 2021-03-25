@@ -73,7 +73,7 @@ export const TypeSelection = ({ handleSetType }) => {
         </Grid>
         <Grid item>
           <TypeCircle
-            type={"Notes"}
+            type={"Creative Writing"}
             image={noteImage}
             handleClick={() => handleSetType({ type: QUESTION_TYPE.note })}
           />

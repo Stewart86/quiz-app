@@ -76,6 +76,8 @@ export const ManageQuestions = () => {
       ),
     },
     { field: "question", headerName: "Question", width: 300 },
+    // { field: "type", headerName: "Type", width: 300 },
+    // { field: "topic", headerName: "Topic", width: 300 },
     { field: "choices", headerName: "Choices", width: 200 },
     {
       field: "answer",

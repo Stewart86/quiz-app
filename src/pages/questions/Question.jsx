@@ -93,7 +93,7 @@ export const Question = ({
   const subHeader = `${question.subject} | ${question.level} | ${question.topic}`
 
   const noteOrQuestion = () =>
-    question.type === QUESTION_TYPE.note ? "Note" : "Question"
+    question.type === QUESTION_TYPE.note ? "Creative Writing" : "Question"
 
   const SubmitMessage = ({ result }) => {
     if (result) {
