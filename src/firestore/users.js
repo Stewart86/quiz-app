@@ -117,10 +117,12 @@ export const getAllUsers = async () => {
 
   // get user roles and append into user obj
   allUsers.forEach((doc) => {
-    result[doc.id] = doc.data()
-    result[doc.id]["action"] = {
-      id: doc.id,
-      isEnabled: result[doc.id].isEnabled,
+    if ("name" in doc.data()) {
+      result[doc.id] = doc.data()
+      result[doc.id]["action"] = {
+        id: doc.id,
+        isEnabled: result[doc.id].isEnabled,
+      }
     }
   })
 
