@@ -149,6 +149,7 @@ export const AddQuestion = () => {
         if (id) {
           await updateOne(id, validation.result)
           await updateTopic(
+            categories.type,
             categories.subject,
             categories.level,
             categories.topic
@@ -158,6 +159,7 @@ export const AddQuestion = () => {
         } else {
           await post(validation.result)
           await updateTopic(
+            categories.type,
             categories.subject,
             categories.level,
             categories.topic

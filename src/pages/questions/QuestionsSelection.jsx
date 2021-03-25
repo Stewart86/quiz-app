@@ -13,7 +13,7 @@ import {
   Select,
   Typography,
 } from "@material-ui/core"
-import { LEVELS, SUBJECTS } from "../../helper/constants"
+import { LEVELS, SUBJECTS, TYPES } from "../../helper/constants"
 import React, { useContext, useEffect, useState } from "react"
 
 import { AuthContext } from "../../components/AuthProvider"
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 185,
   },
   dropdown: {
-    width: 190,
+    width: 230,
   },
   levelBtn: {
     borderRadius: 33,
@@ -82,16 +82,17 @@ export const QuestionsSelection = ({
   const { currentUser } = useContext(AuthContext)
 
   useEffect(() => {
-    if (category.subject && category.level) {
-      handleGetTopics(category.subject, category.level)
+    if (category.type && category.subject && category.level) {
+      handleGetTopics(category.type, category.subject, category.level)
       setSelectedTopics([])
       setSelectAll(false)
       setCategory((state) => ({ ...state, topics: [] }))
       setIsBeginDisabled(true)
     } else {
-      handleGetTopics(SUBJECTS[0], LEVELS[0])
+      handleGetTopics(TYPES[0], SUBJECTS[0], LEVELS[0])
     }
-  }, [category.subject, category.level])
+    console.log("test")
+  }, [category.type, category.subject, category.level])
 
   useEffect(() => {
     if (!isBeginDisabled) {
@@ -111,6 +112,7 @@ export const QuestionsSelection = ({
     if (topicCount === 0) {
       setSelectAll(false)
     } else if (topicCount === selectedTopics.length) {
+      handleForm({ topics })
       setSelectAll(true)
     } else if (selectedTopics.length < topicCount) {
       setSelectAll(false)
@@ -141,8 +143,10 @@ export const QuestionsSelection = ({
     })
   }
 
-  const handleGetTopics = async (subject, level) => {
-    const dbTopics = await getTopic(subject, level)
+  const handleGetTopics = async (type, subject, level) => {
+    console.log("handleGET topic", type, subject, level)
+    const dbTopics = await getTopic(type, subject, level)
+    console.log("handleGET db",dbTopics)
     setTopics(dbTopics)
     setSelectedTopics(dbTopics)
     setTopicCount(dbTopics.length)
@@ -183,16 +187,31 @@ export const QuestionsSelection = ({
       </Grid>
       <Grid container justify={"center"} spacing={5} item>
         <ButtonGroup color={"primary"}>
-          {SUBJECTS.map((value) => (
-            <Button
-              className={classes.subjectBtn}
-              key={value}
-              color={"primary"}
-              variant={category.subject === value ? "contained" : "outlined"}
-              onClick={() => handleForm({ subject: value })}>
-              {value}
-            </Button>
-          ))}
+          {category.type === QUESTION_TYPE.note
+            ? ["English"].map((value) => (
+                <Button
+                  className={classes.subjectBtn}
+                  key={value}
+                  color={"primary"}
+                  variant={
+                    category.subject === value ? "contained" : "outlined"
+                  }
+                  onClick={() => handleForm({ subject: value })}>
+                  {value}
+                </Button>
+              ))
+            : SUBJECTS.map((value) => (
+                <Button
+                  className={classes.subjectBtn}
+                  key={value}
+                  color={"primary"}
+                  variant={
+                    category.subject === value ? "contained" : "outlined"
+                  }
+                  onClick={() => handleForm({ subject: value })}>
+                  {value}
+                </Button>
+              ))}
         </ButtonGroup>
       </Grid>
       <Grid container justify={"center"} spacing={5} item>
@@ -240,7 +259,7 @@ export const QuestionsSelection = ({
           <FormControl>
             <InputLabel>
               {category.type === QUESTION_TYPE.note
-                ? "Number of Notes"
+                ? "Number of Creative Writing"
                 : "Number of Questions"}
             </InputLabel>
             <Select

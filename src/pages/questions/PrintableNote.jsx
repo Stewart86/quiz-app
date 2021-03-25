@@ -21,7 +21,7 @@ export const PrintableNote = ({ question, count }) => {
     <div>
       <Card>
         <CardHeader
-          title={`Note ${count}`}
+          title={`Creative Writing ${count}`}
           subheader={`${question.subject} | ${question.level} | ${question.topic}`}
         />
         <CardContent>
@@ -30,7 +30,7 @@ export const PrintableNote = ({ question, count }) => {
             className={classes.question}
             theme={{ background: classes.question.backgroundColor }}
             readOnly
-            defaultValue={question && question.question}
+            defaultValue={question && question.explain}
           />
         </CardContent>
       </Card>

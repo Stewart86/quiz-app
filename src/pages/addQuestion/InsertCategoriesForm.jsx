@@ -13,11 +13,11 @@ import {
   TextField,
 } from "@material-ui/core"
 import { LEVELS, SUBJECTS, TYPES } from "../../helper/constants"
+import { QUESTION_TYPE, typeReverseLookup } from "../../helper/enum"
 import React, { useEffect, useState } from "react"
 
 import { getTopic } from "../../firestore/topics"
 import { makeStyles } from "@material-ui/core/styles"
-import { typeReverseLookup } from "../../helper/enum"
 
 const useStyles = makeStyles((theme) => ({
   topicInput: {
@@ -45,8 +45,12 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
     let mounted = true
     const setOptions = async () => {
       let arr = []
-      if (selSubject && selLevel) {
-        const topics = await getTopic(selSubject, selLevel)
+      if (selType && selSubject && selLevel) {
+        const topics = await getTopic(
+          typeReverseLookup[selType],
+          selSubject,
+          selLevel
+        )
         topics.forEach((topic) => arr.push({ topic }))
       }
       if (mounted) {
@@ -118,14 +122,23 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
             <FormControl component={"fieldset"}>
               <FormLabel component={"legend"}>Subject</FormLabel>
               <RadioGroup row value={selSubject} onChange={handleSubjectChange}>
-                {SUBJECTS.map((value) => (
-                  <FormControlLabel
-                    key={value}
-                    value={value}
-                    control={<Radio />}
-                    label={value}
-                  />
-                ))}
+                {typeReverseLookup[selType] === QUESTION_TYPE.note
+                  ? ["English"].map((value) => (
+                      <FormControlLabel
+                        key={value}
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))
+                  : SUBJECTS.map((value) => (
+                      <FormControlLabel
+                        key={value}
+                        value={value}
+                        control={<Radio />}
+                        label={value}
+                      />
+                    ))}
               </RadioGroup>
             </FormControl>
           </Grid>
