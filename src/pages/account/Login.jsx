@@ -73,7 +73,7 @@ export const Login = () => {
 
   return (
     <>
-      <Card style={{ width: "15vw", marginTop: "30px" }} elevation={5}>
+      <Card style={{marginTop: "30px" }} elevation={5}>
         <CardContent>
           <CardHeader
             title={"SG School Work"}
