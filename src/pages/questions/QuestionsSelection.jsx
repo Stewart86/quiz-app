@@ -91,7 +91,6 @@ export const QuestionsSelection = ({
     } else {
       handleGetTopics(TYPES[0], SUBJECTS[0], LEVELS[0])
     }
-    console.log("test")
   }, [category.type, category.subject, category.level])
 
   useEffect(() => {
@@ -117,7 +116,7 @@ export const QuestionsSelection = ({
     } else if (selectedTopics.length < topicCount) {
       setSelectAll(false)
     }
-  }, [topicCount, selectedTopics.length])
+  }, [topics, topicCount, selectedTopics.length])
 
   const handleForm = (incomingCategory) => {
     const key = Object.keys(incomingCategory)[0]
@@ -144,9 +143,7 @@ export const QuestionsSelection = ({
   }
 
   const handleGetTopics = async (type, subject, level) => {
-    console.log("handleGET topic", type, subject, level)
     const dbTopics = await getTopic(type, subject, level)
-    console.log("handleGET db",dbTopics)
     setTopics(dbTopics)
     setSelectedTopics(dbTopics)
     setTopicCount(dbTopics.length)
