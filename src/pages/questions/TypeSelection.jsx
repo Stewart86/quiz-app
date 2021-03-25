@@ -5,8 +5,10 @@ import { AuthContext } from "../../components/AuthProvider"
 import { QUESTION_TYPE } from "../../helper/enum"
 import { Redirect } from "react-router"
 import { TypeCircle } from "./TypeCircle"
+import fitbImage from "../../images/FITB.jpg"
 import { isSubscriptionActive } from "../../firestore/products"
-import placeholder from "../../images/placeholder.png"
+import mcqImage from "../../images/MCQ.jpg"
+import noteImage from "../../images/Notes.jpg"
 
 const useStyles = makeStyles((theme) => ({
   centerContent: {
@@ -42,19 +44,19 @@ export const TypeSelection = ({ handleSetType }) => {
         spacing={6}
         container>
         <Grid container justify={"center"} item xs={12}>
-          <Typography variant={"h3"}>
+          <Typography variant={"h2"}>
             Welcome {currentUser.displayName}
           </Typography>
         </Grid>
         <Grid container justify={"center"} item xs={12}>
-          <Typography variant={"h5"}>
+          <Typography variant={"h6"}>
             Let's choose the type of lesson you want to begin
           </Typography>
         </Grid>
         <Grid item>
           <TypeCircle
             type={"Multiple Choice"}
-            image={placeholder}
+            image={mcqImage}
             handleClick={() =>
               handleSetType({ type: QUESTION_TYPE.multipleChoice })
             }
@@ -63,7 +65,7 @@ export const TypeSelection = ({ handleSetType }) => {
         <Grid item>
           <TypeCircle
             type={"Fill In The Blank"}
-            image={placeholder}
+            image={fitbImage}
             handleClick={() =>
               handleSetType({ type: QUESTION_TYPE.fillInTheBlank })
             }
@@ -72,7 +74,7 @@ export const TypeSelection = ({ handleSetType }) => {
         <Grid item>
           <TypeCircle
             type={"Notes"}
-            image={placeholder}
+            image={noteImage}
             handleClick={() => handleSetType({ type: QUESTION_TYPE.note })}
           />
         </Grid>
