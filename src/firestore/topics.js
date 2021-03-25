@@ -25,6 +25,7 @@ export const getTopic = async (subject, level) => {
 }
 
 export const updateTopic = async (subject, level, topic) => {
+  console.log(subject, level, topic)
   const topics = db.collection("topics")
   let query = null
   if (String(level).includes("Primary")) {
@@ -33,15 +34,16 @@ export const updateTopic = async (subject, level, topic) => {
       .where("level", "==", level)
       .where("topic", "==", topic)
   } else {
+    level = levelLookup[level]
     query = topics
       .where("subject", "==", subject)
-      .where("level", "==", levelLookup[level])
+      .where("level", "==", level)
       .where("topic", "==", topic)
   }
 
   const snapshot = await query.get()
 
   if (snapshot.empty) {
-    topics.add({ subject, level: level, topic })
+    topics.add({ subject, level, topic })
   }
 }

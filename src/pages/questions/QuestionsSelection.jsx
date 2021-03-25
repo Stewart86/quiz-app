@@ -3,6 +3,7 @@ import {
   ButtonGroup,
   Checkbox,
   FormControl,
+  FormControlLabel,
   Grid,
   IconButton,
   Input,
@@ -71,10 +72,12 @@ export const QuestionsSelection = ({
 
   const [category, setCategory] = useState({ ...type, numOfQuestions: 5 })
   const [topics, setTopics] = useState([])
+  const [topicCount, setTopicCount] = useState(null)
   const [selectedTopics, setSelectedTopics] = useState([])
   const [numOfQuestions, setNumOfQuestions] = useState(5)
   const [isBeginDisabled, setIsBeginDisabled] = useState(true)
   const [isTrial, setIsTrial] = useState(true)
+  const [selectAll, setSelectAll] = useState(false)
 
   const { currentUser } = useContext(AuthContext)
 
@@ -82,6 +85,7 @@ export const QuestionsSelection = ({
     if (category.subject && category.level) {
       handleGetTopics(category.subject, category.level)
       setSelectedTopics([])
+      setSelectAll(false)
       setCategory((state) => ({ ...state, topics: [] }))
       setIsBeginDisabled(true)
     } else {
@@ -102,6 +106,16 @@ export const QuestionsSelection = ({
       setIsTrial(true)
     }
   }, [currentUser.role, currentUser.db.status, isBeginDisabled])
+
+  useEffect(() => {
+    if (topicCount === 0) {
+      setSelectAll(false)
+    } else if (topicCount === selectedTopics.length) {
+      setSelectAll(true)
+    } else if (selectedTopics.length < topicCount) {
+      setSelectAll(false)
+    }
+  }, [topicCount, selectedTopics.length])
 
   const handleForm = (incomingCategory) => {
     const key = Object.keys(incomingCategory)[0]
@@ -130,6 +144,9 @@ export const QuestionsSelection = ({
   const handleGetTopics = async (subject, level) => {
     const dbTopics = await getTopic(subject, level)
     setTopics(dbTopics)
+    setSelectedTopics(dbTopics)
+    setTopicCount(dbTopics.length)
+    setIsBeginDisabled(false)
   }
 
   const handleTopicChange = (event) => {
@@ -137,6 +154,20 @@ export const QuestionsSelection = ({
       const topics = event.target.value
       handleForm({ topics })
       return topics
+    })
+  }
+
+  const handleSelectAll = () => {
+    setSelectAll((selectAll) => {
+      setSelectedTopics((selTopics) => {
+        selTopics = topics
+        if (selectAll) {
+          selTopics = []
+        }
+        handleForm({ topics: selTopics })
+        return selTopics
+      })
+      return !selectAll
     })
   }
 
@@ -197,6 +228,12 @@ export const QuestionsSelection = ({
                 </MenuItem>
               ))}
             </Select>
+            <FormControlLabel
+              control={
+                <Checkbox checked={selectAll} onChange={handleSelectAll} />
+              }
+              label={"Select All"}
+            />
           </FormControl>
         </Grid>
         <Grid item>

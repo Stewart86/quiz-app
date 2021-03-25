@@ -12,6 +12,7 @@ export const post = async (question) => {
 }
 
 export const getMany = async (categories) => {
+  console.log(categories)
   // assign into local var
   let data = {}
   const setCount = Number(categories.numOfQuestions)

@@ -27,6 +27,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     fontSize: "1.4em",
   },
+  correct: {
+    color: theme.palette.success.main,
+  },
+  incorrect: {
+    color: theme.palette.error.main,
+  },
 }))
 
 export const Question = ({
@@ -88,6 +94,25 @@ export const Question = ({
 
   const noteOrQuestion = () =>
     question.type === QUESTION_TYPE.note ? "Note" : "Question"
+
+  const SubmitMessage = ({ result }) => {
+    if (result) {
+      return (
+        <Grid item>
+          <Typography className={classes.correct} variant={"h4"}>
+            You are correct!
+          </Typography>
+        </Grid>
+      )
+    }
+    return (
+      <Grid item>
+        <Typography className={classes.incorrect} variant={"h4"}>
+          The answer is incorrect.
+        </Typography>
+      </Grid>
+    )
+  }
 
   return (
     <>
@@ -156,6 +181,9 @@ export const Question = ({
             )
           })}
         </Grid>
+      )}
+      {question.result !== undefined && (
+        <SubmitMessage result={question.result} />
       )}
       {showExplain() && (
         <Grid item>
