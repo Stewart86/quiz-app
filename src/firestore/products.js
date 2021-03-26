@@ -3,7 +3,7 @@ import { db, functions } from "../firebase"
 import { STRIPE_PK } from "../helper/constants"
 import { loadStripe } from "@stripe/stripe-js"
 
-export const getProduct = () => {
+export const getProduct = async () => {
   const test = db
     .collection("products")
     .where("active", "==", true)

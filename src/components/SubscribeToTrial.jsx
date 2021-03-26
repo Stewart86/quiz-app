@@ -13,9 +13,10 @@ import {
 } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 import { checkoutSession, getProduct } from "../firestore/products"
+import { isEmpty, last } from "lodash"
 
 import { Loading } from "./Loading"
-import { isEmpty } from "lodash"
+import { signout } from "../auth/auth"
 
 export const SubscribeToTrial = ({ currentUser }) => {
   const [prices, setPrices] = useState(null)
@@ -37,7 +38,11 @@ export const SubscribeToTrial = ({ currentUser }) => {
 
   const handleSubscribe = async () => {
     setLoading(true)
-    await checkoutSession(currentUser, prices[0].price_id)
+    await checkoutSession(currentUser, last(prices).price_id)
+  }
+
+  const handleSignout = async () => {
+    await signout()
   }
 
   return (
@@ -49,14 +54,14 @@ export const SubscribeToTrial = ({ currentUser }) => {
           <DialogTitle>Subscribe Now</DialogTitle>
           {!isEmpty(prices) && (
             <>
-              <DialogTitle>{prices[0].name}</DialogTitle>
+              <DialogTitle>{last(prices).name}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  Free trial for {prices[0].trial_period_days} days
+                  Free trial for {last(prices).trial_period_days} days
                 </DialogContentText>
-                {prices[0].description && (
+                {last(prices).description && (
                   <Typography variant={"body1"}>
-                    Discription: {prices[0].description}
+                    Discription: {last(prices).description}
                   </Typography>
                 )}
                 <Table>
@@ -64,13 +69,15 @@ export const SubscribeToTrial = ({ currentUser }) => {
                     <TableRow>
                       <TableCell>Price</TableCell>
                       <TableCell>
-                        {currencyFormatter.format(prices[0].unit_amount / 100)}
+                        {currencyFormatter.format(
+                          last(prices).unit_amount / 100
+                        )}
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>For</TableCell>
                       <TableCell>
-                        {prices[0].interval_count} {prices[0].interval}
+                        {last(prices).interval_count} {last(prices).interval}
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -79,6 +86,9 @@ export const SubscribeToTrial = ({ currentUser }) => {
             </>
           )}
           <DialogActions>
+            <Button variant={"outlined"} onClick={handleSignout}>
+              Logout
+            </Button>
             <Button
               color={"primary"}
               variant={"contained"}

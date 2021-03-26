@@ -7,6 +7,9 @@ import { CenterContentLayout } from "../layouts/CenterContentRoute"
 export const AdminRoute = ({ component: Component, ...rest }) => {
   const { currentUser } = useContext(AuthContext)
 
+  if (currentUser && currentUser.db && !currentUser.db.isEnabled) {
+    return <Redirect to={"/account/settings"} />
+  }
   return (
     <CenterContentLayout>
       <Route
