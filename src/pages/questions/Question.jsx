@@ -119,7 +119,9 @@ export const Question = ({
       <Grid item>
         <Card>
           <CardHeader
-            title={`${noteOrQuestion()} ${index}`}
+            title={`${noteOrQuestion()} ${
+              noteOrQuestion() === "Creative Writing" ? "" : index
+            }`}
             subheader={subHeader}
           />
           <CardContent>
