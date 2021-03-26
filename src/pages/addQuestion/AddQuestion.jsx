@@ -238,7 +238,7 @@ export const AddQuestion = () => {
             <InsertQuestionForm
               key={rand}
               question={defaultExplain}
-              editorTitle={categories.type === 3 ? "Note" : "Explaination"}
+              editorTitle={categories.type === 3 ? "Note" : "Explanation"}
               handleEditorChange={handleExplainChange}
             />
           </Grid>

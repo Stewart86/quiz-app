@@ -191,7 +191,7 @@ export const Question = ({
       {showExplain() && (
         <Grid item>
           <Card className={classes.answerCard}>
-            <CardHeader title={"Explaination"} />
+            <CardHeader title={"Explanation"} />
             <CardContent>
               <Editor
                 className={classes.question}
