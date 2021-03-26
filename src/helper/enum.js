@@ -14,7 +14,7 @@ export const typeLookUp = {
 
 export const typeReverseLookup = {
   "Multiple Choice": 1,
-  "Fill In The Blank": 2,
+  "Fill In The Blanks": 2,
   "Creative Writing": 3,
 }
 

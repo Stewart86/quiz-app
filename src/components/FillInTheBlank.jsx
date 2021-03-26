@@ -46,7 +46,7 @@ export const FillInTheBlank = ({ question, handleSetQuestion }) => {
       <Grid item>
         <Card>
           <CardHeader
-            title={"Fill in The Blank - Builder"}
+            title={"Fill in The Blanks - Builder"}
             action={
               <IconButton onClick={() => setOpenGuide(true)} size={"small"}>
                 <Help />

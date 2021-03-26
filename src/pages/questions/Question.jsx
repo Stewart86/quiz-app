@@ -182,9 +182,10 @@ export const Question = ({
           })}
         </Grid>
       )}
-      {question.result !== undefined && (
-        <SubmitMessage result={question.result} />
-      )}
+      {question.result !== undefined &&
+        question.type === QUESTION_TYPE.multipleChoice && (
+          <SubmitMessage result={question.result} />
+        )}
       {showExplain() && (
         <Grid item>
           <Card className={classes.answerCard}>

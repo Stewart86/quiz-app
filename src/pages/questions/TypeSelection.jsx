@@ -64,7 +64,7 @@ export const TypeSelection = ({ handleSetType }) => {
         </Grid>
         <Grid item>
           <TypeCircle
-            type={"Fill In The Blank"}
+            type={"Fill In The Blanks"}
             image={fitbImage}
             handleClick={() =>
               handleSetType({ type: QUESTION_TYPE.fillInTheBlank })
