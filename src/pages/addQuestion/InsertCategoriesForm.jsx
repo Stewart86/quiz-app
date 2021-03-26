@@ -123,7 +123,7 @@ export const InsertCategoriesForm = ({ categories, handleChange }) => {
               <FormLabel component={"legend"}>Subject</FormLabel>
               <RadioGroup row value={selSubject} onChange={handleSubjectChange}>
                 {typeReverseLookup[selType] === QUESTION_TYPE.note
-                  ? ["English"].map((value) => (
+                  ? ["English", "Chinese"].map((value) => (
                       <FormControlLabel
                         key={value}
                         value={value}
