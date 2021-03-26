@@ -185,7 +185,7 @@ export const QuestionsSelection = ({
       <Grid container justify={"center"} spacing={5} item>
         <ButtonGroup color={"primary"}>
           {category.type === QUESTION_TYPE.note
-            ? ["English"].map((value) => (
+            ? ["English", "Chinese"].map((value) => (
                 <Button
                   className={classes.subjectBtn}
                   key={value}

@@ -27,9 +27,12 @@ export const TypeSelection = ({ handleSetType }) => {
         const { active } = await isSubscriptionActive(currentUser.uid)
         setRedirect(!active)
       }
+      if (!currentUser.db.isEnabled) {
+        setRedirect(true)
+      }
     }
     checkSubscription()
-  }, [currentUser.role, currentUser.uid])
+  }, [currentUser.role, currentUser.uid, currentUser.db.isEnabled])
 
   if (redirect) {
     return <Redirect to={"/account/settings"} />

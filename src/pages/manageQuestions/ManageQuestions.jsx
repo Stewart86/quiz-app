@@ -86,7 +86,7 @@ export const ManageQuestions = () => {
       width: 100,
       renderCell: (CellParams) => <>{JSON.stringify(CellParams.value)}</>,
     },
-    { field: "explain", headerName: "Explaination", width: 600 },
+    { field: "explain", headerName: "Explanation", width: 600 },
   ]
 
   const [categories, setCategories] = useState({

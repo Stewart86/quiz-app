@@ -129,16 +129,18 @@ export const getAllUsers = async () => {
   return Object.keys(result).map((key, i) => result[key])
 }
 
-export const disableUser = async (uid) => {
-  const userCollection = db.collection("users").doc(uid)
+export const disableUser = async (uid, type) => {
+  const coll = type === "staff" ? "admin" : "users"
+  const userCollection = db.collection(coll).doc(uid)
   await userCollection.update({
     updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
     isEnabled: false,
   })
 }
 
-export const enableUser = async (uid) => {
-  const userCollection = db.collection("users").doc(uid)
+export const enableUser = async (uid, type) => {
+  const coll = type === "staff" ? "admin" : "users"
+  const userCollection = db.collection(coll).doc(uid)
   await userCollection.update({
     updatedOn: firebase.firestore.FieldValue.serverTimestamp(),
     isEnabled: true,

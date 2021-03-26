@@ -119,7 +119,9 @@ export const Question = ({
       <Grid item>
         <Card>
           <CardHeader
-            title={`${noteOrQuestion()} ${index}`}
+            title={`${noteOrQuestion()} ${
+              noteOrQuestion() === "Creative Writing" ? "" : index
+            }`}
             subheader={subHeader}
           />
           <CardContent>
@@ -189,7 +191,7 @@ export const Question = ({
       {showExplain() && (
         <Grid item>
           <Card className={classes.answerCard}>
-            <CardHeader title={"Explaination"} />
+            <CardHeader title={"Explanation"} />
             <CardContent>
               <Editor
                 className={classes.question}

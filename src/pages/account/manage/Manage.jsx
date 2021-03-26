@@ -83,7 +83,8 @@ export const Manage = () => {
   }
 
   const handleEnable = async (uid) => {
-    await enableUser(uid)
+    setLoading(true)
+    await enableUser(uid, type)
   }
 
   const handleDisable = async (uid) => {
@@ -91,7 +92,7 @@ export const Manage = () => {
       alert("You cannot disable yourself.")
     } else {
       setLoading(true)
-      await disableUser(uid)
+      await disableUser(uid, type)
     }
   }
 
