@@ -69,12 +69,16 @@ export const QuestionsSelection = ({
   handleGetQuestions,
 }) => {
   const classes = useStyles()
+  const defaultNumOfQuestion = 1
 
-  const [category, setCategory] = useState({ ...type, numOfQuestions: 5 })
+  const [category, setCategory] = useState({
+    ...type,
+    numOfQuestions: defaultNumOfQuestion,
+  })
   const [topics, setTopics] = useState([])
   const [topicCount, setTopicCount] = useState(null)
   const [selectedTopics, setSelectedTopics] = useState([])
-  const [numOfQuestions, setNumOfQuestions] = useState(5)
+  const [numOfQuestions, setNumOfQuestions] = useState(defaultNumOfQuestion)
   const [isBeginDisabled, setIsBeginDisabled] = useState(true)
   const [isTrial, setIsTrial] = useState(true)
   const [selectAll, setSelectAll] = useState(false)
@@ -145,14 +149,19 @@ export const QuestionsSelection = ({
   const handleGetTopics = async (type, subject, level) => {
     const dbTopics = await getTopic(type, subject, level)
     setTopics(dbTopics)
-    setSelectedTopics(dbTopics)
     setTopicCount(dbTopics.length)
-    setIsBeginDisabled(false)
   }
 
   const handleTopicChange = (event) => {
     setSelectedTopics(() => {
       const topics = event.target.value
+      handleForm({ topics })
+      return topics
+    })
+  }
+  const handleSingleTopicChange = (event) => {
+    setSelectedTopics(() => {
+      const topics = [event.target.value]
       handleForm({ topics })
       return topics
     })
@@ -226,54 +235,75 @@ export const QuestionsSelection = ({
         ))}
       </Grid>
       <Grid container justify={"center"} spacing={5} item>
-        <Grid item>
-          <FormControl>
-            <InputLabel>Topic</InputLabel>
-            <Select
-              className={classes.dropdown}
-              multiple
-              label={"Topic"}
-              value={selectedTopics}
-              onChange={handleTopicChange}
-              input={<Input />}
-              renderValue={(selected) => selected.join(", ")}>
-              {topics.map((value) => (
-                <MenuItem key={value} value={value}>
-                  <Checkbox checked={selectedTopics.indexOf(value) > -1} />
-                  <ListItemText primary={value} />
-                </MenuItem>
-              ))}
-            </Select>
-            <FormControlLabel
-              control={
-                <Checkbox checked={selectAll} onChange={handleSelectAll} />
-              }
-              label={"Select All"}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl>
-            <InputLabel>
-              {category.type === QUESTION_TYPE.note
-                ? "Number of Creative Writing"
-                : "Number of Questions"}
-            </InputLabel>
-            <Select
-              label={"Number of Questions"}
-              className={classes.dropdown}
-              value={numOfQuestions}
-              onChange={(event) =>
-                handleForm({ numOfQuestions: event.target.value })
-              }>
-              {genNumOfQuestions().map((value) => (
-                <MenuItem key={value} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
+        {category.type === QUESTION_TYPE.note ? (
+          <Grid item>
+            <FormControl>
+              <>
+                <InputLabel>Topic</InputLabel>
+                <Select
+                  disabled={topics.length === 0}
+                  value={selectedTopics}
+                  onChange={handleSingleTopicChange}
+                  className={classes.dropdown}>
+                  {topics.map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            </FormControl>
+          </Grid>
+        ) : (
+          <>
+            <Grid item>
+              <FormControl>
+                <InputLabel>Topic</InputLabel>
+                <Select
+                  className={classes.dropdown}
+                  multiple
+                  disabled={topics.length === 0}
+                  label={"Topic"}
+                  value={selectedTopics}
+                  onChange={handleTopicChange}
+                  input={<Input />}
+                  renderValue={(selected) => selected.join(", ")}>
+                  {topics.map((value) => (
+                    <MenuItem key={value} value={value}>
+                      <Checkbox checked={selectedTopics.indexOf(value) > -1} />
+                      <ListItemText primary={value} />
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormControlLabel
+                  disabled={topics.length === 0}
+                  control={
+                    <Checkbox checked={selectAll} onChange={handleSelectAll} />
+                  }
+                  label={"Select All"}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <FormControl>
+                <InputLabel>Number of Questions</InputLabel>
+                <Select
+                  label={"Number of Questions"}
+                  className={classes.dropdown}
+                  value={numOfQuestions}
+                  onChange={(event) =>
+                    handleForm({ numOfQuestions: event.target.value })
+                  }>
+                  {genNumOfQuestions().map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </>
+        )}
       </Grid>
       <Grid container direction={"row"} justify={"center"} spacing={5} item>
         <Grid item>

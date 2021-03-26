@@ -60,7 +60,7 @@ export const getAttempted = (questions) => {
 export const genNumOfQuestions = () => {
   const len = [...Array(21).keys()]
   len.shift()
-  return len.map((x) => x * 5)
+  return [1,...len.map((x) => x * 5)]
 }
 
 export const isAllSelected = (obj, checked) => {
