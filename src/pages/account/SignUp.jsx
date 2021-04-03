@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Link,
   TextField,
   Typography,
 } from "@material-ui/core"
@@ -213,7 +214,11 @@ export const SignUp = ({ open, handleClose, addStaff = false }) => {
             variant={"outlined"}>
             {"Confirm Passward"}
           </TextField>
-          <Typography>todo: t&c</Typography>
+          <Typography>
+            By sigining up, you agree with our{" "}
+            <Link href='https://sgschoolwork.sg/terms'>Terms & condtions</Link> and{" "}
+            <Link href='https://sgschoolwork.sg/privacy'>Privacy Policies</Link>.
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button
