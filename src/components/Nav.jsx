@@ -19,9 +19,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     height: "66px",
-    [theme.breakpoints.down("sm")]: {
-      height: "136px",
-    },
   },
   title: {
     flexGrow: 1,
