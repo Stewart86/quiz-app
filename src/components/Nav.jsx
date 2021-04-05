@@ -18,7 +18,10 @@ import { useHistory } from "react-router"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    height: "70px",
+    height: "66px",
+    [theme.breakpoints.down("sm")]: {
+      height: "136px",
+    },
   },
   title: {
     flexGrow: 1,
@@ -39,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "0px 1px 2px 1px rgb(0 0 0 / 20%)",
   },
   greeting: {
-    flexGrow: 0,
+    flexGrow: 0.03,
   },
   btn: {
     margin: theme.spacing(1),
@@ -63,7 +66,7 @@ export const Nav = () => {
   return (
     <div className={classes.root}>
       <AppBar position='fixed'>
-        <Toolbar variant={"dense"}>
+        <Toolbar style={{ overflowX: "auto" }} variant={"dense"}>
           <div className={classes.title}>
             <img
               className={classes.logo}
@@ -105,7 +108,8 @@ export const Nav = () => {
                 {"Logout"}
               </Button>
               <Typography
-                display={"block"}
+                display={"inline"}
+                noWrap
                 className={
                   classes.greeting
                 }>{`Hi ${currentUser.displayName}`}</Typography>
