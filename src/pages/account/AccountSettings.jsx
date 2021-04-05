@@ -7,6 +7,7 @@ import {
   Container,
   Divider,
   Grid,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -192,6 +193,16 @@ export const AccountSettings = () => {
                 variant={"contained"}>
                 {"Logout"}
               </Button>
+            </Grid>
+            <Grid item>
+              <Link color='primary' href='https://sgschoolwork.sg/terms/'>
+                Terms & Conditions
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link color='primary' href='https://sgschoolwork.sg/privacy/'>
+                Privacy Policy
+              </Link>
             </Grid>
           </Grid>
         </CardContent>

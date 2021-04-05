@@ -18,7 +18,7 @@ export const signup = async (name, email, phone, password, addStaff) => {
       await postStudent({ id, name, email, phone })
     }
     await user.user.sendEmailVerification({
-      url: "https://quiz-app-5f6dc.web.app/account/settings",
+      url: "https://quiz.sgschoolwork.sg/account/settings",
     })
   }
   return user.user.uid
@@ -81,7 +81,7 @@ export const sendVerificationEmail = async () => {
   }
   try {
     await auth.currentUser.sendEmailVerification({
-      url: "https://quiz-app-5f6dc.web.app/account/settings",
+      url: "https://quiz.sgschoolwork.sg/account/settings",
     })
   } catch (e) {
     console.error(e.message)

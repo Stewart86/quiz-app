@@ -18,10 +18,25 @@ import { useHistory } from "react-router"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    height: "48px",
+    height: "70px",
   },
   title: {
     flexGrow: 1,
+    "& :hover": {
+      cursor: "pointer",
+      boxShadow:
+        "0px 2px 4px -1px rgb(0 0 0 / 40%), 0px 4px 5px 0px rgb(0 0 0 / 24%), 0px 1px 10px 0px rgb(0 0 0 / 22%)",
+    },
+    "& :active": {
+      boxShadow: "0px 1px 2px 1px rgb(0 0 0 / 20%)",
+    },
+  },
+  logo: {
+    height: "58px",
+    marginTop: "3px",
+    padding: "9px",
+    borderRadius: "4px",
+    boxShadow: "0px 1px 2px 1px rgb(0 0 0 / 20%)",
   },
   greeting: {
     flexGrow: 0,
@@ -42,7 +57,7 @@ export const Nav = () => {
   }
 
   const handleHome = () => {
-    history.push("/")
+    window.location.assign("https://sgschoolwork.sg")
   }
 
   return (
@@ -50,7 +65,12 @@ export const Nav = () => {
       <AppBar position='fixed'>
         <Toolbar variant={"dense"}>
           <div className={classes.title}>
-            <img height={"50em"} src={logo} alt={"SG Schoolwork logo"} onClick={handleHome} />
+            <img
+              className={classes.logo}
+              src={logo}
+              alt={"SG Schoolwork logo"}
+              onClick={handleHome}
+            />
           </div>
           {currentUser.role === "staff" && currentUser.db.isAdmin && (
             <>
