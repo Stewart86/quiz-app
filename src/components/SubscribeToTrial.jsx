@@ -60,7 +60,7 @@ export const SubscribeToTrial = ({ currentUser }) => {
                 </DialogContentText> */}
                 {last(prices).description && (
                   <Typography variant={"body1"}>
-                    Discription: {last(prices).description}
+                    {last(prices).description}
                   </Typography>
                 )}
                 <Table>
