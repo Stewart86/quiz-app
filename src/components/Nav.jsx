@@ -22,21 +22,21 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-    "& :hover": {
-      cursor: "pointer",
-      boxShadow:
-        "0px 2px 4px -1px rgb(0 0 0 / 40%), 0px 4px 5px 0px rgb(0 0 0 / 24%), 0px 1px 10px 0px rgb(0 0 0 / 22%)",
-    },
-    "& :active": {
-      boxShadow: "0px 1px 2px 1px rgb(0 0 0 / 20%)",
-    },
+     "& :hover": {
+       cursor: "pointer",
+    //   boxShadow:
+    //     "0px 2px 4px -1px rgb(0 0 0 / 40%), 0px 4px 5px 0px rgb(0 0 0 / 24%), 0px 1px 10px 0px rgb(0 0 0 / 22%)",
+     },
+    // "& :active": {
+    //   boxShadow: "0px 1px 2px 1px rgb(0 0 0 / 20%)",
+    // },
   },
   logo: {
     height: "58px",
     marginTop: "3px",
     padding: "9px",
     borderRadius: "4px",
-    boxShadow: "0px 1px 2px 1px rgb(0 0 0 / 20%)",
+    // boxShadow: "0px 1px 2px 1px rgb(0 0 0 / 20%)",
   },
   greeting: {
     flexGrow: 0.03,

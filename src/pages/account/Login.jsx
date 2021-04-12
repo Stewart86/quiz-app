@@ -110,13 +110,13 @@ export const Login = () => {
           </Button>
         </CardContent>
         <CardActions disableSpacing>
-          <Grid container justify={"space-between"}>
+          <Grid container justify={"space-between"} spacing={5}>
             <Grid item>
               <Button
                 onClick={handleSignUp}
                 color={"secondary"}
                 variant={"contained"}>
-                Start your trial now
+                Subscribe as Member
               </Button>
             </Grid>
             <Grid item>
