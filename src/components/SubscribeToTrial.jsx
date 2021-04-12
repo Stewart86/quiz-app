@@ -56,9 +56,9 @@ export const SubscribeToTrial = ({ currentUser }) => {
             <>
               <DialogTitle>{last(prices).name}</DialogTitle>
               <DialogContent>
-                <DialogContentText>
+                {/* <DialogContentText>
                   Free trial for {last(prices).trial_period_days} days
-                </DialogContentText>
+                </DialogContentText> */}
                 {last(prices).description && (
                   <Typography variant={"body1"}>
                     Discription: {last(prices).description}
