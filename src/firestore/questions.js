@@ -35,7 +35,7 @@ export const getMany = async (categories) => {
       data[doc.id] = doc.data()
     })
   } else {
-    const chunkTopics = chunk(categories.topics, 10)
+    const chunkTopics = chunk(categories.topics, 7)
     for (let i = 0; i < chunkTopics.length; i++) {
       let cur = db.collection("questions")
 
@@ -45,9 +45,9 @@ export const getMany = async (categories) => {
 
       if (chunkTopics.length > 0) {
         if (chunkTopics.length === 1) {
-          cur = cur.where("topic", "in", chunkTopics[i])
-        } else {
           cur = cur.where("topic", "in", [chunkTopics[i]])
+        } else {
+          cur = cur.where("topic", "in", chunkTopics[i])
         }
       } else {
         cur = cur.where("topic", "==", chunkTopics[0][0])
