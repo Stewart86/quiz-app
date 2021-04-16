@@ -45,7 +45,7 @@ export const getMany = async (categories) => {
 
       if (chunkTopics.length > 0) {
         if (chunkTopics.length === 1) {
-          cur = cur.where("topic", "in", [chunkTopics[i]])
+          cur = cur.where("topic", "in", chunkTopics[i])
         } else {
           cur = cur.where("topic", "in", chunkTopics[i])
         }
